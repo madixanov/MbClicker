@@ -18,7 +18,7 @@ const Avatar = () => {
     return (
         <div className="avatar-container" onClick={handleClick}>
             <img src={avatar} alt="" />
-            {showText && <p className="popup-text">+1</p>}
+            {showText && <p className="popup-text">+ 10</p>}
         </div>
     )
 }

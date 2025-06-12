@@ -269,14 +269,15 @@ div.avatar-container img:active {
 }
 
 .popup-text {
+  font-size: 20px;
   position: absolute;
-  background-color: rgba(0, 0, 0, 0.8);
+  font-weight: 700;
   color: white;
   padding: 10px;
   border-radius: 5px;
   animation: fadeInOut 1s ease-in-out;
-  top: 60px; 
-  left: 50%;
+  top: 40%; 
+  left: 70%;
   transform: translateX(-50%); 
 }
 
