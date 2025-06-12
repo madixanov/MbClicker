@@ -314,12 +314,14 @@ div.avatar-container img:active {
 
 
 .router-icons-container {
+  position: relative; /* обязательно */
   width: 100%;
   max-width: 304px;
   height: 64px;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  margin: 0 auto; /* центрирует контейнер */
   background: linear-gradient(180deg, rgba(47, 47, 47, 1) 0%, rgba(34, 34, 34, 0.85) 100%);
   border-radius: 100px;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.25);
@@ -342,29 +344,43 @@ div.avatar-container img:active {
   justify-content: center;
 }
 
+/* Добавлено: нужно для позиционирования анимированной подложки */
 .icon-item {
   width: 24px;
   height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
+  position: relative; /* добавлено */
+  z-index: 1; /* добавлено */
 }
 
-.icon-wrapper.selected .icon-item {
-  background-color: white;
+.selected-background {
+  position: absolute;
+  top: -7px;
+  left: 0; /* обязательно, чтобы x работал от начала контейнера */
   width: 78px;
   height: 78px;
   border-radius: 50%;
+  background-color: white;
   border: 12px solid #2F2F2F;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+  z-index: 0;
+  box-sizing: border-box;
+  pointer-events: none;
 }
 
 .icon-wrapper.selected .icon-item img {
   width: 40%;
   height: 45%;
   object-fit: contain;
+}
+
+.labels-container {
+  width: 100%;
+  max-width: 304px;
+  display: flex;
+  justify-content: space-around;
+  padding: 0 10px;
 }
 
 .labels-container p {
@@ -375,6 +391,7 @@ div.avatar-container img:active {
   width: 40px;
   text-align: center;
 }
+
 
 @media (max-width: 768px) {
   div.avatar-container {

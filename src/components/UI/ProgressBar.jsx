@@ -18,7 +18,7 @@ const ProgressBar = () => {
         if (progress >= points) {
         upgradeLevel();
         upgradePoints();
-        resetCount();        // 👈 сброс mbCount до 0
+        resetCount();     
         incrementMbInc();
         }
     }, [progress, points]);
