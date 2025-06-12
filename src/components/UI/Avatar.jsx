@@ -6,6 +6,8 @@ const Avatar = () => {
     const increment = useMbStore((state) => state.increment);
     const [ showText, setShowText ] = useState(false);
 
+    const mbIncrement = useMbStore((state) => state.mbIncrement)
+
     const handleClick = () => {
         increment();
         setShowText(true);
@@ -18,7 +20,7 @@ const Avatar = () => {
     return (
         <div className="avatar-container" onClick={handleClick}>
             <img src={avatar} alt="" />
-            {showText && <p className="popup-text">+ 10</p>}
+            {showText && <p className="popup-text">+ {mbIncrement}</p>}
         </div>
     )
 }

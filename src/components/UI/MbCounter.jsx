@@ -3,7 +3,7 @@ import exchange from "../../assets/icons/exchange.png"
 import useMbStore from "../../store/mb-store.js"
 
 const MbCounter = () => {
-    const mbCount = useMbStore((state) => state.mbCount);
+    const mbCountAll = useMbStore((state) => state.mbCountAll);
 
     return (
         <div className="mb-counter-container">
@@ -11,7 +11,7 @@ const MbCounter = () => {
                 <div className="logo">
                     <img src={logo} alt="" />
                 </div>
-                <h1>{mbCount}</h1>
+                <h1>{mbCountAll.toLocaleString('ru-RU')}</h1>
                 <div className="exchange">
                     <img src={exchange} alt="" />
                 </div>
