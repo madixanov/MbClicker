@@ -1,6 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import useMbStore from "../../store/mb-store";
+import { useNavigate } from "react-router";
 
 import gift from "../../assets/icons/gift.png";
 import task from "../../assets/icons/task.png";
@@ -16,15 +17,16 @@ import selected_task from "../../assets/icons/selected-icons/selected-task.png";
 
 const RouterIcon = () => {
   const mbCount = useMbStore((state) => state.mbCount);
-  const statsImage = mbCount === 0 ? empty_stats : stats;
 
   const menuItems = [
-  { defaultIcon: gift, selectedIcon: selected_gift, label: "GIFT" },
-  { defaultIcon: task, selectedIcon: selected_task, label: "TASK" },
-  { defaultIcon: home, selectedIcon: selected_home, label: "HOME" }, // у тебя только selected версия
-  { defaultIcon: mbCount === 0 ? empty_stats : stats, selectedIcon: selected_stats, label: "STATS" },
-  { defaultIcon: friends, selectedIcon: friends, label: "FRIENDS" }, // нет selected — используем обычную
-];
+  { defaultIcon: gift, selectedIcon: selected_gift, label: "GIFT", onClick: () => console.log('gift') },
+  { defaultIcon: task, selectedIcon: selected_task, label: "TASK", onClick: () => console.log('task') },
+  { defaultIcon: home, selectedIcon: selected_home, label: "HOME", onClick: () => navigate('/') }, // у тебя только selected версия
+  { defaultIcon: mbCount === 0 ? empty_stats : stats, selectedIcon: selected_stats, label: "STATS", onClick: () => console.log('stats') },
+  { defaultIcon: friends, selectedIcon: friends, label: "FRIENDS", onClick: () => console.log('FRIENDS') }, 
+  ];
+
+  const navigate = useNavigate();
 
   const [selectedIndex, setSelectedIndex] = useState(2);
   const [xPosition, setXPosition] = useState(null);
@@ -63,7 +65,7 @@ const RouterIcon = () => {
           <div
             key={index}
             className="icon-wrapper"
-            onClick={() => setSelectedIndex(index)}
+            onClick={() => {setSelectedIndex(index), item.onClick()}}
             ref={(el) => (iconRefs.current[index] = el)}
           >
             <div className="icon-item">

@@ -1,7 +1,7 @@
 import { useEffect } from "react";
-import useMbStore from "../../store/mb-store";
-import click from "../../assets/icons/click.png";
-import useLvlStore from "../../store/lvl-store";
+import useMbStore from "../../../store/mb-store";
+import click from "../../../assets/icons/click.png";
+import useLvlStore from "../../../store/lvl-store";
 
 const ProgressBar = () => {
     const progress = useMbStore((state) => state.mbCount);

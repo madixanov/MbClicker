@@ -1,14 +1,19 @@
-import Footer from "./components/Footer";
-import Header from "./components/Header";
-import Main from "./components/Main";
+import { Routes, Route, BrowserRouter } from "react-router-dom";
+import { lazy, Suspense }  from "react";
+
+const HomePage = lazy(() => import("./pages/HomePage"))
+const ExchangePage = lazy(() => import("./pages/ExchangePage"))
 
 const App = () => {
   return (
-    <>
-      <Header />
-      <Main />
-      <Footer />
-    </>
+    <BrowserRouter>
+      <Suspense fallback={<div>Loading...</div>}>
+        <Routes>
+          <Route path="/" element={<HomePage />} />
+          <Route path="/exchange" element={<ExchangePage />}/>
+        </Routes>
+      </Suspense>
+    </BrowserRouter>
   )
 }
 

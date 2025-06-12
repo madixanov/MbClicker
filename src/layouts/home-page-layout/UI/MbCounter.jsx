@@ -1,9 +1,18 @@
-import logo from "../../assets/icons/logo.png"
-import exchange from "../../assets/icons/exchange.png"
-import useMbStore from "../../store/mb-store.js"
+import logo from "../../../assets/icons/logo.png"
+import exchange from "../../../assets/icons/exchange.png"
+import useMbStore from "../../../store/mb-store.js"
+
+import { useNavigate } from "react-router"
+import { useCallback } from "react"
 
 const MbCounter = () => {
     const mbCountAll = useMbStore((state) => state.mbCountAll);
+
+    const navigate = useNavigate();
+
+    const handleClick = useCallback(() =>{
+        navigate('/exchange')
+    }, [navigate])
 
     return (
         <div className="mb-counter-container">
@@ -12,7 +21,7 @@ const MbCounter = () => {
                     <img src={logo} alt="" />
                 </div>
                 <h1>{mbCountAll.toLocaleString('ru-RU')}</h1>
-                <div className="exchange">
+                <div className="exchange" onClick={handleClick}>
                     <img src={exchange} alt="" />
                 </div>
             </div>

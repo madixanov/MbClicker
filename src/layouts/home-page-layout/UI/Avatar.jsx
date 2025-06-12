@@ -1,6 +1,6 @@
 import { useState } from "react";
-import avatar from "../../assets/images/avatar.png"
-import useMbStore from "../../store/mb-store";
+import avatar from "../../../assets/images/avatar.png"
+import useMbStore from "../../../store/mb-store";
 
 const Avatar = () => {
     const increment = useMbStore((state) => state.increment);
