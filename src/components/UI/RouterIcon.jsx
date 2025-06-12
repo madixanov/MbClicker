@@ -8,28 +8,35 @@ import useMbStore from "../../store/mb-store";
 
 const RouterIcon = () => {
   const mbCount = useMbStore((state) => state.mbCount);
-
   const statsImage = mbCount === 0 ? empty_stats : stats;
 
+  const menuItems = [
+    { icon: gift, label: "GIFT" },
+    { icon: task, label: "TASK" },
+    { icon: selected_home, label: "HOME", isSelected: true },
+    { icon: statsImage, label: "STATS" },
+    { icon: friends, label: "FRIENDS" }
+  ];
+
   return (
-    <div className="router-icons-container">
-      <div className="icon-item">
-        <img src={gift} alt="Gift Icon" />
+    <>
+      <div className="router-icons-container">
+        {menuItems.map((item, index) => (
+          <div key={index} className={`icon-wrapper ${item.isSelected ? 'selected' : ''}`}>
+            <div className="icon-item">
+              <img src={item.icon} alt={`${item.label} Icon`} />
+            </div>
+          </div>
+        ))}
       </div>
-      <div className="icon-item">
-        <img src={task} alt="Task Icon" />
+      <div className="labels-container">
+        {menuItems.map((item, index) => (
+          <p key={index} className={item.isSelected ? 'selected-label' : ''}>
+            {item.label}
+          </p>
+        ))}
       </div>
-      <div className="icon-item">
-        <img src={selected_home} alt="Home Icon" />
-      </div>
-      <div className="icon-item">
-        <img src={statsImage} alt="Stats Icon" />
-      </div>
-      <div className="icon-item">
-        <img src={friends} alt="Friends Icon" />
-      </div>
-    </div>
+    </>
   );
 };
-
 export default RouterIcon;

@@ -1,4 +1,5 @@
 import useMbStore from "../../store/mb-store";
+import click from "../../assets/icons/click.png"
 
 const ProgressBar = () => {
     const progress = useMbStore((state) => state.mbCount);
@@ -19,7 +20,10 @@ const ProgressBar = () => {
                 </div>
                 <span>2 LVL</span>
             </div>
-            <p>{`${progress}/1024`}</p>
+            <div className="target">
+                <p>{`${progress}/1024`}</p>
+                <img src={click} alt="" />
+            </div>
         </div>
     );
 };
