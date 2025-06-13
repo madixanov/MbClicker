@@ -26,30 +26,35 @@ const RouterIcon = () => {
       selectedIcon: selected_gift,
       label: "GIFT",
       path: "/gift",
+      onClick: () => navigate("/gift")
     },
     {
       defaultIcon: task,
       selectedIcon: selected_task,
       label: "TASK",
       path: "/tasks",
+      onClick: () => navigate("/tasks")
     },
     {
       defaultIcon: home,
       selectedIcon: selected_home,
       label: "HOME",
       path: "/",
+      onClick: () => navigate("/")
     },
     {
       defaultIcon: mbCount === 0 ? empty_stats : stats,
       selectedIcon: selected_stats,
       label: "STATS",
       path: null,
+      onClick: () => console.log('stats')
     },
     {
       defaultIcon: friends,
       selectedIcon: friends,
       label: "FRIENDS",
-      path: null,
+      path: "/friends",
+      onClick: () => console.log('friends')
     },
   ];
 
@@ -57,6 +62,8 @@ const RouterIcon = () => {
     "/": 2,
     "/tasks": 1,
     "/gift": 0,
+    "/stats": 3,
+    "/friends": 4
   };
 
   const [selectedIndex, setSelectedIndex] = useState(pathToIndex[location.pathname] ?? 2);
