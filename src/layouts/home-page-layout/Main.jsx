@@ -1,8 +1,8 @@
-import ProgressBar from "./UI/ProgressBar"
-import MbCounter from "./UI/MbCounter";
-import Avatar from "./UI/Avatar";
+import { lazy } from "react";
 
-
+const ProgressBar = lazy(() => import("./UI/ProgressBar"));
+const MbCounter = lazy(() => import("./UI/MbCounter"));
+const Avatar = lazy(() => import("./UI/Avatar"));
 
 const Main = () => {
     return (

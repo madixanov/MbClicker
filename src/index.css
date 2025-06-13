@@ -301,7 +301,7 @@ div.avatar-container img:active {
   background: linear-gradient(
     to right, 
     rgba(8, 8, 8, 0.8) 0%,   /* 90% opaque */
-    rgba(18, 18, 18, 0.8) 50%  /* 95% opaque */
+    rgba(18, 18, 18, 0.8) 50% 
   );
   box-shadow: 0 -50px 100px rgba(0,0,0, 0.8);
   padding: 10px 0 20px;
@@ -314,14 +314,14 @@ div.avatar-container img:active {
 
 
 .router-icons-container {
-  position: relative; /* обязательно */
+  position: relative;
   width: 100%;
   max-width: 304px;
   height: 64px;
   display: flex;
   justify-content: space-around;
   align-items: center;
-  margin: 0 auto; /* центрирует контейнер */
+  margin: 0 auto;
   background: linear-gradient(180deg, rgba(47, 47, 47, 1) 0%, rgba(34, 34, 34, 0.85) 100%);
   border-radius: 100px;
   box-shadow: inset 0 0 10px rgba(0,0,0,0.25);
@@ -344,21 +344,20 @@ div.avatar-container img:active {
   justify-content: center;
 }
 
-/* Добавлено: нужно для позиционирования анимированной подложки */
 .icon-item {
   width: 24px;
   height: 24px;
   display: flex;
   justify-content: center;
   align-items: center;
-  position: relative; /* добавлено */
-  z-index: 1; /* добавлено */
+  position: relative;
+  z-index: 1;
 }
 
 .selected-background {
   position: absolute;
   top: -7px;
-  left: 0; /* обязательно, чтобы x работал от начала контейнера */
+  left: 0; 
   width: 78px;
   height: 78px;
   border-radius: 50%;
