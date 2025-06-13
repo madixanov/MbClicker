@@ -4,6 +4,7 @@ import { lazy, Suspense }  from "react";
 const HomePage = lazy(() => import("./pages/HomePage"))
 const ExchangePage = lazy(() => import("./pages/ExchangePage"))
 const TaskPage = lazy(() => import("./pages/TaskPage"))
+const GiftPage = lazy(() => import("./pages/GiftPage"))
 
 const App = () => {
   return (
@@ -13,6 +14,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />}/>
           <Route path="/tasks" element={<TaskPage />}/>
+          <Route path="/gift" element={<GiftPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>

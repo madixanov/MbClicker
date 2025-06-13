@@ -25,35 +25,30 @@ const RouterIcon = () => {
       defaultIcon: gift,
       selectedIcon: selected_gift,
       label: "GIFT",
-      onClick: () => console.log("gift"),
-      path: null,
+      path: "/gift",
     },
     {
       defaultIcon: task,
       selectedIcon: selected_task,
       label: "TASK",
-      onClick: () => navigate("/tasks"),
       path: "/tasks",
     },
     {
       defaultIcon: home,
       selectedIcon: selected_home,
       label: "HOME",
-      onClick: () => navigate("/"),
       path: "/",
     },
     {
       defaultIcon: mbCount === 0 ? empty_stats : stats,
       selectedIcon: selected_stats,
       label: "STATS",
-      onClick: () => console.log("stats"),
       path: null,
     },
     {
       defaultIcon: friends,
       selectedIcon: friends,
       label: "FRIENDS",
-      onClick: () => console.log("FRIENDS"),
       path: null,
     },
   ];
@@ -61,10 +56,14 @@ const RouterIcon = () => {
   const pathToIndex = {
     "/": 2,
     "/tasks": 1,
+    "/gift": 0,
   };
 
   const [selectedIndex, setSelectedIndex] = useState(pathToIndex[location.pathname] ?? 2);
   const [xPosition, setXPosition] = useState(null);
+  const [pendingNavigationPath, setPendingNavigationPath] = useState(null);
+  const [animationComplete, setAnimationComplete] = useState(false);
+
   const containerRef = useRef(null);
   const iconRefs = useRef([]);
 
@@ -87,6 +86,14 @@ const RouterIcon = () => {
     }
   }, [location.pathname]);
 
+  useEffect(() => {
+    if (animationComplete && pendingNavigationPath) {
+      navigate(pendingNavigationPath);
+      setPendingNavigationPath(null);
+      setAnimationComplete(false);
+    }
+  }, [animationComplete, pendingNavigationPath, navigate]);
+
   return (
     <>
       <div
@@ -100,6 +107,9 @@ const RouterIcon = () => {
             initial={false}
             animate={{ x: xPosition }}
             transition={{ type: "spring", stiffness: 300, damping: 30 }}
+            onAnimationComplete={() => {
+              setAnimationComplete(true);
+            }}
           />
         )}
 
@@ -108,8 +118,14 @@ const RouterIcon = () => {
             key={index}
             className="icon-wrapper"
             onClick={() => {
-              setSelectedIndex(index);
-              item.onClick();
+              if (item.path) {
+                setSelectedIndex(index);
+                setPendingNavigationPath(item.path);
+                setAnimationComplete(false);
+              } else {
+                // если путь не указан — просто лог или иное поведение
+                console.log(`${item.label} clicked`);
+              }
             }}
             ref={(el) => (iconRefs.current[index] = el)}
           >
