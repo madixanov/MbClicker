@@ -134,14 +134,18 @@ div.theme-container > p {
 }
 
 div.home-main {
-  height: 100%;
+  height: 80%;
+  padding-top: 70px;
 }
 
 div.progress-bar-container {
     width: 100%;
     max-width: 600px;
-    margin: 20px auto;
+    margin: 0 auto;
     text-align: center;
+    padding-top: 10px;
+    text-align: center;
+    scroll-margin-top: 60px;
 }
 
 div.lvl {
@@ -257,10 +261,14 @@ div.exchange img {
 }
 
 div.avatar-container {
-  height: 515px;
-  width: 294.11px;
-  align-self: flex-end;
+  align-self: center; /* Центрируем по горизонтали */
   z-index: 1;
+  width: 100%;
+  max-width: 270px;
+  height: auto;
+  aspect-ratio: 3 / 5; /* Поддержка пропорций (мобильная ориентация) */
+  padding: 10px;
+  box-sizing: border-box;
 }
 
 div.avatar-container img {
@@ -649,7 +657,6 @@ form > div {
   align-self: flex-start;
 }
 
-/* ModalOverlay.css */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -660,14 +667,137 @@ form > div {
   z-index: 9998;
 }
 
+.task-title {
+  margin-left: 40px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.task-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #000;
+  margin-top: -60px;
+  width: 100%;
+  max-height: 100vh;
+  gap: 10px;
+}
+
+.active-tab {
+  width: 195px;
+  height: 29px;
+  border-radius: 0 0 20px 20px;
+  border: none;
+  background-color: white;
+  color: black;
+  font-size: 13px;
+  font-weight: 500;
+  border-top: 1px solid #fff;
+}
+
+.non-active-tab {
+  width: 195px;
+  height: 29px;
+  color: white;
+  background-color: #000;
+  border: none;
+  border-top: 1px solid #fff;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+.tabs {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.task-container {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 5px 10px;
+  align-items: center;
+  height: 50px;
+}
+
+.pfphoto {
+  height: 50px;
+  width: 50px;
+  background-color: white;
+  border-radius: 50%;
+}
+
+.task-content {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.task-content p {
+  margin: 0;
+  display: block;
+}
+
+.task-name {
+  font-size: 11px;
+  font-weight: 400;
+}
+
+.task-prize {
+  font-size: 11px;
+  font-weight: 400;
+  color: #53FF6D;
+}
+
+.task-btn {
+  width: 65px;
+  height: 22px;
+  background-color: #f6f6f6;
+  border-radius: 100px;
+  color: black;
+  font-size: 9px;
+  font-weight: 400;
+  border: none;
+  text-align: center;
+}
+
+.active-btn {
+  background: #404040;
+  color: white;
+}
+
+.completed {
+  background-color: #0BFF54;
+  color: black;
+}
+
+@media (max-width: 1200px) {
+  div.avatar-container {
+    max-width: 400px;
+    aspect-ratio: 3/5;
+    padding: 5px;
+  }
+}
+
 @media (max-width: 768px) {
   div.avatar-container {
-    height: 500px;
-    width: 280px;
+    max-width: 300px;
+    aspect-ratio: 3/5;
+    padding: 5px;
   }
 
   div.avatar-container img {
     width: 100%;
     height: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  div.avatar-container {
+    max-width: 300px;
+    aspect-ratio: 3 / 5;
+    padding: 0;
   }
 }

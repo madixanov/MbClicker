@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion } from "framer-motion";
 import useMbStore from "../../store/mb-store";
-import { useNavigate } from "react-router";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import gift from "../../assets/icons/gift.png";
 import task from "../../assets/icons/task.png";
@@ -17,18 +17,53 @@ import selected_task from "../../assets/icons/selected-icons/selected-task.png";
 
 const RouterIcon = () => {
   const mbCount = useMbStore((state) => state.mbCount);
-
   const navigate = useNavigate();
+  const location = useLocation();
 
   const menuItems = [
-  { defaultIcon: gift, selectedIcon: selected_gift, label: "GIFT", onClick: () => console.log('gift') },
-  { defaultIcon: task, selectedIcon: selected_task, label: "TASK", onClick: () => console.log('task') },
-  { defaultIcon: home, selectedIcon: selected_home, label: "HOME", onClick: () => navigate('/') },
-  { defaultIcon: mbCount === 0 ? empty_stats : stats, selectedIcon: selected_stats, label: "STATS", onClick: () => console.log('stats') },
-  { defaultIcon: friends, selectedIcon: friends, label: "FRIENDS", onClick: () => console.log('FRIENDS') }, 
+    {
+      defaultIcon: gift,
+      selectedIcon: selected_gift,
+      label: "GIFT",
+      onClick: () => console.log("gift"),
+      path: null,
+    },
+    {
+      defaultIcon: task,
+      selectedIcon: selected_task,
+      label: "TASK",
+      onClick: () => navigate("/tasks"),
+      path: "/tasks",
+    },
+    {
+      defaultIcon: home,
+      selectedIcon: selected_home,
+      label: "HOME",
+      onClick: () => navigate("/"),
+      path: "/",
+    },
+    {
+      defaultIcon: mbCount === 0 ? empty_stats : stats,
+      selectedIcon: selected_stats,
+      label: "STATS",
+      onClick: () => console.log("stats"),
+      path: null,
+    },
+    {
+      defaultIcon: friends,
+      selectedIcon: friends,
+      label: "FRIENDS",
+      onClick: () => console.log("FRIENDS"),
+      path: null,
+    },
   ];
 
-  const [selectedIndex, setSelectedIndex] = useState(2);
+  const pathToIndex = {
+    "/": 2,
+    "/tasks": 1,
+  };
+
+  const [selectedIndex, setSelectedIndex] = useState(pathToIndex[location.pathname] ?? 2);
   const [xPosition, setXPosition] = useState(null);
   const containerRef = useRef(null);
   const iconRefs = useRef([]);
@@ -44,6 +79,13 @@ const RouterIcon = () => {
       setXPosition(centerX - 39);
     }
   }, [selectedIndex]);
+
+  useEffect(() => {
+    const newIndex = pathToIndex[location.pathname];
+    if (newIndex !== undefined) {
+      setSelectedIndex(newIndex);
+    }
+  }, [location.pathname]);
 
   return (
     <>
