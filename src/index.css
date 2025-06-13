@@ -264,7 +264,7 @@ div.avatar-container {
   z-index: 1;
   width: 100%;
   max-width: 250px;
-  height: 400px;
+  height: 500px;
   aspect-ratio: 3 / 5;
   padding: 10px;
   box-sizing: border-box;
@@ -667,6 +667,7 @@ form > div {
 }
 
 .task-title {
+  margin-top: -40px;
   margin-left: 40px;
   font-size: 15px;
   font-weight: 700;
@@ -681,6 +682,8 @@ form > div {
   width: 100%;
   max-height: 100vh;
   gap: 10px;
+  width: 400px;
+  height: 600px;
 }
 
 .active-tab {
@@ -719,6 +722,7 @@ form > div {
   padding: 5px 10px;
   align-items: center;
   height: 50px;
+  width: 100%;
 }
 
 .pfphoto {
@@ -772,6 +776,13 @@ form > div {
   color: black;
 }
 
+.gift-title {
+  font-size: 28px;
+  font-weight: 700;
+  width: 277px;
+  padding-left: 10px;
+}
+
 @media (max-width: 1200px) {
   div.avatar-container {
     max-width: 450px;
@@ -779,12 +790,16 @@ form > div {
     aspect-ratio: 3/5;
     padding: 5px;
   }
+
+  .task-main {
+    scale: 0.93;
+  }
 }
 
 @media (max-width: 768px) {
   div.avatar-container {
     max-width: 300px;
-    height: 450px;
+    height: 480px;
     aspect-ratio: 3/5;
     padding: 5px;
   }
@@ -793,13 +808,21 @@ form > div {
     width: 100%;
     height: 100%;
   }
+
+  .task-main {
+    scale: 0.9;
+  }
 }
 
 @media (max-width: 480px) {
   div.avatar-container {
     max-width: 300px;
-    height: 400px;
+    height: 460px;
     aspect-ratio: 3 / 5;
     padding: 0;
+  }
+
+  .task-main {
+    scale: 0.8;
   }
 }
