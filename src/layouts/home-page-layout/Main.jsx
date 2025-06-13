@@ -6,7 +6,7 @@ const Avatar = lazy(() => import("./UI/Avatar"));
 
 const Main = () => {
     return (
-        <main>
+        <main className="home-main">
             <ProgressBar />
             <MbCounter />
             <Avatar />
