@@ -260,12 +260,12 @@ div.exchange img {
 }
 
 div.avatar-container {
-  align-self: center; /* Центрируем по горизонтали */
+  align-self: center;
   z-index: 1;
   width: 100%;
-  max-width: 270px;
-  height: auto;
-  aspect-ratio: 3 / 5; /* Поддержка пропорций (мобильная ориентация) */
+  max-width: 250px;
+  height: 400px;
+  aspect-ratio: 3 / 5;
   padding: 10px;
   box-sizing: border-box;
 }
@@ -774,7 +774,8 @@ form > div {
 
 @media (max-width: 1200px) {
   div.avatar-container {
-    max-width: 400px;
+    max-width: 450px;
+    height: 480px;
     aspect-ratio: 3/5;
     padding: 5px;
   }
@@ -783,6 +784,7 @@ form > div {
 @media (max-width: 768px) {
   div.avatar-container {
     max-width: 300px;
+    height: 450px;
     aspect-ratio: 3/5;
     padding: 5px;
   }
@@ -796,6 +798,7 @@ form > div {
 @media (max-width: 480px) {
   div.avatar-container {
     max-width: 300px;
+    height: 400px;
     aspect-ratio: 3 / 5;
     padding: 0;
   }
