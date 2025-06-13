@@ -796,6 +796,12 @@ form > div {
   }
 }
 
+.avatar-container {
+  position: relative;
+  display: inline-block;
+  overflow: visible;
+}
+
 @media (max-width: 768px) {
   div.avatar-container {
     max-width: 300px;
@@ -817,12 +823,18 @@ form > div {
 @media (max-width: 480px) {
   div.avatar-container {
     max-width: 300px;
-    height: 460px;
+    height: 440px;
     aspect-ratio: 3 / 5;
     padding: 0;
   }
 
   .task-main {
     scale: 0.8;
+  }
+}
+
+@media (hover: none) {
+  .avatar-container {
+    touch-action: manipulation;
   }
 }
