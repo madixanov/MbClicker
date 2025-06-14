@@ -46,14 +46,18 @@
 
 ## 📦 Getting Started
 
+📦 Getting Started
 To run the project locally:
 
-# Clone the repo
+bash
+Copy
+Edit
+# 1. Clone the repository
 git clone https://github.com/your-username/MbClicker.git
 cd MbClicker
 
-# Install dependencies
+# 2. Install dependencies
 npm install
 
-# Start the dev server
+# 3. Start the development server
 npm run dev
