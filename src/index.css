@@ -17,6 +17,11 @@ body {
   background-repeat: no-repeat;
 }
 
+body.other-page {
+  background: none;
+  background-color: #000;
+}
+
 header {
   width: 100%;
   height: 56px;
@@ -559,6 +564,7 @@ form > div {
   background-color: #60FF82;
   font-size: 12px;
   font-weight: 600;
+  color: black;
 }
 
 .instruction-container {

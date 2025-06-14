@@ -7,6 +7,7 @@ const TaskPage = lazy(() => import("./pages/TaskPage"))
 const GiftPage = lazy(() => import("./pages/GiftPage"))
 
 const App = () => {
+
   return (
     <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>

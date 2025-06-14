@@ -16,6 +16,14 @@ const ExchangePage = () => {
         };
     }, []);
 
+    useEffect(() => {
+        document.body.classList.add("other-page")
+
+        return () => {
+            document.body.classList.remove('other-page')
+        }
+    }, [])
+
     return (
         <div className="exchange-content">
             <Header />
