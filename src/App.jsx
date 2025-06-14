@@ -5,6 +5,7 @@ const HomePage = lazy(() => import("./pages/HomePage"))
 const ExchangePage = lazy(() => import("./pages/ExchangePage"))
 const TaskPage = lazy(() => import("./pages/TaskPage"))
 const GiftPage = lazy(() => import("./pages/GiftPage"))
+const StatsPage = lazy(() => import('./pages/StatsPage'))
 
 const App = () => {
 
@@ -12,10 +13,11 @@ const App = () => {
     <BrowserRouter>
       <Suspense fallback={<div>Loading...</div>}>
         <Routes>
+          <Route path="/gift" element={<GiftPage />} />
+          <Route path="/tasks" element={<TaskPage />}/>
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />}/>
-          <Route path="/tasks" element={<TaskPage />}/>
-          <Route path="/gift" element={<GiftPage />} />
+          <Route path="/stats" element={<StatsPage />}/>
         </Routes>
       </Suspense>
     </BrowserRouter>

@@ -46,14 +46,14 @@ const RouterIcon = () => {
       defaultIcon: mbCount === 0 ? empty_stats : stats,
       selectedIcon: selected_stats,
       label: "STATS",
-      path: null,
-      onClick: () => console.log('stats')
+      path: '/stats',
+      onClick: () => navigate('/stats')
     },
     {
       defaultIcon: friends,
       selectedIcon: friends,
       label: "FRIENDS",
-      path: "/friends",
+      path: null,
       onClick: () => console.log('friends')
     },
   ];

@@ -40,7 +40,7 @@ const ProgressBar = () => {
             <span>{level + 1} LVL</span>
         </div>
         <div className="target">
-            <p>{`${progress}/${points}`}</p>
+            <p>{`${progress.toLocaleString('ru-RU')} / ${points.toLocaleString('ru-RU')}`}</p>
             <img src={click} alt="" />
         </div>
         </div>
