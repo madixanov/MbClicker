@@ -9,7 +9,6 @@ const FriendsList = () => {
         <div className="friends-list">
             {friends.map(
                 (friend, index) => {
-
                     const bgColor = bgColors[index % bgColors.length]
 
                     return (
@@ -17,7 +16,7 @@ const FriendsList = () => {
                         <div className="friend-avatar">
                             <img src={friend.img} alt={friend.name} className="friend-photo"/>
                             <img src={friend.role === 'premium' ? premium : tg} alt={friend.role} className="friend-role-icon" />
-                            <div className="friend-number" style={{ backgroundColor: bgColor}}>{index}</div>
+                            <div className="friend-number" style={{ backgroundColor: bgColor}}>{index+1}</div>
                         </div>
                         <div className="friend-info">
                             <p>{friend.name}</p>
