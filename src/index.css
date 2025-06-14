@@ -804,7 +804,7 @@ form > div {
 .stats-main {
   display: flex;
   flex-direction: column;
-  justify-content: start;
+  justify-content: center;
   align-items: start;
   min-height: 100vh;
   padding: 2rem;
@@ -1204,6 +1204,10 @@ form > div {
     margin-top: -80px;
     scale: 0.8;
   }
+
+  .tab-row {
+    width: 400px;
+  }
 }
 
 @media (max-width: 400px) {
@@ -1216,6 +1220,13 @@ form > div {
     scale: 0.7;
     margin-top: -90px;
   }
+
+  .tab-row {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+  }
+
 }
 
 @media (hover: none) {
