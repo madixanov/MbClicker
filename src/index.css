@@ -1209,6 +1209,10 @@ form > div {
     width: 400px;
     padding-left: 1.3rem;
   }
+
+  .active-tab, .non-active-tab {
+    height: 40px;
+  }
 }
 
 @media (max-width: 400px) {
