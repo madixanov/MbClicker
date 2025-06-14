@@ -10,7 +10,7 @@ const Avatar = () => {
 
     const handleClick = (e) => {
         increment();
-        
+
         const container = e.currentTarget.getBoundingClientRect();
         const x = e.clientX - container.left;
         const y = e.clientY - container.top;
@@ -20,7 +20,6 @@ const Avatar = () => {
             x,
             y,
             text: `+ ${mbIncrement}`,
-
             xVariation: (Math.random() - 0.5) * 40,
             scale: 0.8 + Math.random() * 0.4
         };
@@ -61,8 +60,8 @@ const Avatar = () => {
                         key={popup.id}
                         initial={{ 
                             opacity: 1,
-                            y: 0,
                             x: popup.x,
+                            y: popup.y,
                             rotate: 0,
                             scale: popup.scale,
                             position: 'absolute',
@@ -73,9 +72,9 @@ const Avatar = () => {
                         }}
                         animate={{ 
                             opacity: [1, 0.8, 0],
-                            y: -60,
+                            y: popup.y - 60,
                             x: popup.x + popup.xVariation,
-                            rotate: popup.rotation,
+                            rotate: 0
                         }}
                         transition={{ 
                             duration: 1.2,
