@@ -21,7 +21,17 @@
 
 ## 📂 Folder Structure
 
-<pre> ```bash src/ ├── assets/ # Icons and images ├── pages/ # Route-based page components ├── App.jsx # Main routing config ├── main.jsx # Entry point ├── layout/ # Page layouts for readability and reuse ├── components/ # UI components split by page ├── store/ # Global state management (e.g. game state, theme, etc.) └── index.css # Global styles ``` </pre>
+<pre> 
+  src/ 
+  ├── assets/ # Icons and images
+  ├── pages/ # Route-based page components
+  ├── App.jsx # Main routing config
+  ├── main.jsx # Entry point
+  ├── layout/ # Page layouts for readability and reuse
+  ├── components/ # UI components split by page 
+  ├── store/ # Global state management (e.g. game state, theme, etc.)
+  └── index.css # Global styles 
+</pre>
 
 ---
 
