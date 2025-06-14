@@ -808,7 +808,6 @@ form > div {
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  padding-left: 2rem;
 }
 
 .stats-main h1 {
@@ -1208,6 +1207,7 @@ form > div {
 
   .tab-row {
     width: 400px;
+    padding-left: 1.3rem;
   }
 }
 
