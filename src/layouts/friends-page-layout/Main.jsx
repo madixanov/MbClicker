@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useRef } from "react";
 import tg from '../../assets/icons/tg.png';
 import premium from '../../assets/icons/premium.png';
 import bonus from '../../assets/icons/bonus.png';
@@ -7,13 +7,6 @@ import FriendsList from "./UI/FriendsList";
 const Main = () => {
     const [btnName, setBtnName] = useState('COPY');
     const invitedRef = useRef(null);
-
-    useEffect(() => {
-        // Прокрутка до "INVITED FRIENDS"
-        if (invitedRef.current) {
-            invitedRef.current.scrollIntoView({ behavior: "smooth" });
-        }
-    }, []);
 
     return (
         <main className="friends-main">
