@@ -692,6 +692,19 @@ form > div {
   height: 600px;
 }
 
+.gift-main {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  background-color: #000;
+  margin-top: -60px;
+  width: 100%;
+  max-height: 100vh;
+  gap: 10px;
+  width: 400px;
+  height: 600px;
+}
+
 .active-tab {
   width: 195px;
   height: 29px;
@@ -797,8 +810,14 @@ form > div {
     padding: 5px;
   }
 
+  .gift-main {
+    scale: 0.93;
+    margin-top: -200px;
+  }
+
   .task-main {
     scale: 0.93;
+    margin-top: -170px;
   }
 }
 
@@ -821,9 +840,14 @@ form > div {
     height: 100%;
   }
 
-  .task-main {
+  .gift-main {
     scale: 0.9;
     margin-top: -200px;
+  }
+
+  .task-main {
+    scale: 0.9;
+    margin-top: -170px;
   }
 
 }
@@ -836,9 +860,26 @@ form > div {
     padding: 0;
   }
 
-  .task-main {
-    margin-top: -250px;
+  .gift-main {
+    margin-top: -200px;
     scale: 0.8;
+  }
+
+  .task-main {
+    margin-top: -180px;
+    scale: 0.8;
+  }
+}
+
+@media (max-width: 400px) {
+  .gift-main {
+    scale: 0.7;
+    margin-top: -190px;
+  }
+
+  .task-main {
+    scale: 0.7;
+    margin-top: -140px;
   }
 }
 
