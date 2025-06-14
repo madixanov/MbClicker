@@ -705,6 +705,12 @@ form > div {
   height: 600px;
 }
 
+.tab-row {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .active-tab {
   width: 180px;
   height: 29px;
@@ -1205,11 +1211,6 @@ form > div {
     scale: 0.8;
   }
 
-  .tab-row {
-    width: 400px;
-    padding-left: 1.3rem;
-  }
-
   .active-tab, .non-active-tab {
     height: 40px;
   }
@@ -1224,12 +1225,6 @@ form > div {
   .task-main {
     scale: 0.7;
     margin-top: -90px;
-  }
-
-  .tab-row {
-    display: flex;
-    justify-content: center;
-    width: 100%;
   }
 
 }
