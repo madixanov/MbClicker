@@ -16,7 +16,6 @@ const MbCounter = () => {
         navigate('/exchange');
     }, [navigate]);
 
-    // Анимация при изменении mbCountAll
     useEffect(() => {
         const controls = animate(animatedCount, mbCountAll, {
             duration: 1,
