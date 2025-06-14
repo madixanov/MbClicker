@@ -6,6 +6,7 @@ const ExchangePage = lazy(() => import("./pages/ExchangePage"))
 const TaskPage = lazy(() => import("./pages/TaskPage"))
 const GiftPage = lazy(() => import("./pages/GiftPage"))
 const StatsPage = lazy(() => import('./pages/StatsPage'))
+const FriendsPage = lazy(() => import('./pages/FriendsPage'))
 
 const App = () => {
 
@@ -18,6 +19,7 @@ const App = () => {
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />}/>
           <Route path="/stats" element={<StatsPage />}/>
+          <Route path="/friends" element={<FriendsPage />}/>
         </Routes>
       </Suspense>
     </BrowserRouter>

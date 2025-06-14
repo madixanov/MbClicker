@@ -14,6 +14,7 @@ import selected_home from "../../assets/icons/selected-icons/selected-home.png";
 import selected_gift from "../../assets/icons/selected-icons/selected-gift.png";
 import selected_stats from "../../assets/icons/selected-icons/selected-stats.png";
 import selected_task from "../../assets/icons/selected-icons/selected-task.png";
+import selected_friends from "../../assets/icons/selected-icons/selected-friends.png";
 
 const RouterIcon = () => {
   const mbCount = useMbStore((state) => state.mbCount);
@@ -51,10 +52,10 @@ const RouterIcon = () => {
     },
     {
       defaultIcon: friends,
-      selectedIcon: friends,
+      selectedIcon: selected_friends,
       label: "FRIENDS",
-      path: null,
-      onClick: () => console.log('friends')
+      path: '/friends',
+      onClick: () => navigate('/friebds')
     },
   ];
 
