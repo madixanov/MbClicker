@@ -818,6 +818,14 @@ form > div {
   .task-main {
     scale: 0.9;
   }
+
+  .task-title {
+    margin-top: -100px;
+  }
+
+  .gift-title {
+    margin-top: -90px;
+  }
 }
 
 @media (max-width: 480px) {
