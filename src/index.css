@@ -806,9 +806,9 @@ form > div {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: start;
+  align-items: center;
   min-height: 100vh;
-  padding: 2rem;
+  padding-left: 2rem;
 }
 
 .stats-main h1 {
