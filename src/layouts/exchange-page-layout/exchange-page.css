@@ -10,7 +10,8 @@
 .exchange-main {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  justify-content: start;
+  align-items: center;
   width: 100vw;
   width: 100%;
 }
@@ -18,6 +19,7 @@
 .title {
   display: flex;
   flex-direction: column;
+  text-align: center;
 }
 
 .title-h1 {
@@ -167,6 +169,7 @@ form > div {
 }
 
 .instruction-title {
+  text-align: center;
   display: flex;
   align-items: center;
   gap: 10px;
@@ -185,7 +188,7 @@ form > div {
   flex-direction: column;
   gap: 5px;
   margin: 0;
-  padding-left: 60px;
+  padding-left: 1px;
 }
 
 .instruction-list > li {
@@ -203,4 +206,29 @@ form > div {
   border-radius: 50%;
   font-size: 8px;
   font-weight: 500;
+}
+
+
+@media (max-width: 480px) {
+  .exchange-main {
+    align-items: unset;
+  }
+
+  .title-h1 {
+    text-align: start;
+    padding-left: 34px;
+  }
+
+  .instruction-title {
+    text-align: start;
+  }
+
+  .instruction-list {
+    padding-left: 60px;
+  }
+
+  .title-p {
+    text-align: start;
+    padding-left: 34px;
+  }
 }
