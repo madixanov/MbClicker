@@ -90,19 +90,17 @@
   color: black;
 }
 
-@media (max-width: 768px) {
-  .gift-main {
+@media (max-width: 480px) {
+    .gift-main {
     align-items: start;
   }
 
-  .gift-title {
+    .gift-title {
     width: 277px;
     text-align: unset;
     padding-left: 34px;
   }
-}
 
-@media (max-width: 480px) {
   .task-container {
     justify-content: space-between;
     gap: 0;
