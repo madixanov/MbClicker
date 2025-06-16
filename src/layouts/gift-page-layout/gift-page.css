@@ -1,18 +1,17 @@
 .gift-main {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
+  align-items: center;
   min-height: 133vh;
   width: 100vw;
   width: 100%;
 }
 
 .gift-title {
+  text-align: center;
   margin: 0;
   font-size: 28px;
   font-weight: 700;
-  width: 277px;
-  padding-left: 34px;
   padding-top: 27px;
   padding-bottom: 16px;
 }
@@ -29,7 +28,8 @@
 .task-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 60px;
   padding: 5px 10px;
   align-items: center;
   height: 50px;
@@ -59,6 +59,7 @@
 .task-name {
   font-size: 11px;
   font-weight: 400;
+  width: 175px;
 }
 
 .task-prize {
@@ -87,4 +88,23 @@
 .completed {
   background-color: #0BFF54;
   color: black;
+}
+
+@media (max-width: 768px) {
+  .gift-main {
+    align-items: start;
+  }
+
+  .gift-title {
+    width: 277px;
+    text-align: unset;
+    padding-left: 34px;
+  }
+}
+
+@media (max-width: 480px) {
+  .task-container {
+    justify-content: space-between;
+    gap: 0;
+  }
 }
