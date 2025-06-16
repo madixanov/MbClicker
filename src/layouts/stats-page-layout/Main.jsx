@@ -1,6 +1,7 @@
 import { useState } from "react"
 import DashBoard from "./UI/DashBoard"
 import Leaders from "./UI/LeadersList"
+import './stats-page.css'
 
 const Main = () => {
     const [ activeTab, setActiveTabs ] = useState('daily')

@@ -1,5 +1,6 @@
 import tasks from "./task-list"
 import TabContent from './UI/TabContent'
+import './gift-page.css'
 
 const Main = () => {
     return (

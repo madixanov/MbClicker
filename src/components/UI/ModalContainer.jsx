@@ -1,4 +1,5 @@
 import { IoCloseOutline } from "react-icons/io5";
+import './modal-container.css'
 
 
 const ModalContainer = ({ title, content, closeModal }) => {

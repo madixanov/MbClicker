@@ -4,6 +4,8 @@ import premium from '../../assets/icons/premium.png';
 import bonus from '../../assets/icons/bonus.png';
 import FriendsList from "./UI/FriendsList";
 
+import './friends-page.css'
+
 const Main = () => {
     const [btnName, setBtnName] = useState('COPY');
     const invitedRef = useRef(null);

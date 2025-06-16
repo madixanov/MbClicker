@@ -1,6 +1,7 @@
 import useModalStore from "../store/modal-store";
 import dark from "../assets/icons/dark.png";
 import light from "../assets/icons/light.png"
+import './header.css'
 
 const Header = () => {
     const setModalDay = useModalStore((state) => state.setModalDay);
