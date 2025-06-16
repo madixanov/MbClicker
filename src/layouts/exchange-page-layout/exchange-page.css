@@ -124,6 +124,7 @@ div.exchange img {
 
 .styled-input {
   text-align: center;
+  font-size: 16px;
   width: 300px;
   padding: 8px 10px;
   background: #000;
@@ -248,5 +249,17 @@ div.exchange img {
   .title-p {
     text-align: start;
     padding-left: 34px;
+  }
+
+  .styled-input {
+    width: 280px;
+  }
+
+  .input-line {
+    width: 280px;
+  }
+
+  .input-wrapper {
+    width: 290px;
   }
 }
