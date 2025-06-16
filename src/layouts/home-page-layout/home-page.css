@@ -134,17 +134,13 @@ div.avatar-container {
   flex-direction: column;
   justify-content: flex-end;
   align-items: center;
-  margin-top: 40px;
-  
   z-index: 1;
   width: 100%;
   max-width: 250px;
   height: 500px;
   aspect-ratio: 3 / 5;
-
   padding: 10px;
   box-sizing: border-box;
-
   user-select: none;
   -webkit-user-select: none;
   -moz-user-select: none;
@@ -196,6 +192,7 @@ div.avatar-container img:active {
 @media (max-width: 780px) {
   .avatar-container {
     justify-content: flex-end;
+    margin-bottom: 40px;
   }
 }
 
