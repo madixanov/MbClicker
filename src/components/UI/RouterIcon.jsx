@@ -41,7 +41,9 @@ const RouterIcon = () => {
       selectedIcon: selected_home,
       label: "HOME",
       path: "/",
-      onClick: () => navigate("/")
+      onClick: () => {
+        console.log('HOME')
+        navigate("/")}
     },
     {
       defaultIcon: mbCount === 0 ? empty_stats : stats,
@@ -95,12 +97,25 @@ const RouterIcon = () => {
   }, [location.pathname]);
 
   useEffect(() => {
-    if (animationComplete && pendingNavigationPath) {
+    if (
+      animationComplete &&
+      pendingNavigationPath &&
+      location.pathname !== pendingNavigationPath
+    ) {
       navigate(pendingNavigationPath);
+    }
+
+    if (animationComplete) {
       setPendingNavigationPath(null);
       setAnimationComplete(false);
     }
-  }, [animationComplete, pendingNavigationPath, navigate]);
+
+    if (location.pathname === '/exchange' && pendingNavigationPath === '/') {
+      navigate('/')
+    }
+  }, [animationComplete, pendingNavigationPath, navigate, location.pathname]);
+
+
 
   return (
     <>
@@ -126,14 +141,9 @@ const RouterIcon = () => {
             key={index}
             className="icon-wrapper"
             onClick={() => {
-              if (item.path) {
-                setSelectedIndex(index);
-                setPendingNavigationPath(item.path);
-                setAnimationComplete(false);
-              } else {
-                // если путь не указан — просто лог или иное поведение
-                console.log(`${item.label} clicked`);
-              }
+              setSelectedIndex(index);
+              setPendingNavigationPath(item.path); 
+              setAnimationComplete(false); 
             }}
             ref={(el) => (iconRefs.current[index] = el)}
           >
