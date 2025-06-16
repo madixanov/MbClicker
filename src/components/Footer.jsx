@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import useModalStore from "../store/modal-store";
+import './footer.css'
 
 const RouterIcon = lazy(() => import("./UI/RouterIcon"));
 const ModalContainer = lazy(() => import("./UI/ModalContainer"));

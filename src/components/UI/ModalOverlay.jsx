@@ -1,5 +1,6 @@
 import React from "react";
 import useModalStore from "../../store/modal-store";
+import './modal-container.css'
 
 
 const ModalOverlay = () => {

@@ -1,4 +1,5 @@
 import { lazy } from "react"
+import './exchange-page.css'
 
 const Title = lazy(() => import('./UI/Title'))
 const WithdrawContainer = lazy(() => import('./UI/WithdrawContainer'))

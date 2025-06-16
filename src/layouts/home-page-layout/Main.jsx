@@ -1,4 +1,5 @@
 import { lazy } from "react";
+import './home-page.css'
 
 const ProgressBar = lazy(() => import("./UI/ProgressBar"));
 const MbCounter = lazy(() => import("./UI/MbCounter"));
