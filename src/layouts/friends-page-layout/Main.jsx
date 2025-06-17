@@ -28,7 +28,6 @@ const Main = () => {
                         <img src={tg} alt="" />
                         <div className="i-bonus">
                             <p>+ 10 000</p>
-                            <img src={bonus} alt="" />
                         </div>
                         <p>FOR YOU AND YOUR FRIEND</p>
                         <p className="p-regular">REGULAR</p>
@@ -37,7 +36,6 @@ const Main = () => {
                         <img src={premium} alt="" />
                         <div className="i-bonus">
                             <p>+ 30 000</p>
-                            <img src={bonus} alt="" />
                         </div>
                         <p>FOR YOU AND YOUR FRIEND</p>
                         <p className="p-prem">PREMIUM</p>
