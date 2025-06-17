@@ -1,10 +1,15 @@
-.task-main {
+.task-page {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding-top: 54px;
+  padding-bottom: 150px;
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  min-height: 133vh;
-  width: 100vw;
-  width: 100%;
+  overflow-y: auto;
+  scroll-behavior: smooth;
 }
 
 .tabs {
@@ -99,6 +104,9 @@
   align-items: center;
   width: 100%;
   justify-content: center;
+  position: sticky;
+  top: 0;
+  z-index: 100;
 }
 
 .active-tab {

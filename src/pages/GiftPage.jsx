@@ -14,11 +14,11 @@ const GiftPage = () => {
     }, [])
 
     return (
-        <>
+        <div className="gift-page">
             <Header />
             <Main />
             <Footer />
-        </>
+        </div>
     )
 }
 
