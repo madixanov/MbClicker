@@ -3,18 +3,18 @@ import { motion } from "framer-motion";
 import useMbStore from "../../store/mb-store";
 import { useNavigate, useLocation } from "react-router-dom";
 
-import gift from "../../assets/icons/gift.png";
-import task from "../../assets/icons/task.png";
-import empty_stats from "../../assets/icons/empty_stats.png";
-import home from "../../assets/icons/home.png";
-import stats from "../../assets/icons/stats.png";
-import friends from "../../assets/icons/friends.png";
+import gift from "../../assets/icons/gift.svg";
+import task from "../../assets/icons/tasks.svg";
+import empty_stats from "../../assets/icons/empty_stats.svg";
+import home from "../../assets/icons/home.svg";
+import stats from "../../assets/icons/stats.svg";
+import friends from "../../assets/icons/friends.svg";
 
-import selected_home from "../../assets/icons/selected-icons/selected-home.png";
-import selected_gift from "../../assets/icons/selected-icons/selected-gift.png";
-import selected_stats from "../../assets/icons/selected-icons/selected-stats.png";
-import selected_task from "../../assets/icons/selected-icons/selected-task.png";
-import selected_friends from "../../assets/icons/selected-icons/selected-friends.png";
+import selected_home from "../../assets/icons/selected-icons/selected-home.svg";
+import selected_gift from "../../assets/icons/selected-icons/selected-gift.svg";
+import selected_stats from "../../assets/icons/selected-icons/selected-stats.svg";
+import selected_task from "../../assets/icons/selected-icons/selected-task.svg";
+import selected_friends from "../../assets/icons/selected-icons/selected-friends.svg";
 
 const RouterIcon = () => {
   const mbCount = useMbStore((state) => state.mbCount);

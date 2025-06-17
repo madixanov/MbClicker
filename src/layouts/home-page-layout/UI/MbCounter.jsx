@@ -1,5 +1,6 @@
-import logo from "../../../assets/icons/logo.png"
-import exchange from "../../../assets/icons/exchange.png"
+import logo from "../../../assets/icons/logo.svg"
+import exchange from "../../../assets/icons/exchange.svg"
+import exchange1 from "../../../assets/icons/exchange1.svg"
 import useMbStore from "../../../store/mb-store.js"
 
 import { useNavigate } from "react-router"
@@ -36,6 +37,7 @@ const MbCounter = () => {
                 <h1>{animatedCount.toLocaleString('ru-RU')}</h1>
                 <div className="exchange" onClick={handleClick}>
                     <img src={exchange} alt="" />
+                    <img src={exchange1} alt="" />
                 </div>
             </div>
             <p>MEGABYTE</p>

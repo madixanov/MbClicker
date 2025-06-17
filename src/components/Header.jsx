@@ -1,6 +1,6 @@
 import useModalStore from "../store/modal-store";
-import dark from "../assets/icons/dark.png";
-import light from "../assets/icons/light.png"
+import dark from "../assets/icons/dark.svg";
+import light from "../assets/icons/light.svg"
 import './header.css'
 
 const Header = () => {

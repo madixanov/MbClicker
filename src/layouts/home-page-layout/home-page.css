@@ -104,8 +104,8 @@ div.logo {
 }
 
 div.logo img {
-  width: 80%;
-  height: 80%;
+  width: 20px;
+  height: 20px;
   object-fit: contain;
 }
 

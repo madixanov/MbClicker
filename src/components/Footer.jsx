@@ -1,4 +1,4 @@
-import { lazy } from "react";
+import { lazy, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import useModalStore from "../store/modal-store";
 import './footer.css'
@@ -18,13 +18,29 @@ const Footer = () => {
     const isModalDayOpen = useModalStore(state => state.isModalDayOpen);
     const isModalThemeOpen = useModalStore(state => state.isModalThemeOpen);
     const setModalDay = useModalStore(state => state.setModalDay);
-    const setModalTheme = useModalStore(state => state.setModalTheme);
+    const setModalTheme = useModalStore(state => state.setModalTheme)
+
+    useEffect(() => {
+        const footer = document.querySelector('.footer-container');
+        const initialHeight = window.innerHeight;
+
+        const handleResize = () => {
+            if (window.innerHeight < initialHeight - 100) {
+            footer.style.display = 'none';
+            } else {
+            footer.style.display = 'flex';
+            }
+        };
+
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
 
     return (
         <div className="footer-container">
         <RouterIcon />
         <ModalOverlay />
-
         <AnimatePresence>
             {isModalDayOpen && (
             <motion.div

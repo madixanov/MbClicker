@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import useMbStore from "../../../store/mb-store";
-import click from "../../../assets/icons/click.png";
+import click from "../../../assets/icons/click.svg";
 import useLvlStore from "../../../store/lvl-store";
 
 const ProgressBar = () => {
