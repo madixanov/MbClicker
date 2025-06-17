@@ -1,16 +1,21 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import tg from '../../assets/icons/tg.png';
 import premium from '../../assets/icons/premium.png';
 import FriendsList from "./UI/FriendsList";
 import './friends-page.css';
 
 const Main = () => {
-    const [btnName, setBtnName] = useState('COPY');
+    const [ copied, setCopied ] = useState(false);
+    const inputRef = useRef(null);
 
-    const handleCopyClick = () => {
-        setBtnName("COPIED");
-        setTimeout(() => setBtnName("COPY"), 2000);
-        // Здесь можно добавить логику копирования ссылки
+    const handleCopyClick = async () => {
+        try {
+            await navigator.clipboard.writeText(inputRef.current.value);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch (err) {
+            console.error('Ошибка при копировании.', err)
+        }
     };
 
     return (
@@ -20,6 +25,7 @@ const Main = () => {
                 <h2>ТВОЯ ССЫЛКА</h2>
                 <div className="input-container">
                     <input 
+                        ref={inputRef}
                         type="text" 
                         value={'LINK'} 
                         readOnly 
@@ -31,7 +37,7 @@ const Main = () => {
                             className="submit-btn" 
                             onClick={handleCopyClick}
                         >
-                            {btnName}
+                            {copied ? 'COPIED' : 'COPY'}
                         </button>
                     </div>
                 </div>

@@ -26,14 +26,14 @@
   flex-direction: column;
   width: 100%;
   align-items: center;
+  justify-content: center;
+  align-items: center;
 }
 
 .link-container h1 {
   margin: 0;
   font-size: 28px;
   font-weight: 700;
-  align-self: flex-start;
-  padding-left: 34px;
 }
 
 .link-container h2 {
@@ -43,8 +43,6 @@
   margin-left: 5px;
   margin-top: 13px;
   margin-bottom: 14px;
-  padding-left: 34px;
-  align-self: flex-start;
 }
 
 .input-container {
@@ -317,4 +315,16 @@
 .friends-main::-webkit-scrollbar-thumb {
   background: #b51eff;
   border-radius: 999px;
+}
+
+@media (max-width: 480px) {
+  .link-container h1 {
+    align-self: flex-start;
+    padding-left: 34px;
+  }
+
+  .link-container h2 {
+    align-self: flex-start;
+    padding-left: 34px;
+  }
 }
