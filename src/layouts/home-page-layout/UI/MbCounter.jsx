@@ -36,8 +36,8 @@ const MbCounter = () => {
                 </div>
                 <h1>{animatedCount.toLocaleString('ru-RU')}</h1>
                 <div className="exchange" onClick={handleClick}>
-                    <img src={exchange} alt="" />
-                    <img src={exchange1} alt="" />
+                    <img src={exchange} alt="exchange-icon" className="exchane-icon"/>
+                    <img src={exchange1} alt="exchange-icon" className="exchane-icon" />
                 </div>
             </div>
             <p>MEGABYTE</p>

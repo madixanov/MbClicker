@@ -10,6 +10,7 @@ header {
 }
 
 div.header-container {
+  height: 56px;
   padding: 11px 22px;
   display: flex;
   align-items: center;

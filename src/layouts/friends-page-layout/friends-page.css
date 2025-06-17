@@ -1,19 +1,28 @@
+.friends-page {
+  position: fixed;
+  top: 54px;
+  left: 0;
+  right: 0;
+  bottom: 140px;
+  overflow-y: auto; /* Теперь скролл будет здесь */
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
 
 .friends-main {
+  min-height: calc(100vh - 200px); /* Важно для скролла */
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
-  min-height: 133vh;
-  width: 100vw;
   width: 100%;
+  align-items: center;
+  padding-bottom: 40px; /* Добавляем отступ снизу */
 }
 
 .link-container {
   margin-top: 40px;
   display: flex;
-  flex-direction: inherit;
+  flex-direction: column;
   width: 100%;
-  justify-content: center;
   align-items: center;
 }
 
@@ -140,22 +149,26 @@
   color: rgba(217, 255, 0, 0.57)
 }
 
-.friends-container {
-  height: calc(100vh-105px);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
+.friend-title {
+  font-size: 1.2rem;
+  color: white;
+  text-align: center;
+  padding: 15px 0;
+  position: sticky;
+  top: 0;
+  background: #000;
+  z-index: 8;
+  margin: 0;
+  width: 100%;
+  border-bottom: 1px solid rgba(186, 186, 186, 0.44);
 }
 
 .friends-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  justify-content: center;
-  align-items: center;
-  width: 308px;
-  border-top: 1px solid rgba(255, 255, 255, 0.32);
+  width: 100%;
+  max-width: 308px;
   padding-top: 10px;
 }
 
@@ -164,7 +177,7 @@
   gap: 20px;
   justify-content: space-between;
   align-items: center;
-  width: 308px;
+  width: 100%;
 }
 
 .friend-avatar {
@@ -279,22 +292,6 @@
   font-size: 8px;
 }
 
-.friends-container {
-  margin-top: 40px;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  max-height: 500px; /* ограничить общую высоту */
-}
-
-.friends-list-scroll {
-  max-height: 400px;
-  overflow-y: auto;
-  padding-right: 4px;
-  scrollbar-width: thin;
-  scrollbar-color: #b51eff transparent;
-}
-
 .submit-btn {
   width: 114.95px;
   height: 28px;
@@ -304,4 +301,18 @@
   font-size: 12px;
   font-weight: 600;
   color: black;
+}
+
+/* Стили для скролла */
+.friends-main::-webkit-scrollbar {
+  width: 3px;
+}
+
+.friends-main::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.friends-main::-webkit-scrollbar-thumb {
+  background: #b51eff;
+  border-radius: 999px;
 }

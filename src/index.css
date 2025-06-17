@@ -15,7 +15,6 @@ body {
   background: radial-gradient(circle, rgba(255,255,255,0.6) 0%, black 35%, #0C0B0B 100%);
   background-repeat: no-repeat;
   padding-top: 50px;
-  min-height: 100vh;
   overflow: hidden;
 }
 
@@ -23,5 +22,4 @@ body.other-page {
   background: none;
   background-color: #000;
   display: block;
-  overflow: scroll;
 }

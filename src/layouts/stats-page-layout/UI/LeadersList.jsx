@@ -10,12 +10,14 @@ const LeadersList = () => {
 
                 return (
                     <div key={player.name} className="player-container">
-                        <p className="placement">{placement}</p>
-                        <div className="player-info">
-                            <div className="leaders-photo-container">
-                                <img src={player.img} alt={player.name} />
+                        <div className="placement-player">
+                            <p className="placement">{placement}</p>
+                            <div className="player-info">
+                                <div className="leaders-photo-container">
+                                    <img src={player.img} alt={player.name} />
+                                </div>
+                                <p>{player.name}</p>
                             </div>
-                            <p>{player.name}</p>
                         </div>
                         <p className="balance">{player.balance.toLocaleString('ru-RU')}</p>
                         <p className="exchanges">{player.exchanges.toLocaleString('ru-RU')}</p>
