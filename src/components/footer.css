@@ -40,10 +40,14 @@
 
 .labels-container {
   width: 100%;
-  max-width: 304px;
   display: flex;
   justify-content: space-around;
   padding: 0 10px;
+}
+
+.labels-container p{
+  text-wrap: wrap;
+  width: px;
 }
 
 .icon-wrapper {

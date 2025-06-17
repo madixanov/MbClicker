@@ -12,11 +12,11 @@ const Header = () => {
             <div className="header-container">
                 <div className="time-container" onClick={() => setModalDay(true)}>
                     <div className="div-day">1 DAY</div>
-                    <p>TIME</p>
+                    <p>ВРЕМЯ</p>
                 </div>
                 <div className="name-container">
                     <div>WEIXSE</div>
-                    <p>YOUR NAME</p>
+                    <p>ВАШЕ ИМЯ</p>
                 </div>
                 <div className="theme-container" onClick={() => setModalTheme(true)}>
                     <div>
@@ -27,7 +27,7 @@ const Header = () => {
                             <img src={light} alt="Light Mode" className="" />
                         </div>
                     </div>
-                    <p>THEME</p>
+                    <p>ТЕМА</p>
                 </div>
             </div>
         </header>

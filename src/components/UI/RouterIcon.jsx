@@ -25,21 +25,21 @@ const RouterIcon = () => {
     {
       defaultIcon: gift,
       selectedIcon: selected_gift,
-      label: "GIFT",
+      label: "БОНУСЫ",
       path: "/gift",
       onClick: () => navigate("/gift")
     },
     {
       defaultIcon: task,
       selectedIcon: selected_task,
-      label: "TASK",
+      label: "ЗАДАНИЯ",
       path: "/tasks",
       onClick: () => navigate("/tasks")
     },
     {
       defaultIcon: home,
       selectedIcon: selected_home,
-      label: "HOME",
+      label: "ГЛАВНАЯ",
       path: "/",
       onClick: () => {
         console.log('HOME')
@@ -48,14 +48,14 @@ const RouterIcon = () => {
     {
       defaultIcon: mbCount === 0 ? empty_stats : stats,
       selectedIcon: selected_stats,
-      label: "STATS",
+      label: "СТАТИС\nТИКА",
       path: '/stats',
       onClick: () => navigate('/stats')
     },
     {
       defaultIcon: friends,
       selectedIcon: selected_friends,
-      label: "FRIENDS",
+      label: "ДРУЗЬЯ",
       path: '/friends',
       onClick: () => navigate('/friebds')
     },

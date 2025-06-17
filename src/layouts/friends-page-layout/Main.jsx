@@ -37,7 +37,7 @@ const Main = () => {
                             className="submit-btn" 
                             onClick={handleCopyClick}
                         >
-                            {copied ? 'COPIED' : 'COPY'}
+                            {copied ? 'СКОПИРОВАНО' : 'СКОПИРОВАТЬ'}
                         </button>
                     </div>
                 </div>
@@ -48,22 +48,22 @@ const Main = () => {
                         <div className="i-bonus">
                             <p>+ 10 000</p>
                         </div>
-                        <p>FOR YOU AND YOUR FRIEND</p>
-                        <p className="p-regular">REGULAR</p>
+                        <p>ВАМ И ВАШЕМУ ДРУГУ</p>
+                        <p className="p-regular">ОБЫЧНЫЙ</p>
                     </div>
                     <div className="premium-bonus">
                         <img src={premium} alt="Premium" />
                         <div className="i-bonus">
                             <p>+ 30 000</p>
                         </div>
-                        <p>FOR YOU AND YOUR FRIEND</p>
-                        <p className="p-prem">PREMIUM</p>
+                        <p>ВАМ И ВАШЕМУ ДРУГУ</p>
+                        <p className="p-prem">ПРЕМИУМ</p>
                     </div>
                 </div>
             </div>
 
             <div className="friends-container">
-                <p className="friend-title">INVITED FRIENDS</p>
+                <p className="friend-title">ПРИГЛАШЕННЫЕ ДРУЗЬЯ</p>
                 <div 
                     className="friends-list-scroll"
                 >

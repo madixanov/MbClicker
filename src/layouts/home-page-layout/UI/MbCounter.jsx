@@ -40,7 +40,7 @@ const MbCounter = () => {
                     <img src={exchange1} alt="exchange-icon" className="exchane-icon" />
                 </div>
             </div>
-            <p>MEGABYTE</p>
+            <p>МЕГАБАЙТ</p>
         </div>
     );
 };
