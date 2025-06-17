@@ -48,7 +48,7 @@ const RouterIcon = () => {
     {
       defaultIcon: mbCount === 0 ? empty_stats : stats,
       selectedIcon: selected_stats,
-      label: "СТАТИС\nТИКА",
+      label: "СТАТА",
       path: '/stats',
       onClick: () => navigate('/stats')
     },
