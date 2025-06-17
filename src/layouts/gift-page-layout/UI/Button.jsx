@@ -17,7 +17,7 @@ const Button = () => {
             onClick={handleClick}
             className={`task-btn ${isActive ? "active-btn" : ""} ${isCompleted ? "completed" : ""}`}
         >
-            {isCompleted ? "ACCEPT" : isActive ? "CHECK" : "PERFORM"}
+            {isCompleted ? "ПОЛУЧИТЬ" : isActive ? "ПРОВЕРКА" : "ВЫПОЛНИТЬ"}
         </button>
     );
 };
