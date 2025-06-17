@@ -23,8 +23,8 @@ const DashBoard = () => {
                             <img src={player.img} alt={player.name} />
                         </div>
                         <h2>{player.name}</h2>
-                        <p>BALANCE: <span>{player.balance}</span></p>
-                        <p>EXCHANGES: <span>{player.exchanges}</span></p>
+                        <p>BALANCE: <span>{player.balance.toLocaleString('ru-RU')}</span></p>
+                        <p>EXCHANGES: <span>{player.exchanges.toLocaleString('ru-RU')}</span></p>
                     </div>
                 );
             })}
