@@ -1,12 +1,14 @@
 .friends-page {
   position: fixed;
-  top: 54px;
+  top: 0;
   left: 0;
   right: 0;
-  bottom: 140px;
+  bottom: 0;
   overflow-y: auto; /* Теперь скролл будет здесь */
   scroll-behavior: smooth;
   -webkit-overflow-scrolling: touch;
+  padding-top: 54px;
+  padding-bottom: 120px;
 }
 
 .friends-main {
