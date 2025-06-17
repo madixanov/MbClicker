@@ -1,13 +1,16 @@
 .stats-page {
   position: fixed;
-  top: 54px; /* Отступ для header */
+  top: 0px;
   left: 0;
   right: 0;
-  bottom: 120px; /* Отступ для navbar */
+  bottom: 0px;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
   width: 100%;
+  background-color: transparent;
+  padding-top: 54px;
+  padding-bottom: 120px;
 }
 
 .stats-main h1 {

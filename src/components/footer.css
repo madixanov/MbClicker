@@ -18,7 +18,7 @@
   align-items: center;
   gap: 20px;
   border: none;
-  z-index: 800;
+  z-index: 1000;
 }
 
 
