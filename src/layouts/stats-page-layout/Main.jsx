@@ -30,12 +30,12 @@ const Main = () => {
             <div className="leaders-container">
                 <div className="leaders-header">
                     <div className="p-row-leaders">
-                        <p>TRADER</p>
-                        <p>BALANCE</p>
-                        <p>EXCHANGES</p>
+                        <p>ТРЕЙДЕР</p>
+                        <p>БАЛАНС</p>
+                        <p>ОБМЕНЫ</p>
                     </div>
                     <div className="your-placement-badge">
-                        YOU ARE #3 IN TOP
+                        ТЫ НА #3 В ТОПЕ
                     </div>
                 </div>
 
