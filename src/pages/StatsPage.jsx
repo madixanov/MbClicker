@@ -1,4 +1,5 @@
 import { lazy, useEffect } from "react";
+import '../layouts/stats-page-layout/stats-page.css'
 
 const Header = lazy(() => import('../components/Header'))
 const Footer = lazy(() => import('../components/Footer'))
@@ -14,11 +15,11 @@ const StatsPage = () => {
     }, [])
 
     return (
-        <>
+        <div className="stats-page">
             <Header />
             <Main />
             <Footer />
-        </>
+        </div>
     )
 }
 

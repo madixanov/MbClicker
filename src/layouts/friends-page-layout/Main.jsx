@@ -1,14 +1,17 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import tg from '../../assets/icons/tg.png';
 import premium from '../../assets/icons/premium.png';
-import bonus from '../../assets/icons/bonus.png';
 import FriendsList from "./UI/FriendsList";
-
-import './friends-page.css'
+import './friends-page.css';
 
 const Main = () => {
     const [btnName, setBtnName] = useState('COPY');
-    const invitedRef = useRef(null);
+
+    const handleCopyClick = () => {
+        setBtnName("COPIED");
+        setTimeout(() => setBtnName("COPY"), 2000);
+        // Здесь можно добавить логику копирования ссылки
+    };
 
     return (
         <main className="friends-main">
@@ -16,16 +19,26 @@ const Main = () => {
                 <h1>МОИ ДРУЗЬЯ</h1>
                 <h2>ТВОЯ ССЫЛКА</h2>
                 <div className="input-container">
-                    <input type="text" value={'LINK'} readOnly className="link-input" />
+                    <input 
+                        type="text" 
+                        value={'LINK'} 
+                        readOnly 
+                        className="link-input" 
+                    />
                     <div className="fade-overlay"></div>
                     <div className="btn-container">
-                        <button className="submit-btn" onClick={() => setBtnName("COPIED")}>{btnName}</button>
+                        <button 
+                            className="submit-btn" 
+                            onClick={handleCopyClick}
+                        >
+                            {btnName}
+                        </button>
                     </div>
                 </div>
 
                 <div className="bonus">
                     <div className="tg-bonus">
-                        <img src={tg} alt="" />
+                        <img src={tg} alt="Telegram" />
                         <div className="i-bonus">
                             <p>+ 10 000</p>
                         </div>
@@ -33,7 +46,7 @@ const Main = () => {
                         <p className="p-regular">REGULAR</p>
                     </div>
                     <div className="premium-bonus">
-                        <img src={premium} alt="" />
+                        <img src={premium} alt="Premium" />
                         <div className="i-bonus">
                             <p>+ 30 000</p>
                         </div>
@@ -44,8 +57,10 @@ const Main = () => {
             </div>
 
             <div className="friends-container">
-                <p ref={invitedRef}>INVITED FRIENDS</p>
-                <div className="friends-list-scroll">
+                <p className="friend-title">INVITED FRIENDS</p>
+                <div 
+                    className="friends-list-scroll"
+                >
                     <FriendsList />
                 </div>
             </div>

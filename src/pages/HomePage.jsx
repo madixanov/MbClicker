@@ -6,11 +6,11 @@ const Footer = lazy(() => import("../components/Footer"));
 
 const HomePage = () => {
     return (
-        <>
+        <div className="home-page">
             <Header />
             <Main />
             <Footer />
-        </>
+        </div>
     )
 }
 
