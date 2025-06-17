@@ -14,11 +14,11 @@ const TaskPage = () => {
         }, [])
 
     return (
-        <>
+        <div className='task-page'>
             <Header />
             <Main />
             <Footer />
-        </>
+        </div>
     )
 }
 

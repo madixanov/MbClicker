@@ -1,3 +1,17 @@
+.gift-page {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  padding-top: 54px;
+  padding-bottom: 120px;
+  display: flex;
+  flex-direction: column;
+  overflow-y: auto;
+  scroll-behavior: smooth;
+}
+
 .gift-main {
   display: flex;
   flex-direction: column;
