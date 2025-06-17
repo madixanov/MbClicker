@@ -3,11 +3,10 @@
   top: 54px; /* Отступ для header */
   left: 0;
   right: 0;
-  bottom: 150px; /* Отступ для navbar */
+  bottom: 120px; /* Отступ для navbar */
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
   scroll-behavior: smooth;
-  background: #000;
   width: 100%;
 }
 
