@@ -27,7 +27,7 @@ const Header = () => {
                             <img src={light} alt="Light Mode" className="" />
                         </div>
                     </div>
-                    <p>ТЕМА</p>
+                    <p>ТЕМА</p> 
                 </div>
             </div>
         </header>
