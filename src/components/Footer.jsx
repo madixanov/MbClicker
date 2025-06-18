@@ -2,10 +2,11 @@ import { lazy, Suspense, useEffect, useRef } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import useModalStore from "../store/modal-store";
 import './footer.css'
+import ModalContainer from './UI/ModalContainer'
+import ModalOverlay from './UI/ModalOverlay'
+
 
 const RouterIcon = lazy(() => import("./UI/RouterIcon"));
-const ModalContainer = lazy(() => import("./UI/ModalContainer"));
-const ModalOverlay = lazy(() => import("./UI/ModalOverlay"));
 
 const Footer = () => {
     const isModalDayOpen = useModalStore(state => state.isModalDayOpen);
@@ -62,7 +63,7 @@ const Footer = () => {
 const AnimatedModal = ({ title, content, onClose, modalKey }) => {
 
     const modalAnimation = {
-        initial: { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)' },
+        initial: { opacity: 0, clipPath: 'inset(100% 100% 0% 100%)' },
         animate: { opacity: 1, clipPath: 'inset(0% 0% 0% 0%)' },
         exit: { opacity: 0, clipPath: 'inset(100% 0% 0% 0%)' },
         transition: { duration: 0.3, ease: 'easeOut' }
