@@ -69,7 +69,7 @@ const AnimatedModal = ({ title, content, onClose, modalKey }) => {
     };
 
     return (
-        <motion.div className="modal-container" {...modalAnimation} key={modalKey}>
+        <motion.div className="modal-container" {...modalAnimation} key={modalKey} layout>
             <ModalContainer title={title} content={content} closeModal={onClose} />
         </motion.div>
     );

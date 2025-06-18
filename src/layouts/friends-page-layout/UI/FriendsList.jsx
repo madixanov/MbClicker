@@ -12,7 +12,7 @@ const FriendsList = () => {
                     const bgColor = bgColors[index % bgColors.length]
 
                     return (
-                    <div className="friend-container">
+                    <div className="friend-container" key={index}>
                         <div className="friend-avatar">
                             <img src={friend.img} alt={friend.name} className="friend-photo"/>
                             <img src={friend.role === 'premium' ? premium : tg} alt={friend.role} className="friend-role-icon" />

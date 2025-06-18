@@ -3,28 +3,32 @@ import DashBoard from "./UI/DashBoard";
 import Leaders from "./UI/LeadersList";
 import './stats-page.css';
 
+const tabs = [
+    { key: 'daily', label: 'ЗА ВСЕ ВРЕМЯ' },
+    { key: 'giveaways', label: 'ЗА ЭТОТ МЕСЯЦ' },
+];
+
 const Main = () => {
-    const [activeTab, setActiveTabs] = useState('daily');
+    const [activeTab, setActiveTab] = useState('daily');
 
     return (
         <main className="stats-main">
             <h1>ТОП ИГРОКОВ</h1>
+
             <div className="tab-row">
-                <button 
-                    className={activeTab === 'daily' ? 'active-tab' : 'non-active-tab'} 
-                    onClick={() => setActiveTabs('daily')}
-                >
-                    ЗА ВСЕ ВРЕМЯ
-                </button>
-                <button 
-                    className={activeTab === 'giveaways' ? 'active-tab' : 'non-active-tab'} 
-                    onClick={() => setActiveTabs('giveaways')}
-                >
-                    ЗА ЭТОТ МЕСЯЦ
-                </button>
+                {tabs.map(tab => (
+                    <button
+                        key={tab.key}
+                        className={activeTab === tab.key ? 'active-tab' : 'non-active-tab'}
+                        onClick={() => setActiveTab(tab.key)}
+                    >
+                        {tab.label}
+                    </button>
+                ))}
             </div>
-            
+
             <DashBoard />
+
             <h2 className="leaders-title">ЛИДЕРЫ</h2>
 
             <div className="leaders-container">
@@ -44,7 +48,7 @@ const Main = () => {
                 </div>
             </div>
         </main>
-    )
-}
+    );
+};
 
 export default Main;
