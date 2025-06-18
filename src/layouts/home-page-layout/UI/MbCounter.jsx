@@ -1,48 +1,52 @@
-import logo from "../../../assets/icons/logo.svg"
-import exchange from "../../../assets/icons/exchange.svg"
-import exchange1 from "../../../assets/icons/exchange1.svg"
-import useMbStore from "../../../store/mb-store.js"
+import logo from "../../../assets/icons/logo.svg";
+import exchange from "../../../assets/icons/exchange.svg";
+import exchange1 from "../../../assets/icons/exchange1.svg";
 
-import { useNavigate } from "react-router"
-import { useCallback, useEffect, useState } from "react"
-import { animate } from "framer-motion"
+import useMbStore from "../../../store/mb-store.js";
+import { useNavigate } from "react-router";
+import { useEffect, useState, useRef } from "react";
+import { animate } from "framer-motion";
 
 const MbCounter = () => {
-    const mbCountAll = useMbStore((state) => state.mbCountAll);
-    const [animatedCount, setAnimatedCount] = useState(mbCountAll);
+  const mbCountAll = useMbStore((state) => state.mbCountAll);
+  const [animatedCount, setAnimatedCount] = useState(mbCountAll);
 
-    const navigate = useNavigate();
+  const navigate = useNavigate();
+  const prevCountRef = useRef(mbCountAll); // запоминаем предыдущее значение
 
-    const handleClick = useCallback(() => {
-        navigate('/exchange');
-    }, [navigate]);
+  useEffect(() => {
+    // избегаем повторной анимации, если значение не изменилось
+    if (prevCountRef.current === mbCountAll) return;
 
-    useEffect(() => {
-        const controls = animate(animatedCount, mbCountAll, {
-            duration: 1,
-            onUpdate: (latest) => {
-                setAnimatedCount(Math.round(latest));
-            },
-        });
+    const controls = animate(prevCountRef.current, mbCountAll, {
+      duration: 0.8,
+      ease: "easeOut",
+      onUpdate: (latest) => {
+        setAnimatedCount(Math.round(latest));
+      },
+    });
 
-        return () => controls.stop();
-    }, [mbCountAll]);
+    prevCountRef.current = mbCountAll; // обновляем предыдущее значение
+    return () => controls.stop();
+  }, [mbCountAll]);
 
-    return (
-        <div className="mb-counter-container">
-            <div className="mb-counter">
-                <div className="logo">
-                    <img src={logo} alt="" />
-                </div>
-                <h1>{animatedCount.toLocaleString('ru-RU')}</h1>
-                <div className="exchange" onClick={handleClick}>
-                    <img src={exchange} alt="exchange-icon" className="exchane-icon"/>
-                    <img src={exchange1} alt="exchange-icon" className="exchane-icon" />
-                </div>
-            </div>
-            <p>МЕГАБАЙТ</p>
+  const handleClick = () => navigate("/exchange");
+
+  return (
+    <div className="mb-counter-container select-none">
+      <div className="mb-counter">
+        <div className="logo">
+          <img src={logo} alt="logo" />
         </div>
-    );
+        <h1>{animatedCount.toLocaleString("ru-RU")}</h1>
+        <div className="exchange" onClick={handleClick}>
+          <img src={exchange} alt="exchange icon" className="exchange-icon" />
+          <img src={exchange1} alt="exchange icon" className="exchange-icon" />
+        </div>
+      </div>
+      <p>МЕГАБАЙТ</p>
+    </div>
+  );
 };
 
 export default MbCounter;

@@ -1,22 +1,22 @@
 .loading-wrapper {
-  height: 100vh;
-  width: 100vw;
-  background-color: #121212; /* тёмная тема */
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  color: white;
-  font-family: 'Arial', sans-serif;
+    height: 100vh;
+    width: 100vw;
+    background-color: #121212; /* тёмная тема */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    font-family: 'Arial', sans-serif;
 }
 
 .loading-logo {
-  font-size: 64px;
-  margin-bottom: 20px;
+    font-size: 64px;
+    margin-bottom: 20px;
 }
 
 .loading-text {
-  font-size: 18px;
-  letter-spacing: 2px;
-  color: #b51eff;
+    font-size: 18px;
+    letter-spacing: 2px;
+    color: white;
 }

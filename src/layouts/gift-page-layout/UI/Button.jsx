@@ -1,23 +1,33 @@
 import { useState } from "react";
 
 const Button = () => {
-    const [isActive, setIsActive] = useState(false);
-    const [isCompleted, setIsCompleted] = useState(false);
+    const [status, setStatus] = useState("idle");
 
     const handleClick = () => {
-        if (isActive || isCompleted) return; 
-        setIsActive(true);
-        setTimeout(() => {
-            setIsCompleted(true);
-        }, 3000);
+        if (status !== "idle") return;
+
+        setStatus("checking");
+        setTimeout(() => setStatus("done"), 3000);
+    };
+
+    const getLabel = () => {
+        switch (status) {
+            case "done":
+                return "ПОЛУЧИТЬ";
+            case "checking":
+                return "ПРОВЕРКА";
+            default:
+                return "ВЫПОЛНИТЬ";
+        }
     };
 
     return (
         <button
+            aria-label={getLabel()}
             onClick={handleClick}
-            className={`task-btn ${isActive ? "active-btn" : ""} ${isCompleted ? "completed" : ""}`}
+            className={`task-btn ${status === "checking" ? "active-btn" : ""} ${status === "done" ? "completed" : ""}`}
         >
-            {isCompleted ? "ПОЛУЧИТЬ" : isActive ? "ПРОВЕРКА" : "ВЫПОЛНИТЬ"}
+            {getLabel()}
         </button>
     );
 };

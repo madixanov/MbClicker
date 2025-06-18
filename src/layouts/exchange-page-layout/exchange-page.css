@@ -3,8 +3,18 @@
 }
 
 .exchange-content {
-  min-height: 100vh;
-  color: white;
+  position: fixed;
+  top: 0px;
+  left: 0;
+  right: 0;
+  bottom: 0px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  scroll-behavior: smooth;
+  width: 100%;
+  background-color: transparent;
+  padding-top: 54px;
+  padding-bottom: 120px;
 }
 
 .exchange-main {
