@@ -84,11 +84,12 @@
 .btn-container {
   position: absolute;
   right: 10px;
-  z-index: 2;
+  top: 0;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
+  z-index: 2;
 }
 
 .bonus {
@@ -302,6 +303,7 @@
   font-size: 12px;
   font-weight: 600;
   color: black;
+  margin: 0;
 }
 
 /* Стили для скролла */
