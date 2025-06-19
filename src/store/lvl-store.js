@@ -37,7 +37,7 @@ const useLvlStore = create(
           const players = res.data.data;
 
           if (players.length > 0) {
-            const playerId = players[0].id;
+            const playerId = players[0].documentId;
 
             console.log("⏳ Отправка данных в Strapi:", {
                 id: playerId,
