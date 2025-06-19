@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 
 const usePlayerData = () => {
@@ -9,23 +9,26 @@ const usePlayerData = () => {
     const tg = window.Telegram?.WebApp;
     const user = tg?.initDataUnsafe?.user;
 
-    console.log("🧪 user from Telegram:", user);
-    console.log("🧪 telegramId:", user?.id);
-
-    if (!user) return;
+    if (!user) {
+      console.warn("❌ Пользователь Telegram не найден");
+      setLoading(false);
+      return;
+    }
 
     const telegramId = user.id;
+    const url = `https://mbclickerstrapi.onrender.com/api/players?filters[telegram_id][$eq]=${telegramId}`;
 
     axios
-      .get(
-        `https://mbclickerstrapi.onrender.com/api/players?filters[telegram_id][$eq]=${telegramId}`
-      )
+      .get(url)
       .then((res) => {
+        console.log("📥 Ответ от Strapi:", res.data);
+
         const data = res.data.data;
-        if (data.length > 0) {
+        if (data && data.length > 0) {
           setPlayer(data[0].attributes);
         } else {
-          console.warn("⚠️ Игрок не найден");
+          console.warn("⚠️ Игрок не найден в Strapi");
+          setPlayer(null);
         }
       })
       .catch((err) => {
