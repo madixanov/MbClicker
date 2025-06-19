@@ -8,7 +8,9 @@ const Header = () => {
     const setModalDay = useModalStore((state) => state.setModalDay);
     const setModalTheme = useModalStore((state) => state.setModalTheme);
 
-    const { player } = usePlayerData();
+    const { player, loading } = usePlayerData();
+    if (loading) return <p>Loading...</p>;
+    if (!player) return <p>Player not found.</p>
     console.log(player);
 
     return (
