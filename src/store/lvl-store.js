@@ -86,11 +86,6 @@ const useLvlStore = create(
           console.error("❌ Ошибка при загрузке уровня из Strapi:", err);
         }
       },
-
-      // Оставим, если хочешь вручную удваивать (опционально)
-      upgradePoints: () => set((state) => ({
-        points: state.points * 2
-      })),
     }),
     {
       name: "lvl-storage",
