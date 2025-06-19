@@ -11,7 +11,7 @@ import { animate } from "framer-motion";
 const MbCounter = () => {
   const { player } = usePlayerData();
   const mbCountAll = useMbStore((state) => state.mbCountAll);
-  const [animatedCount, setAnimatedCount] = useState(player.clicks);
+  const [animatedCount, setAnimatedCount] = useState(player?.clicks ?? 0);
 
   const navigate = useNavigate();
   const prevCountRef = useRef(mbCountAll); 
