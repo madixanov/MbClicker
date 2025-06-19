@@ -9,9 +9,8 @@ const Header = () => {
     const setModalTheme = useModalStore((state) => state.setModalTheme);
 
     const { player, loading } = usePlayerData();
-    if (loading) return <p>Loading...</p>;
-    if (!player) return <p>Player not found.</p>
     console.log(player);
+    if (loading) return <p>Loading...</p>;
 
     return (
         <header>
@@ -21,7 +20,7 @@ const Header = () => {
                     <p>ВРЕМЯ</p>
                 </div>
                 <div className="name-container">
-                    <div>{player.first_name}</div>
+                    <div>{player?.first_name || "?"}</div>
                     <p>ВАШЕ ИМЯ</p>
                 </div>
                 <div className="theme-container" onClick={() => setModalTheme(true)}>
