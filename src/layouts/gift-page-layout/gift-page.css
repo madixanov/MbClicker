@@ -83,8 +83,7 @@
 }
 
 .task-btn {
-  width: 65px;
-  height: 22px;
+  width: 75px;
   background-color: #f6f6f6;
   border-radius: 100px;
   color: black;
@@ -92,6 +91,7 @@
   font-weight: 400;
   border: none;
   text-align: center;
+  padding: 3px 5px;
 }
 
 .active-btn {
