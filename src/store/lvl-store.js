@@ -69,16 +69,16 @@ const useLvlStore = create(
         const user = getTelegramUser();
         if (!user) return;
 
-        const documentId = user.id;
+        const telegram_id = user.id;
 
         try {
           const res = await axios.get(
-            `https://mbclickerstrapi.onrender.com/api/players?filters[documentId][$eq]=${documentId}`
+            `https://mbclickerstrapi.onrender.com/api/players?filters[telegram_id][$eq]=${telegram_id}`
           );
           const players = res.data.data;
 
           if (players.length > 0) {
-            const level = players[0].attributes?.level ?? 1;
+            const level = players[0].level ?? 1;
             set({ level });
             console.log("✅ Уровень загружен из Strapi:", level);
           }
