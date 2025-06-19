@@ -2,8 +2,10 @@ import { useEffect } from "react";
 import useMbStore from "../../../store/mb-store";
 import click from "../../../assets/icons/click.svg";
 import useLvlStore from "../../../store/lvl-store";
+import usePlayerData from "../../../hooks/usePlayerData";
 
 const ProgressBar = () => {
+    const { player } = usePlayerData();
     const progress = useMbStore((state) => state.mbCount);
     const incrementMbInc = useMbStore((state) => state.incrementMbInc);
     const resetCount = useMbStore((state) => state.resetCount);
@@ -28,7 +30,7 @@ const ProgressBar = () => {
     return (
         <div className="progress-bar-container">
         <div className="lvl">
-            <span>{level} LVL</span>
+            <span>{player.level} LVL</span>
             <div className="progress-bar">
             <div className="progress-bar__wrapper">
                 <div
@@ -37,7 +39,7 @@ const ProgressBar = () => {
                 ></div>
             </div>
             </div>
-            <span>{level + 1} LVL</span>
+            <span>{player.level + 1} LVL</span>
         </div>
         <div className="target">
             <p>{`${progress.toLocaleString('ru-RU')} / ${points.toLocaleString('ru-RU')}`}</p>
