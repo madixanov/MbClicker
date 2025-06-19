@@ -75,8 +75,9 @@ const useLvlStore = create(
             // Обновляем всё состояние через PUT
             await axios.put(
               `https://mbclickerstrapi.onrender.com/api/players/${playerDocId}`,
-              {
+              {data: {
                 level: newLevel,
+              }
               }
             );
 
