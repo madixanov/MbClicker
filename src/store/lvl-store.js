@@ -1,9 +1,9 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import axios from "axios";
-import useMbStore from "./mb-store"; // путь подкорректируй под свой проект
+import useMbStore from "./mb-store"; // путь к своему mb-store
 
-// Получить Telegram user
+// Получить Telegram user из WebApp
 const getTelegramUser = () => {
   const tg = window.Telegram?.WebApp;
   return tg?.initDataUnsafe?.user || null;
@@ -15,18 +15,45 @@ const useLvlStore = create(
       level: 1,
       points: 1024,
 
+      // Загружаем уровень и очки с сервера
+      loadLevelFromStrapi: async () => {
+        const user = getTelegramUser();
+        if (!user) return;
+
+        const telegram_id = user.id;
+
+        try {
+          const res = await axios.get(
+            `https://mbclickerstrapi.onrender.com/api/players?filters[telegram_id][$eq]=${telegram_id}`
+          );
+
+          const players = res.data.data;
+
+          if (players.length > 0) {
+            const player = players[0];
+
+            const strapiLevel = player.level ?? 1;
+
+            // Устанавливаем состояние точно по Strapi
+            set({ level: strapiLevel });
+
+            console.log("✅ Загружено из Strapi:", strapiLevel);
+          }
+        } catch (err) {
+          console.error("❌ Ошибка при загрузке из Strapi:", err);
+        }
+      },
+
+      // Повышение уровня
       upgradeLevel: async () => {
-        const prevState = get();
-        const newLevel = prevState.level + 1;
-        const newPoints = prevState.points * 2;
+        const { level, points } = get();
+        const newLevel = level + 1;
+        const newPoints = points * 2;
 
-        // 🔄 Обновляем локальное состояние
-        set({
-          level: newLevel,
-          points: newPoints,
-        });
+        // Обновляем локально
+        set({ level: newLevel, points: newPoints });
 
-        // 🔄 Сброс mbCount после повышения уровня
+        // Сбрасываем клики
         const resetCount = useMbStore.getState().resetCount;
         resetCount();
 
@@ -39,46 +66,24 @@ const useLvlStore = create(
           const res = await axios.get(
             `https://mbclickerstrapi.onrender.com/api/players?filters[telegram_id][$eq]=${telegram_id}`
           );
+
           const players = res.data.data;
 
           if (players.length > 0) {
             const playerDocId = players[0].documentId;
 
+            // Обновляем всё состояние через PUT
             await axios.put(
               `https://mbclickerstrapi.onrender.com/api/players/document/${playerDocId}`,
               {
-                data: {
-                  level: newLevel,
-                },
+                level: newLevel,
               }
             );
 
-            console.log("✅ Уровень обновлён в Strapi:", newLevel);
+            console.log("✅ Обновлено в Strapi:", newLevel, newPoints);
           }
         } catch (err) {
-          console.error("❌ Ошибка при обновлении уровня в Strapi:", err);
-        }
-      },
-
-      loadLevelFromStrapi: async () => {
-        const user = getTelegramUser();
-        if (!user) return;
-
-        const telegram_id = user.id;
-
-        try {
-          const res = await axios.get(
-            `https://mbclickerstrapi.onrender.com/api/players?filters[telegram_id][$eq]=${telegram_id}`
-          );
-          const players = res.data.data;
-
-          if (players.length > 0) {
-            const level = players[0].level ?? 1;
-            set({ level });
-            console.log("✅ Уровень загружен из Strapi:", level);
-          }
-        } catch (err) {
-          console.error("❌ Ошибка при загрузке уровня из Strapi:", err);
+          console.error("❌ Ошибка при обновлении в Strapi:", err);
         }
       },
     }),
