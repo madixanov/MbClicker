@@ -10,7 +10,6 @@ const ProgressBar = () => {
     const incrementMbInc = useMbStore((state) => state.incrementMbInc);
     const resetCount = useMbStore((state) => state.resetCount);
 
-    const level = useLvlStore((state) => state.level);
     const points = useLvlStore((state) => state.points);
     const upgradeLevel = useLvlStore((state) => state.upgradeLevel);
     const upgradePoints = useLvlStore((state) => state.upgradePoints);
@@ -30,7 +29,7 @@ const ProgressBar = () => {
     return (
         <div className="progress-bar-container">
         <div className="lvl">
-            <span>{player.level} LVL</span>
+            <span>{player?.level ?? '?'} LVL</span>
             <div className="progress-bar">
             <div className="progress-bar__wrapper">
                 <div
@@ -39,7 +38,7 @@ const ProgressBar = () => {
                 ></div>
             </div>
             </div>
-            <span>{player.level + 1} LVL</span>
+            <span>{(player?.level ?? 0) + 1} LVL</span>
         </div>
         <div className="target">
             <p>{`${progress.toLocaleString('ru-RU')} / ${points.toLocaleString('ru-RU')}`}</p>
