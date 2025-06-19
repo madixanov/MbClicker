@@ -5,6 +5,7 @@ const useTelegramAuth = () => {
     useEffect(() => {
         const tg = window.Telegram?.WebApp;
         const user = tg?.initDataUnsafe?.user;
+        console.log(window.Telegram)
         if (!user) return;
 
     const telegramUser = {
