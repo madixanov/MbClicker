@@ -43,7 +43,6 @@ const useLvlStore = create(
             await axios.put(`https://mbclickerstrapi.onrender.com/api/players/${playerId}`, {
               data: {
                 level: newLevel,
-                points: newPoints,
               },
             });
 
