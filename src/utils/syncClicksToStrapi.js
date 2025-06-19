@@ -11,45 +11,36 @@ const syncClicksToStrapi = async () => {
     return;
   }
 
-  const telegramId = user.id;
-
   try {
-    // Получаем игрока по telegram_id
-    const res = await axios.get(
-      "https://mbclickerstrapi.onrender.com/api/players",
-      {
-        params: {
-          filters: {
-            telegram_id: {
-              $eq: telegramId,
-            },
+    const res = await axios.get("https://mbclickerstrapi.onrender.com/api/players", {
+      params: {
+        filters: {
+          telegram_id: {
+            $eq: user.id,
           },
-          publicationState: "preview", // важно для Strapi v5
         },
-      }
-    );
+        publicationState: "preview",
+      },
+    });
 
     const player = res.data.data[0];
+
     if (!player) {
       console.warn("⚠️ Игрок не найден");
       return;
     }
 
-    const documentId = player.documentId;
+    const id = player.id; // ✅ используем id напрямую из data[0]
 
-    // Обновляем поле clicks по documentId
-    await axios.put(
-      `https://mbclickerstrapi.onrender.com/api/players/document/${documentId}`,
-      {
-        data: {
-          clicks: mbCountAll,
-        },
-      }
-    );
+    await axios.put(`https://mbclickerstrapi.onrender.com/api/players/${id}`, {
+      data: {
+        clicks: mbCountAll,
+      },
+    });
 
-    console.log("✅ Клики успешно синхронизированы в Strapi");
-  } catch (error) {
-    console.error("❌ Ошибка при сохранении кликов:", error.response?.data || error);
+    console.log("✅ Клики обновлены (ID:", id, ")");
+  } catch (err) {
+    console.error("❌ Ошибка при сохранении кликов:", err.response?.data || err);
   }
 };
 
