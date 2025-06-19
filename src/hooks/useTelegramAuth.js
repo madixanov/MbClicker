@@ -4,6 +4,10 @@ import axios from 'axios';
 const useTelegramAuth = () => {
   useEffect(() => {
     const tg = window.Telegram?.WebApp;
+    if (!tg) return;
+
+    tg.ready();
+
     const user = tg?.initDataUnsafe?.user;
 
     if (!user) return;
