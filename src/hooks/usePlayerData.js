@@ -9,6 +9,9 @@ const usePlayerData = () => {
     const tg = window.Telegram?.WebApp;
     const user = tg?.initDataUnsafe?.user;
 
+    console.log("🧪 user from Telegram:", user);
+    console.log("🧪 telegramId:", user?.id);
+
     if (!user) return;
 
     const telegramId = user.id;
