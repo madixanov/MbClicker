@@ -16,10 +16,10 @@ const useTelegramAuth = () => {
     };
 
     axios
-        .get(`http://localhost:1337/api/users?filters[telegram_id][$eq]=${user.id}`)
+        .get(`https://mbclickerstrapi.onrender.com/api/players?filters[telegram_id][$eq]=${user.id}`)
         .then((res) => {
             if (res.data.data.length === 0) {
-                return axios.post('http://localhost:1337/api/users', {
+                return axios.post('https://mbclickerstrapi.onrender.com/api/players', {
                     data: telegramUser,
                 });
             } else {
