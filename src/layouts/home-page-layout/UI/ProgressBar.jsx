@@ -11,12 +11,10 @@ const ProgressBar = () => {
   const level = useLvlStore((state) => state.level);
   const points = useLvlStore((state) => state.points);
   const upgradeLevel = useLvlStore((state) => state.upgradeLevel);
-  const upgradePoints = useLvlStore((state) => state.upgradePoints);
 
   useEffect(() => {
     if (progress >= points) {
       upgradeLevel();
-      upgradePoints();
       resetCount();
       incrementMbInc();
     }
