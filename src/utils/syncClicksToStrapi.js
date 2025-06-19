@@ -30,7 +30,7 @@ const syncClicksToStrapi = async () => {
       return;
     }
 
-    const id = player.id; // ✅ используем id напрямую из data[0]
+    const id = player.documentId; // ✅ используем id напрямую из data[0]
 
     await axios.put(`https://mbclickerstrapi.onrender.com/api/players/${id}`, {
       data: {
