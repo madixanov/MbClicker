@@ -2,6 +2,7 @@ import { Routes, Route, BrowserRouter } from "react-router-dom";
 import { lazy, Suspense }  from "react";
 import LoadingPage from "./pages/LoadingPage";
 import useTelegramAuth from "./hooks/useTelegramAuth";
+import AutoSaveClicks from "./components/AutoSaveClisk";
 
 const HomePage = lazy(() => import("./pages/HomePage"))
 const ExchangePage = lazy(() => import("./pages/ExchangePage"))
@@ -15,6 +16,7 @@ const App = () => {
 
   return (
     <BrowserRouter>
+      <AutoSaveClicks />
       <Suspense fallback={<LoadingPage />}>
         <Routes>
           <Route path="/gift" element={<GiftPage />} />
