@@ -20,7 +20,7 @@ const Header = () => {
                     <p>ВРЕМЯ</p>
                 </div>
                 <div className="name-container">
-                    <div>{player?.first_name || "?"}</div>
+                    <div>{player?.username || "?"}</div>
                     <p>ВАШЕ ИМЯ</p>
                 </div>
                 <div className="theme-container" onClick={() => setModalTheme(true)}>
