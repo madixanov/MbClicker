@@ -2,10 +2,14 @@ import useModalStore from "../store/modal-store";
 import dark from "../assets/icons/dark.svg";
 import light from "../assets/icons/light.svg"
 import './header.css'
+import usePlayerData from "../hooks/usePlayerData";
 
 const Header = () => {
     const setModalDay = useModalStore((state) => state.setModalDay);
     const setModalTheme = useModalStore((state) => state.setModalTheme);
+
+    const { player } = usePlayerData();
+    console.log(player);
 
     return (
         <header>
@@ -15,7 +19,7 @@ const Header = () => {
                     <p>ВРЕМЯ</p>
                 </div>
                 <div className="name-container">
-                    <div>WEIXSE</div>
+                    <div>{player.first_name}</div>
                     <p>ВАШЕ ИМЯ</p>
                 </div>
                 <div className="theme-container" onClick={() => setModalTheme(true)}>
