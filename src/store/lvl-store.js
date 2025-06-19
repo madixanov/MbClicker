@@ -39,6 +39,16 @@ const useLvlStore = create(
           if (players.length > 0) {
             const playerId = players[0].id;
 
+            console.log("⏳ Отправка данных в Strapi:", {
+                id: playerId,
+                payload: {
+                    data: {
+                    level: newLevel, // ← только это поле, если points не используется
+                    },
+                },
+                });
+
+
             // 2. Обновим в Strapi level и points
             await axios.put(`https://mbclickerstrapi.onrender.com/api/players/${playerId}`, {
               data: {
@@ -48,7 +58,6 @@ const useLvlStore = create(
 
             console.log("✅ Уровень и очки обновлены в Strapi:", {
               level: newLevel,
-              points: newPoints,
             });
           }
         } catch (err) {
