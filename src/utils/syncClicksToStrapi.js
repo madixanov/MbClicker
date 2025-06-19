@@ -25,7 +25,7 @@ const syncClicksToStrapi = async () => {
       return;
     }
 
-    const playerId = player.id;
+    const playerId = player.id - 1;
 
     // Обновляем поле clicks
     await axios.put(`https://mbclickerstrapi.onrender.com/api/players/${playerId}`, {
