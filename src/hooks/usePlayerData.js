@@ -21,11 +21,9 @@ const usePlayerData = () => {
     axios
       .get(url)
       .then((res) => {
-        console.log("📥 Ответ от Strapi:", res.data);
-
         const data = res.data.data;
         if (data && data.length > 0) {
-          setPlayer(data[0].attributes);
+          setPlayer(data[0]); // 👈 правильная строка
         } else {
           console.warn("⚠️ Игрок не найден в Strapi");
           setPlayer(null);
