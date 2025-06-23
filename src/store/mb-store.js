@@ -10,11 +10,10 @@ const useMbStore = create(
       mbCount: 0,         // локальный прогресс до следующего уровня
       mbIncrement: 10,    // шаг
 
-      // Увеличить счётчик
       increment: () =>
         set((state) => ({
-          mbCountAll: state.mbCountAll + state.mbIncrement,
-          mbCount: state.mbCount + state.mbIncrement,
+          mbCountAll: Number(state.mbCountAll) + state.mbIncrement,
+          mbCount: Number(state.mbCount) + state.mbIncrement,
         })),
 
       // Увеличить инкремент
