@@ -1,12 +1,13 @@
 import { useEffect, useRef } from "react";
 import useMbStore from "../../../store/mb-store";
 import useLvlStore from "../../../store/lvl-store";
-import { player } from "../../../hooks/usePlayerData";
+import usePlayerData from "../../../hooks/usePlayerData";
 
 import click from "../../../assets/icons/click.svg";
 
 const ProgressBar = () => {
   const resetCount = useMbStore((state) => state.resetCount);
+  const { player } = usePlayerData();
 
   const level = useLvlStore((state) => state.level);
   const points = useLvlStore((state) => state.points);
