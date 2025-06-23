@@ -19,7 +19,6 @@ const MbCounter = () => {
   const prevCountRef = useRef(mbCountAll);
   const navigate = useNavigate();
 
-  // 🎞️ Анимация счётчика
   useEffect(() => {
     if (prevCountRef.current === mbCountAll) return;
 
@@ -35,11 +34,11 @@ const MbCounter = () => {
     return () => controls.stop();
   }, [mbCountAll]);
 
-  // ☁️ Отправка кликов в Strapi при изменении
+
   useEffect(() => {
     if (!player || !player.documentId) return;
 
-    updatePlayer({ clicks: mbCountAll }); // обновляем только clicks
+    updatePlayer({ clicks: mbCountAll });
   }, [mbCountAll]);
 
   // 🔁 Навигация
