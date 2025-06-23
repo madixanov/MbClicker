@@ -1,7 +1,8 @@
 import { useEffect } from "react";
 import useMbStore from "../../../store/mb-store";
-import click from "../../../assets/icons/click.svg";
 import useLvlStore from "../../../store/lvl-store";
+
+import click from "../../../assets/icons/click.svg";
 
 const ProgressBar = () => {
   const progress = useMbStore((state) => state.mbCount);
@@ -14,7 +15,7 @@ const ProgressBar = () => {
 
   useEffect(() => {
     if (progress >= points) {
-      upgradeLevel();
+      upgradeLevel();     // ✅ теперь сохраняет и в Strapi
       resetCount();
       incrementMbInc();
     }
@@ -38,7 +39,7 @@ const ProgressBar = () => {
       </div>
       <div className="target">
         <p>{`${progress.toLocaleString("ru-RU")} / ${points.toLocaleString("ru-RU")}`}</p>
-        <img src={click} alt="" />
+        <img src={click} alt="click icon" />
       </div>
     </div>
   );

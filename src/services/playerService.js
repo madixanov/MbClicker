@@ -16,15 +16,9 @@ export const fetchPlayerByTelegramId = async (telegram_id) => {
   return res.data?.data?.[0] || null;
 };
 
-export const updatePlayerLevel = async (documentId, level) => {
+export const updatePlayer = async (documentId, fields = {}) => {
   return axios.put(`${API_BASE_URL}/players/${documentId}`, {
-    data: { level },
-  });
-};
-
-export const updatePlayerClicks = async (documentId, clicks) => {
-  return axios.put(`${API_BASE_URL}/players/${documentId}`, {
-    data: { clicks },
+    data: fields,
   });
 };
 
@@ -32,4 +26,32 @@ export const createPlayer = async (playerData) => {
   return axios.post(`${API_BASE_URL}/players`, {
     data: playerData,
   });
+};
+
+// ✅ Отложенное обновление при offline/ошибке
+export const updatePlayerWithFallback = async (documentId, fields = {}) => {
+  try {
+    await updatePlayer(documentId, fields);
+    console.log("✅ Обновлено:", fields);
+    localStorage.removeItem("pendingUpdate");
+  } catch (err) {
+    console.warn(`⚠️ Ошибка при обновлении: ${err}. Сохраняем в очередь: ${fields}`);
+    localStorage.setItem(
+      "pendingUpdate",
+      JSON.stringify({ documentId, fields })
+    );
+  }
+};
+
+// ✅ Повторная попытка при запуске
+export const retryPendingUpdate = async () => {
+  const item = localStorage.getItem("pendingUpdate");
+  if (!item) return;
+
+  try {
+    const { documentId, fields } = JSON.parse(item);
+    await updatePlayerWithFallback(documentId, fields);
+  } catch (err) {
+    console.error("❌ Ошибка при повторной попытке обновления:", err);
+  }
 };

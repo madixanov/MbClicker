@@ -1,10 +1,11 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
+
 import useMbStore from "./mb-store";
 import getTelegramUser from "../utils/getTelegramUser";
 import {
   fetchPlayerByTelegramId,
-  updatePlayerLevel,
+  updatePlayerWithFallback,
 } from "../services/playerService";
 
 const useLvlStore = create(
@@ -13,46 +14,49 @@ const useLvlStore = create(
       level: 1,
       points: 1024,
 
-      // Загрузка уровня с сервера
+      // Загрузка уровня из Strapi
       loadLevelFromStrapi: async () => {
         const user = getTelegramUser();
         if (!user) return;
 
-        const player = await fetchPlayerByTelegramId(user.id);
-        if (!player || !player.level) {
-          console.warn("⚠️ Игрок не найден или уровень не задан");
-          return;
+        try {
+          const player = await fetchPlayerByTelegramId(user.id);
+          if (player && player.level !== undefined) {
+            set({ level: player.level });
+            console.log("✅ Уровень загружен из Strapi:", player.level);
+          }
+        } catch (err) {
+          console.error("❌ Ошибка при загрузке уровня:", err);
         }
-
-        set({ level: player.level });
-        console.log("✅ Уровень загружен из Strapi:", player.level);
       },
 
-      // Повышение уровня
+      // Повышение уровня и обновление на сервере
       upgradeLevel: async () => {
         const { level, points } = get();
         const newLevel = level + 1;
         const newPoints = points * 2;
 
+        // Локально
+        set({ level: newLevel, points: newPoints });
+
+        // Сброс кликов
+        useMbStore.getState().resetCount();
+
         const user = getTelegramUser();
         if (!user) return;
 
-        const player = await fetchPlayerByTelegramId(user.id);
-        if (!player || !player.documentId) {
-          console.warn("⚠️ Игрок или documentId не найден");
-          return;
-        }
-
         try {
-          await updatePlayerLevel(player.documentId, newLevel);
+          const player = await fetchPlayerByTelegramId(user.id);
+          if (!player || !player.documentId) {
+            console.warn("⚠️ Игрок не найден или нет documentId");
+            return;
+          }
 
-          // ✅ После успешного обновления — сохраняем локально
-          set({ level: newLevel, points: newPoints });
+          await updatePlayerWithFallback(player.documentId, {
+            level: newLevel,
+          });
 
-          // Сброс кликов
-          useMbStore.getState().resetCount();
-
-          console.log("✅ Уровень обновлён в Strapi и локально:", newLevel);
+          console.log("✅ Уровень обновлён в Strapi:", newLevel);
         } catch (err) {
           console.error("❌ Ошибка при обновлении уровня:", err);
         }

@@ -1,8 +1,9 @@
 import { Routes, Route, BrowserRouter } from "react-router-dom";
-import { lazy, Suspense }  from "react";
+import { lazy, Suspense, useEffect }  from "react";
 import LoadingPage from "./pages/LoadingPage";
 import useTelegramAuth from "./hooks/useTelegramAuth";
 import AutoSaveClicks from "./components/AutoSaveClisk";
+import { retryPendingUpdate } from "./services/playerService";
 
 const HomePage = lazy(() => import("./pages/HomePage"))
 const ExchangePage = lazy(() => import("./pages/ExchangePage"))
@@ -13,6 +14,10 @@ const FriendsPage = lazy(() => import('./pages/FriendsPage'))
 
 const App = () => {
   useTelegramAuth();
+
+  useEffect(() => {
+    retryPendingUpdate();
+  }, []);
 
   return (
     <BrowserRouter>
