@@ -10,7 +10,7 @@ const ProgressBar = () => {
   const progress = useMbStore((state) => state.progressTokens);
   const saveTokensToStrapi = useMbStore((state) => state.saveTokensToStrapi);
 
-  const { player, loadPlayer } = usePlayerData();
+  const { loadPlayer } = usePlayerData();
 
   const level = useLvlStore((state) => state.level);
   const points = useLvlStore((state) => state.points);
@@ -40,26 +40,6 @@ const ProgressBar = () => {
       upgradedRef.current = false;
     }
   }, [progress, points]);
-
-  if (!player) {
-    return (
-      <div className="progress-bar-container">
-        <div className="lvl">
-          <span>Загрузка...</span>
-          <div className="progress-bar">
-            <div className="progress-bar__wrapper">
-              <div className="progress-bar__fill" style={{ width: "0%" }}></div>
-            </div>
-          </div>
-          <span>Загрузка...</span>
-        </div>
-        <div className="target">
-          <p>Загрузка данных...</p>
-          <img src={click} alt="click icon" />
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="progress-bar-container">
