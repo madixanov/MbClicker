@@ -4,6 +4,8 @@ import LoadingPage from "./pages/LoadingPage";
 import useTelegramAuth from "./hooks/useTelegramAuth";
 import AutoSaveClicks from "./components/AutoSaveClisk";
 import { retryPendingUpdate } from "./services/playerService";
+import useLvlStore from "./store/lvl-store";
+import useMbStore from "./store/mb-store";
 
 const HomePage = lazy(() => import("./pages/HomePage"))
 const ExchangePage = lazy(() => import("./pages/ExchangePage"))
@@ -14,6 +16,15 @@ const FriendsPage = lazy(() => import('./pages/FriendsPage'))
 
 const App = () => {
   useTelegramAuth();
+
+  useEffect(() => {
+    const syncData = async () => {
+      await useLvlStore.getState().loadLevelFromStrapi();
+      await useMbStore.getState().loadClicksFromStrapi();
+    }
+
+    syncData();
+  }, []);
 
   useEffect(() => {
     retryPendingUpdate();
