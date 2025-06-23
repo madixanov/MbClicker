@@ -33,7 +33,7 @@ const useMbStore = create((set, get) => ({
 
     await updatePlayerWithFallback(player.documentId, {
       clicks: newAll,
-      progressTokens: newTokens,
+      progress_tokens: newTokens,
     });
   },
 
@@ -52,12 +52,12 @@ const useMbStore = create((set, get) => ({
 
     set({
       mbCountAll: Number(player.clicks) || 0,
-      progressTokens: Number(player.progressTokens) || 0,
+      progressTokens: Number(player.progress_tokens) || 0,
     });
 
     console.log("🔁 Данные игрока загружены:", {
       clicks: player.clicks,
-      progressTokens: player.progressTokens,
+      progressTokens: player.progress_tokens,
     });
   },
 
