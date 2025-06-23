@@ -7,12 +7,13 @@ import {
   fetchPlayerByTelegramId,
   updatePlayerWithFallback,
 } from "../services/playerService";
+import { calculatePoints } from "../utils/levelUtils";
 
 const useLvlStore = create(
   persist(
     (set, get) => ({
       level: 1,
-      points: 1024,
+      points: calculatePoints(1),
 
       // Загрузка уровня из Strapi
       loadLevelFromStrapi: async () => {
@@ -22,21 +23,24 @@ const useLvlStore = create(
         try {
           const player = await fetchPlayerByTelegramId(user.id);
           if (player && player.level !== undefined) {
-            set({ level: player.level });
-            console.log("✅ Уровень загружен из Strapi:", player.level);
+            const level = player.level;
+            const points = calculatePoints(level);
+            set({ level, points });
+
+            console.log("✅ Уровень загружен из Strapi:", level);
           }
         } catch (err) {
           console.error("❌ Ошибка при загрузке уровня:", err);
         }
       },
 
-      // Повышение уровня и обновление на сервере
+      // Повышение уровня
       upgradeLevel: async () => {
-        const { level, points } = get();
+        const { level } = get();
         const newLevel = level + 1;
-        const newPoints = points * 2;
+        const newPoints = calculatePoints(newLevel);
 
-        // Локально
+        // Локальное обновление
         set({ level: newLevel, points: newPoints });
 
         // Сброс кликов
