@@ -15,7 +15,28 @@ const ProgressBar = () => {
 
   const upgradedRef = useRef(false);
 
-  // Если игрок еще загружается
+  const progress = Number(player?.progress_tokens ?? 0);
+  const progressPercent = Math.min(Math.max((progress / points) * 100, 0), 100);
+
+  // ⏱ Автосохранение токенов каждые 15 секунд
+  useEffect(() => {
+    const interval = setInterval(() => {
+      useMbStore.getState().saveTokensToStrapi();
+    }, 15000);
+    return () => clearInterval(interval);
+  }, []);
+
+  // ⬆ Проверка на повышение уровня
+  useEffect(() => {
+    if (progress >= points && !upgradedRef.current) {
+      upgradedRef.current = true;
+      upgradeLevel();
+      resetCount();
+    } else if (progress < points) {
+      upgradedRef.current = false;
+    }
+  }, [progress, points]);
+
   if (!player) {
     return (
       <div className="progress-bar-container">
@@ -35,28 +56,6 @@ const ProgressBar = () => {
       </div>
     );
   }
-
-  const progress = Number(player.progress_tokens ?? 0);
-  const progressPercent = Math.min(Math.max((progress / points) * 100, 0), 100);
-
-  // ⏱ Автосохранение токенов каждые 15 секунд
-  useEffect(() => {
-    const interval = setInterval(() => {
-      useMbStore.getState().saveTokensToStrapi();
-    }, 15000);
-    return () => clearInterval(interval);
-  }, []);
-
-  // ⬆ Проверка на повышение уровня
-  useEffect(() => {
-    if (progress >= points && !upgradedRef.current) {
-      upgradedRef.current = true;
-      upgradeLevel();     // Увеличиваем уровень
-      resetCount();       // Сбрасываем прогресс токенов
-    } else if (progress < points) {
-      upgradedRef.current = false;
-    }
-  }, [progress, points]);
 
   return (
     <div className="progress-bar-container">
