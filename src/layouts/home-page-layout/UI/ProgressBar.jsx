@@ -8,7 +8,6 @@ import click from "../../../assets/icons/click.svg";
 const ProgressBar = () => {
   const resetCount = useMbStore((state) => state.resetCount);
   const { player } = usePlayerData();
-  const progress = Number(player.progress_tokens);
 
   const level = useLvlStore((state) => state.level);
   const points = useLvlStore((state) => state.points);
@@ -16,6 +15,31 @@ const ProgressBar = () => {
 
   const upgradedRef = useRef(false);
 
+  // Если игрок еще загружается
+  if (!player) {
+    return (
+      <div className="progress-bar-container">
+        <div className="lvl">
+          <span>Загрузка...</span>
+          <div className="progress-bar">
+            <div className="progress-bar__wrapper">
+              <div className="progress-bar__fill" style={{ width: "0%" }}></div>
+            </div>
+          </div>
+          <span>Загрузка...</span>
+        </div>
+        <div className="target">
+          <p>Загрузка данных...</p>
+          <img src={click} alt="click icon" />
+        </div>
+      </div>
+    );
+  }
+
+  const progress = Number(player.progress_tokens ?? 0);
+  const progressPercent = Math.min(Math.max((progress / points) * 100, 0), 100);
+
+  // ⏱ Автосохранение токенов каждые 15 секунд
   useEffect(() => {
     const interval = setInterval(() => {
       useMbStore.getState().saveTokensToStrapi();
@@ -23,17 +47,16 @@ const ProgressBar = () => {
     return () => clearInterval(interval);
   }, []);
 
+  // ⬆ Проверка на повышение уровня
   useEffect(() => {
     if (progress >= points && !upgradedRef.current) {
       upgradedRef.current = true;
-      upgradeLevel();     // ⬆ повысили уровень и сохранили в Strapi
-      resetCount();       // 🔁 сброс прогресса
+      upgradeLevel();     // Увеличиваем уровень
+      resetCount();       // Сбрасываем прогресс токенов
     } else if (progress < points) {
-      upgradedRef.current = false; // сброс флага, когда пользователь ещё не достиг нового уровня
+      upgradedRef.current = false;
     }
   }, [progress, points]);
-
-  const progressPercent = Math.min(Math.max((progress / points) * 100, 0), 100);
 
   return (
     <div className="progress-bar-container">
