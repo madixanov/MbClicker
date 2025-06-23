@@ -2,7 +2,7 @@ import useMbStore from "../store/mb-store";
 import getTelegramUser from "../utils/getTelegramUser";
 import {
   fetchPlayerByTelegramId,
-  updatePlayerClicks,
+  updatePlayer,
 } from "../services/playerService";
 
 const syncClicksToStrapi = async () => {
@@ -22,7 +22,7 @@ const syncClicksToStrapi = async () => {
       return;
     }
 
-    await updatePlayerClicks(player.documentId, mbCountAll);
+    await updatePlayer(player.documentId, { clicks: mbCountAll });
 
     console.log("✅ Клики обновлены (ID:", player.documentId, ")");
   } catch (err) {
