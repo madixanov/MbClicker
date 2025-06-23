@@ -1,54 +1,50 @@
-import { useEffect } from 'react';
-import axios from 'axios';
+import { useEffect } from "react";
+import getTelegramUser from "../utils/getTelegramUser";
+import { fetchPlayerByTelegramId, createPlayer } from "../services/playerService";
 
 const useTelegramAuth = () => {
   useEffect(() => {
-    const tg = window.Telegram?.WebApp;
-    if (!tg) return;
+    const initAuth = async () => {
+      const user = getTelegramUser();
 
-    tg.ready();
+      if (!user) {
+        console.warn("❌ Пользователь Telegram не найден");
+        return;
+      }
 
-    const user = tg?.initDataUnsafe?.user;
+      const telegram_id = Number(user.id);
 
-    if (!user) return;
+      const telegramUser = {
+        telegram_id,
+        username: user.username || "",
+        photo_url: user.photo_url || "",
+        first_name: user.first_name || "",
+        last_name: user.last_name || "",
+      };
 
-    const telegram_id = Number(user.id); // ⬅️ Всегда как число
+      try {
+        const existingPlayer = await fetchPlayerByTelegramId(telegram_id);
 
-    const telegramUser = {
-      telegram_id,
-      username: user.username,
-      photo_url: user.photo_url,
-      first_name: user.first_name,
-      last_name: user.last_name,
+        if (!existingPlayer) {
+          const res = await createPlayer(telegramUser);
+          console.log("🎉 Новый пользователь сохранён:", res.data);
+          window.location.reload(); // ❗ перезагрузка по желанию
+        } else {
+          console.log("✅ Пользователь уже существует (id:", existingPlayer.id, ")");
+        }
+      } catch (err) {
+        if (
+          err.response?.status === 400 &&
+          err.response.data?.error?.message?.includes("already exists")
+        ) {
+          console.warn("⚠️ Пользователь уже существует (ошибка дубликата)");
+        } else {
+          console.error("❌ Ошибка при авторизации:", err);
+        }
+      }
     };
 
-    axios
-      .get(`https://mbclickerstrapi.onrender.com/api/players?filters[telegram_id][$eq]=${telegram_id}`)
-      .then((res) => {
-        const players = res.data.data;
-        if (players.length === 0) {
-          // ✅ Только если игрока нет — создаём
-          return axios.post('https://mbclickerstrapi.onrender.com/api/players', {
-            data: telegramUser,
-          });
-        } else {
-          console.log('✅ Пользователь уже существует в базе (id:', players[0].id, ')');
-        }
-      })
-      .then((res) => {
-        if (res) {
-            console.log('🎉 Новый пользователь сохранён', res.data);
-            window.location.reload();
-        }
-      })
-      .catch((err) => {
-        // Обработка ошибки при попытке дублировать
-        if (err.response?.status === 400 && err.response.data?.error?.message?.includes("already exists")) {
-          console.warn("⚠️ Пользователь уже существует (Strapi вернул duplicate error)");
-        } else {
-          console.error("❌ Ошибка при аутентификации:", err);
-        }
-      });
+    initAuth();
   }, []);
 };
 

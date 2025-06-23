@@ -1,10 +1,13 @@
-import axios from "axios";
 import useMbStore from "../store/mb-store";
+import getTelegramUser from "../utils/getTelegramUser";
+import {
+  fetchPlayerByTelegramId,
+  updatePlayerClicks,
+} from "../services/playerService";
 
 const syncClicksToStrapi = async () => {
   const { mbCountAll } = useMbStore.getState();
-  const tg = window.Telegram?.WebApp;
-  const user = tg?.initDataUnsafe?.user;
+  const user = getTelegramUser();
 
   if (!user) {
     console.warn("❌ Пользователь Telegram не найден");
@@ -12,33 +15,16 @@ const syncClicksToStrapi = async () => {
   }
 
   try {
-    const res = await axios.get("https://mbclickerstrapi.onrender.com/api/players", {
-      params: {
-        filters: {
-          telegram_id: {
-            $eq: user.id,
-          },
-        },
-        publicationState: "preview",
-      },
-    });
+    const player = await fetchPlayerByTelegramId(user.id);
 
-    const player = res.data.data[0];
-
-    if (!player) {
-      console.warn("⚠️ Игрок не найден");
+    if (!player || !player.documentId) {
+      console.warn("⚠️ Игрок или его documentId не найден");
       return;
     }
 
-    const id = player.documentId; // ✅ используем id напрямую из data[0]
+    await updatePlayerClicks(player.documentId, mbCountAll);
 
-    await axios.put(`https://mbclickerstrapi.onrender.com/api/players/${id}`, {
-      data: {
-        clicks: mbCountAll,
-      },
-    });
-
-    console.log("✅ Клики обновлены (ID:", id, ")");
+    console.log("✅ Клики обновлены (ID:", player.documentId, ")");
   } catch (err) {
     console.error("❌ Ошибка при сохранении кликов:", err.response?.data || err);
   }

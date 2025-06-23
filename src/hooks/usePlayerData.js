@@ -1,41 +1,43 @@
 import { useState, useEffect } from "react";
-import axios from "axios";
+import getTelegramUser from "../utils/getTelegramUser";
+import { fetchPlayerByTelegramId } from "../services/playerService";
 
 const usePlayerData = () => {
   const [player, setPlayer] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const tg = window.Telegram?.WebApp;
-    const user = tg?.initDataUnsafe?.user;
+    const fetchPlayer = async () => {
+      const user = getTelegramUser();
 
-    if (!user) {
-      console.warn("❌ Пользователь Telegram не найден");
-      setLoading(false);
-      return;
-    }
+      if (!user) {
+        console.warn("❌ Пользователь Telegram не найден");
+        setLoading(false);
+        return;
+      }
 
-    const telegramId = user.id;
-    const url = `https://mbclickerstrapi.onrender.com/api/players?filters[telegram_id][$eq]=${telegramId}`;
+      try {
+        const playerData = await fetchPlayerByTelegramId(user.id);
 
-    axios
-      .get(url)
-      .then((res) => {
-        const data = res.data.data;
-        if (data && data.length > 0) {
-          setPlayer(data[0]); // 👈 правильная строка
+        if (playerData) {
+          setPlayer(playerData);
         } else {
           console.warn("⚠️ Игрок не найден в Strapi");
           setPlayer(null);
         }
-      })
-      .catch((err) => {
+      } catch (err) {
         console.error("❌ Ошибка при получении игрока:", err);
-      })
-      .finally(() => setLoading(false));
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchPlayer();
   }, []);
 
-  return { player, loading };
+  return { player, loading, error };
 };
 
 export default usePlayerData;
