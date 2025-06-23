@@ -8,6 +8,7 @@ import click from "../../../assets/icons/click.svg";
 const ProgressBar = () => {
   const resetCount = useMbStore((state) => state.resetCount);
   const { player } = usePlayerData();
+  const progress = Number(player.progress_tokens);
 
   const level = useLvlStore((state) => state.level);
   const points = useLvlStore((state) => state.points);
@@ -23,14 +24,14 @@ const ProgressBar = () => {
   }, []);
 
   useEffect(() => {
-    if (player.progress_tokens >= points && !upgradedRef.current) {
+    if (progress >= points && !upgradedRef.current) {
       upgradedRef.current = true;
       upgradeLevel();     // ⬆ повысили уровень и сохранили в Strapi
       resetCount();       // 🔁 сброс прогресса
-    } else if (player.progress_tokens < points) {
+    } else if (progress < points) {
       upgradedRef.current = false; // сброс флага, когда пользователь ещё не достиг нового уровня
     }
-  }, [player.progress_tokens, points]);
+  }, [progress, points]);
 
   const progressPercent = Math.min(Math.max((progress / points) * 100, 0), 100);
 
