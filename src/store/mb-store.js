@@ -13,7 +13,7 @@ const useMbStore = create(
       // ← динамический инкремент
       increment: () => {
         const level = useLvlStore.getState().level || 1;
-        const mbIncrement = 10 + level;
+        const mbIncrement = 10 + (level - 1);
 
         set((state) => ({
           mbCountAll: state.mbCountAll + mbIncrement,

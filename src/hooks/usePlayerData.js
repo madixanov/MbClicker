@@ -7,37 +7,37 @@ const usePlayerData = () => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  const loadPlayer = async () => {
+    const user = getTelegramUser();
+
+    if (!user) {
+      console.warn("❌ Пользователь Telegram не найден");
+      setLoading(false);
+      return;
+    }
+
+    try {
+      const playerData = await fetchPlayerByTelegramId(user.id);
+
+      if (playerData) {
+        setPlayer(playerData);
+      } else {
+        console.warn("⚠️ Игрок не найден в Strapi");
+        setPlayer(null);
+      }
+    } catch (err) {
+      console.error("❌ Ошибка при получении игрока:", err);
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    const fetchPlayer = async () => {
-      const user = getTelegramUser();
-
-      if (!user) {
-        console.warn("❌ Пользователь Telegram не найден");
-        setLoading(false);
-        return;
-      }
-
-      try {
-        const playerData = await fetchPlayerByTelegramId(user.id);
-
-        if (playerData) {
-          setPlayer(playerData);
-        } else {
-          console.warn("⚠️ Игрок не найден в Strapi");
-          setPlayer(null);
-        }
-      } catch (err) {
-        console.error("❌ Ошибка при получении игрока:", err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchPlayer();
+    loadPlayer();
   }, []);
 
-  return { player, loading, error };
+  return { player, setPlayer, loadPlayer, loading, error };
 };
 
 export default usePlayerData;
