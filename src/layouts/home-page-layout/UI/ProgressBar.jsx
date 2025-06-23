@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import useMbStore from "../../../store/mb-store";
 import useLvlStore from "../../../store/lvl-store";
 
@@ -6,18 +6,21 @@ import click from "../../../assets/icons/click.svg";
 
 const ProgressBar = () => {
   const progress = useMbStore((state) => state.mbCount);
-  const incrementMbInc = useMbStore((state) => state.incrementMbInc);
   const resetCount = useMbStore((state) => state.resetCount);
 
   const level = useLvlStore((state) => state.level);
   const points = useLvlStore((state) => state.points);
   const upgradeLevel = useLvlStore((state) => state.upgradeLevel);
 
+  const upgradedRef = useRef(false);
+
   useEffect(() => {
-    if (progress >= points) {
-      upgradeLevel();     // ✅ теперь сохраняет и в Strapi
-      resetCount();
-      incrementMbInc();
+    if (progress >= points && !upgradedRef.current) {
+      upgradedRef.current = true;
+      upgradeLevel();     // ⬆ повысили уровень и сохранили в Strapi
+      resetCount();       // 🔁 сброс прогресса
+    } else if (progress < points) {
+      upgradedRef.current = false; // сброс флага, когда пользователь ещё не достиг нового уровня
     }
   }, [progress, points]);
 
