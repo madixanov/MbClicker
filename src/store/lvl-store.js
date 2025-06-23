@@ -7,43 +7,42 @@ import {
   fetchPlayerByTelegramId,
   updatePlayerWithFallback,
 } from "../services/playerService";
-import { calculatePoints } from "../utils/levelUtils";
 
 const useLvlStore = create(
   persist(
     (set, get) => ({
       level: 1,
-      points: calculatePoints(1),
+      points: 1024,
 
-      // Загрузка уровня из Strapi
+      // 🔁 Загрузка уровня из Strapi + пересчёт points
       loadLevelFromStrapi: async () => {
         const user = getTelegramUser();
         if (!user) return;
 
         try {
           const player = await fetchPlayerByTelegramId(user.id);
-          if (player && player.level !== undefined) {
+
+          if (player && typeof player.level === "number") {
             const level = player.level;
-            const points = calculatePoints(level);
+            const points = 1024 * 2 ** (level - 1); // ⬅ расчёт цели
+
             set({ level, points });
 
-            console.log("✅ Уровень загружен из Strapi:", level);
+            console.log("✅ Синхронизировано: уровень", level, "цель:", points);
           }
         } catch (err) {
-          console.error("❌ Ошибка при загрузке уровня:", err);
+          console.error("❌ Ошибка загрузки уровня:", err);
         }
       },
 
-      // Повышение уровня
+      // ⬆ Повышение уровня + сохранение в Strapi
       upgradeLevel: async () => {
         const { level } = get();
         const newLevel = level + 1;
-        const newPoints = calculatePoints(newLevel);
+        const newPoints = 1024 * 2 ** (newLevel - 1);
 
-        // Локальное обновление
         set({ level: newLevel, points: newPoints });
 
-        // Сброс кликов
         useMbStore.getState().resetCount();
 
         const user = getTelegramUser();
@@ -52,7 +51,7 @@ const useLvlStore = create(
         try {
           const player = await fetchPlayerByTelegramId(user.id);
           if (!player || !player.documentId) {
-            console.warn("⚠️ Игрок не найден или нет documentId");
+            console.warn("⚠️ Игрок не найден или documentId отсутствует");
             return;
           }
 
@@ -60,9 +59,9 @@ const useLvlStore = create(
             level: newLevel,
           });
 
-          console.log("✅ Уровень обновлён в Strapi:", newLevel);
+          console.log("🎉 Уровень обновлён в Strapi:", newLevel);
         } catch (err) {
-          console.error("❌ Ошибка при обновлении уровня:", err);
+          console.error("❌ Ошибка обновления уровня:", err);
         }
       },
     }),
