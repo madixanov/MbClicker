@@ -6,6 +6,7 @@ import AutoSaveClicks from "./components/AutoSaveClisk";
 import { retryPendingUpdate } from "./services/playerService";
 import useLvlStore from "./store/lvl-store";
 import useMbStore from "./store/mb-store";
+import useSyncOnUnload from "./hooks/useSyncOnUnload";
 
 const HomePage = lazy(() => import("./pages/HomePage"))
 const ExchangePage = lazy(() => import("./pages/ExchangePage"))
@@ -16,6 +17,7 @@ const FriendsPage = lazy(() => import('./pages/FriendsPage'))
 
 const App = () => {
   useTelegramAuth();
+  useSyncOnUnload();
 
   useEffect(() => {
     const syncData = async () => {
