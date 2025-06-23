@@ -1,0 +1,1 @@
+export const calculatePoints = (level) => 1024 * Math.pow(2, level - 1);
