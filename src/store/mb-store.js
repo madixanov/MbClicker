@@ -60,6 +60,22 @@ const useMbStore = create((set, get) => ({
       progressTokens: player.progressTokens,
     });
   },
+
+  saveTokensToStrapi: async () => {
+    const user = getTelegramUser();
+    if (!user) return;
+
+    const player = await fetchPlayerByTelegramId(user.id);
+    if (!player || !player.documentId) return;
+
+    const { progressTokens } = get();
+
+    await updatePlayerWithFallback(player.documentId, {
+      progressTokens,
+    });
+
+    console.log("💾 Прогресс токены сохранены в Strapi:", progressTokens);
+  },
 }));
 
 export default useMbStore;
