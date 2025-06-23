@@ -13,13 +13,14 @@ const useSyncOnUnload = () => {
       const player = await fetchPlayerByTelegramId(user.id);
       if (!player || !player.documentId) return;
 
-      const { mbCountAll } = useMbStore.getState();
+      const { mbCountAll, progressTokens } = useMbStore.getState();
       const { level } = useLvlStore.getState();
 
       try {
         await updatePlayerWithFallback(player.documentId, {
           clicks: mbCountAll,
           level,
+          progress_tokens: progressTokens
         });
         console.log("💾 Данные игрока синхронизированы перед выходом");
       } catch (err) {

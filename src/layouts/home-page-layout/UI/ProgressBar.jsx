@@ -5,7 +5,7 @@ import useLvlStore from "../../../store/lvl-store";
 import click from "../../../assets/icons/click.svg";
 
 const ProgressBar = () => {
-  const progress = useMbStore((state) => state.mbCount);
+  const progress = useMbStore((state) => state.progressTokens);
   const resetCount = useMbStore((state) => state.resetCount);
 
   const level = useLvlStore((state) => state.level);
@@ -13,6 +13,13 @@ const ProgressBar = () => {
   const upgradeLevel = useLvlStore((state) => state.upgradeLevel);
 
   const upgradedRef = useRef(false);
+
+  useEffect(() => {
+    const interval = setInterval(() => {
+      useMbStore.getState().saveTokensToStrapi();
+    }, 15000);
+    return () => clearInterval(interval);
+  }, []);
 
   useEffect(() => {
     if (progress >= points && !upgradedRef.current) {
