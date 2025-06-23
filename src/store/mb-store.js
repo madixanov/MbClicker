@@ -24,7 +24,7 @@ const useMbStore = create(
       // ← геттер инкремента
       getMbIncrement: () => {
         const level = useLvlStore.getState().level || 1;
-        return 10 + level;
+        return 10 + (level - 1);
       },
 
       resetCount: () => set(() => ({ mbCount: 0 })),
