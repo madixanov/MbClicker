@@ -7,7 +7,7 @@ import click from "../../../assets/icons/click.svg";
 
 const ProgressBar = () => {
   const resetCount = useMbStore((state) => state.resetCount);
-  const { player } = usePlayerData();
+  const { player, loadPlayer } = usePlayerData();
 
   const level = useLvlStore((state) => state.level);
   const points = useLvlStore((state) => state.points);
@@ -20,11 +20,13 @@ const ProgressBar = () => {
 
   // ⏱ Автосохранение токенов каждые 15 секунд
   useEffect(() => {
-    const interval = setInterval(() => {
-      useMbStore.getState().saveTokensToStrapi();
+  const interval = setInterval(async () => {
+    await useMbStore.getState().saveTokensToStrapi();
+    await loadPlayer(); // 🔄 Подтянуть обновлённые данные из Strapi
     }, 15000);
     return () => clearInterval(interval);
   }, []);
+
 
   // ⬆ Проверка на повышение уровня
   useEffect(() => {
