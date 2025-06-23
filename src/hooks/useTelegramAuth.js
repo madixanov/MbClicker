@@ -1,13 +1,18 @@
 import { useEffect, useRef } from "react";
 import getTelegramUser from "../utils/getTelegramUser";
-import { fetchPlayerByTelegramId, createPlayer } from "../services/playerService";
+import {
+  fetchPlayerByTelegramId,
+  createPlayer,
+} from "../services/playerService";
+import usePlayerData from "../hooks/usePlayerData"; // ✅ импорт хука
 
 const useTelegramAuth = () => {
-  const isCreating = useRef(false); // 🔒 блокировка повторного вызова
+  const isCreating = useRef(false); // 🔒 защита от повторов
+  const { setPlayer } = usePlayerData(); // ✅ доступ к setPlayer
 
   useEffect(() => {
     const initAuth = async () => {
-      if (isCreating.current) return; // уже в процессе
+      if (isCreating.current) return;
       isCreating.current = true;
 
       const user = getTelegramUser();
@@ -18,7 +23,6 @@ const useTelegramAuth = () => {
       }
 
       const telegram_id = Number(user.id);
-
       const telegramUser = {
         telegram_id,
         username: user.username || "",
@@ -32,12 +36,16 @@ const useTelegramAuth = () => {
 
         if (!existingPlayer) {
           const res = await createPlayer(telegramUser);
-          console.log("🎉 Новый пользователь сохранён:", res.data);
+          const newPlayer = res.data?.data;
+          console.log("🎉 Новый пользователь сохранён:", newPlayer);
 
-          // ❗ Перезагружать только если нужно
-          // window.location.reload();
+          // ✅ сразу сохраняем в состояние
+          if (newPlayer) {
+            setPlayer(newPlayer);
+          }
         } else {
           console.log("✅ Пользователь уже существует (id:", existingPlayer.id, ")");
+          setPlayer(existingPlayer); // ✅ гарантированная установка
         }
       } catch (err) {
         if (
@@ -54,7 +62,7 @@ const useTelegramAuth = () => {
     };
 
     initAuth();
-  }, []);
+  }, [setPlayer]); // 🔁 зависимость для React (хотя setPlayer стабилен)
 };
 
 export default useTelegramAuth;
