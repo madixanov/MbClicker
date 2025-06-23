@@ -8,17 +8,18 @@ import exchange1 from "../../../assets/icons/exchange1.svg";
 
 import useMbStore from "../../../store/mb-store.js";
 import usePlayerData from "../../../hooks/usePlayerData.js";
-import useUpdatePlayer from "../../../hooks/useUpdatePlayer"; // ✅ наш хук обновления
+import useUpdatePlayer from "../../../hooks/useUpdatePlayer";
 
 const MbCounter = () => {
-  const { player } = usePlayerData(); // получаем игрока
-  const updatePlayer = useUpdatePlayer(); // хук обновления
+  const { player } = usePlayerData();
+  const updatePlayer = useUpdatePlayer();
   const mbCountAll = useMbStore((state) => state.mbCountAll);
 
   const [animatedCount, setAnimatedCount] = useState(player?.clicks ?? mbCountAll);
   const prevCountRef = useRef(mbCountAll);
   const navigate = useNavigate();
 
+  // 🎞 Анимация при клике
   useEffect(() => {
     if (prevCountRef.current === mbCountAll) return;
 
@@ -34,12 +35,17 @@ const MbCounter = () => {
     return () => controls.stop();
   }, [mbCountAll]);
 
-
+  // ⏳ Обновление в Strapi — раз в 15 секунд
   useEffect(() => {
     if (!player || !player.documentId) return;
 
-    updatePlayer({ clicks: mbCountAll });
-  }, [mbCountAll]);
+    const interval = setInterval(() => {
+      updatePlayer({ clicks: mbCountAll });
+      console.log("📤 Обновлены клики:", mbCountAll);
+    }, 15000); // ⏱️ раз в 15 сек
+
+    return () => clearInterval(interval); // очищаем при размонтировании
+  }, [mbCountAll, player?.documentId]);
 
   // 🔁 Навигация
   const handleClick = () => navigate("/exchange");
