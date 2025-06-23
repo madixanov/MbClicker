@@ -7,6 +7,9 @@ import click from "../../../assets/icons/click.svg";
 
 const ProgressBar = () => {
   const resetCount = useMbStore((state) => state.resetCount);
+  const progress = useMbStore((state) => state.progressTokens);
+  const saveTokensToStrapi = useMbStore((state) => state.saveTokensToStrapi);
+
   const { player, loadPlayer } = usePlayerData();
 
   const level = useLvlStore((state) => state.level);
@@ -15,25 +18,24 @@ const ProgressBar = () => {
 
   const upgradedRef = useRef(false);
 
-  const progress = Number(player?.progress_tokens ?? 0);
   const progressPercent = Math.min(Math.max((progress / points) * 100, 0), 100);
 
-  // ⏱ Автосохранение токенов каждые 15 секунд
+  // ⏱ Автосохранение и синхронизация с сервером
   useEffect(() => {
-  const interval = setInterval(async () => {
-    await useMbStore.getState().saveTokensToStrapi();
-    await loadPlayer(); // 🔄 Подтянуть обновлённые данные из Strapi
+    const interval = setInterval(async () => {
+      await saveTokensToStrapi(); // сохраняем прогресс
+      await loadPlayer();         // загружаем обновлённые данные
     }, 15000);
+
     return () => clearInterval(interval);
   }, []);
 
-
-  // ⬆ Проверка на повышение уровня
+  // ⬆ Проверка достижения уровня
   useEffect(() => {
     if (progress >= points && !upgradedRef.current) {
       upgradedRef.current = true;
       upgradeLevel();
-      resetCount();
+      resetCount(); // сброс токенов
     } else if (progress < points) {
       upgradedRef.current = false;
     }
