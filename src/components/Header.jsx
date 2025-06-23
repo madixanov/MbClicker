@@ -2,13 +2,13 @@ import useModalStore from "../store/modal-store";
 import dark from "../assets/icons/dark.svg";
 import light from "../assets/icons/light.svg"
 import './header.css'
-import usePlayerData from "../hooks/usePlayerData";
+import usePlayerStore from "../store/player-store";
 
 const Header = () => {
     const setModalDay = useModalStore((state) => state.setModalDay);
     const setModalTheme = useModalStore((state) => state.setModalTheme);
 
-    const { player } = usePlayerData();
+    const player = usePlayerStore((state) => state.player);
     console.log(player);
 
     return (
