@@ -1,14 +1,19 @@
-import { useEffect } from "react";
+import { useEffect, useRef } from "react";
 import getTelegramUser from "../utils/getTelegramUser";
 import { fetchPlayerByTelegramId, createPlayer } from "../services/playerService";
 
 const useTelegramAuth = () => {
+  const isCreating = useRef(false); // 🔒 блокировка повторного вызова
+
   useEffect(() => {
     const initAuth = async () => {
-      const user = getTelegramUser();
+      if (isCreating.current) return; // уже в процессе
+      isCreating.current = true;
 
+      const user = getTelegramUser();
       if (!user) {
         console.warn("❌ Пользователь Telegram не найден");
+        isCreating.current = false;
         return;
       }
 
@@ -28,7 +33,9 @@ const useTelegramAuth = () => {
         if (!existingPlayer) {
           const res = await createPlayer(telegramUser);
           console.log("🎉 Новый пользователь сохранён:", res.data);
-          window.location.reload(); // ❗ перезагрузка по желанию
+
+          // ❗ Перезагружать только если нужно
+          // window.location.reload();
         } else {
           console.log("✅ Пользователь уже существует (id:", existingPlayer.id, ")");
         }
@@ -41,6 +48,8 @@ const useTelegramAuth = () => {
         } else {
           console.error("❌ Ошибка при авторизации:", err);
         }
+      } finally {
+        isCreating.current = false;
       }
     };
 
