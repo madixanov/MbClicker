@@ -71,7 +71,7 @@ const useMbStore = create((set, get) => ({
     const { progressTokens } = get();
 
     await updatePlayerWithFallback(player.documentId, {
-      progressTokens,
+      progress_tokens: progressTokens,
     });
 
     console.log("💾 Прогресс токены сохранены в Strapi:", progressTokens);
