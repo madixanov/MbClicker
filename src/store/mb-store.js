@@ -1,45 +1,53 @@
-import { create } from "zustand";
-import { persist } from "zustand/middleware";
-import getTelegramUser from "../utils/getTelegramUser";
-import { fetchPlayerByTelegramId } from "../services/playerService";
+import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
+import { fetchPlayerByTelegramId } from '../services/playerService';
+import getTelegramUser from '../utils/getTelegramUser';
 
 const useMbStore = create(
   persist(
     (set, get) => ({
-      mbCount: 0,
-      mbCountAll: 0,
-      mbInc: 1,
+      mbCountAll: 0,      // общий счёт (в Strapi)
+      mbCount: 0,         // локальный прогресс до следующего уровня
+      mbIncrement: 10,    // шаг
 
-      // Загрузка кликов с сервера
-      loadClicksFromStrapi: async () => {
+      // Увеличить счётчик
+      increment: () =>
+        set((state) => ({
+          mbCountAll: state.mbCountAll + state.mbIncrement,
+          mbCount: state.mbCount + state.mbIncrement,
+        })),
+
+      // Увеличить инкремент
+      incrementMbInc: () =>
+        set((state) => ({
+          mbIncrement: state.mbIncrement + 1,
+        })),
+
+      // Сброс локального счётчика
+      resetCount: () =>
+        set(() => ({
+          mbCount: 0,
+        })),
+
+      // 🔁 Загрузка из Strapi
+      loadMbFromPlayer: async () => {
         const user = getTelegramUser();
         if (!user) return;
 
-        try {
-          const player = await fetchPlayerByTelegramId(user.id);
-          if (player && player.clicks !== undefined) {
-            set({ mbCount: player.clicks, mbCountAll: player.clicks });
-            console.log("✅ Клики загружены из Strapi:", player.clicks);
-          }
-        } catch (err) {
-          console.error("❌ Ошибка при загрузке кликов:", err);
-        }
-      },
+        const player = await fetchPlayerByTelegramId(user.id);
+        if (!player) return;
 
-      incrementMb: () => {
-        const { mbCount, mbCountAll, mbInc } = get();
-        set({ mbCount: mbCount + mbInc, mbCountAll: mbCountAll + mbInc });
-      },
+        const clicks = player.clicks ?? 0;
 
-      resetCount: () => set({ mbCount: 0 }),
+        set({
+          mbCountAll: clicks,
+        });
 
-      incrementMbInc: () => {
-        const { mbInc } = get();
-        set({ mbInc: mbInc + 1 });
+        console.log("🔁 Загружены данные из Strapi:", { clicks });
       },
     }),
     {
-      name: "mb-storage",
+      name: 'mbCounter-storage',
       getStorage: () => localStorage,
     }
   )

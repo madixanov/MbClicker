@@ -17,14 +17,14 @@ const FriendsPage = lazy(() => import('./pages/FriendsPage'))
 const App = () => {
   useTelegramAuth();
 
-  // useEffect(() => {
-  //   const syncData = async () => {
-  //     await useLvlStore.getState().loadLevelFromStrapi();
-  //     await useMbStore.getState().loadClicksFromStrapi();
-  //   }
+  useEffect(() => {
+    const syncData = async () => {
+      await useLvlStore.getState().loadLevelFromStrapi();
+      await useMbStore.getState().loadMbFromPlayer();
+    }
 
-  //   syncData();
-  // }, []);
+    syncData();
+  }, []);
 
   useEffect(() => {
     retryPendingUpdate();
