@@ -5,8 +5,9 @@ import useTelegramAuth from "./hooks/useTelegramAuth";
 import AutoSaveClicks from "./components/AutoSaveClisk";
 import { retryPendingUpdate } from "./services/playerService";
 import useSyncOnUnload from "./hooks/useSyncOnUnload";
-import useAppReady from "./hooks/useAppReady"; // ⬅ подключаем хук
+import useAppReady from "./hooks/useAppReady";
 
+// Lazy загружаемые страницы
 const HomePage = lazy(() => import("./pages/HomePage"));
 const ExchangePage = lazy(() => import("./pages/ExchangePage"));
 const TaskPage = lazy(() => import("./pages/TaskPage"));
@@ -15,26 +16,26 @@ const StatsPage = lazy(() => import("./pages/StatsPage"));
 const FriendsPage = lazy(() => import("./pages/FriendsPage"));
 
 const App = () => {
-  useTelegramAuth();
-  useSyncOnUnload();
-  const appReady = useAppReady(); // ⬅ ждём загрузку из Strapi
+  useTelegramAuth();         // Получение данных из Telegram WebApp
+  useSyncOnUnload();         // Сохранение перед закрытием
+  const appReady = useAppReady(); // ⬅ Ждём загрузку player, level и mb из Strapi
 
   useEffect(() => {
-    retryPendingUpdate();
+    retryPendingUpdate();    // Повторная отправка неудачных обновлений
   }, []);
 
-  // ⬇️ Пока данные не загружены — просто LoadingPage
+  // Пока всё не готово — показываем глобальный LoadingPage
   if (!appReady) return <LoadingPage />;
 
   return (
     <BrowserRouter>
-      <AutoSaveClicks />
+      <AutoSaveClicks /> {/* Автосохранение кликов */}
       <Suspense fallback={<LoadingPage />}>
         <Routes>
-          <Route path="/gift" element={<GiftPage />} />
-          <Route path="/tasks" element={<TaskPage />} />
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />} />
+          <Route path="/tasks" element={<TaskPage />} />
+          <Route path="/gift" element={<GiftPage />} />
           <Route path="/stats" element={<StatsPage />} />
           <Route path="/friends" element={<FriendsPage />} />
         </Routes>
