@@ -1,6 +1,4 @@
-import { memo } from "react"
-
-const InstructionList = memo(() => {
+const InstructionList = () => {
     return (
         <div className="instruction-container">
             <div className="instruction-title">
@@ -16,6 +14,6 @@ const InstructionList = memo(() => {
             </ol>
         </div>
     )
-})
+}
 
 export default InstructionList
