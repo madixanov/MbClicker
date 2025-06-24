@@ -1,7 +1,16 @@
 import "./loading-page.css";
 import { Helmet } from "react-helmet";
+import { useEffect } from "react";
 
 const LoadingPage = () => {
+  useEffect(() => {
+          document.body.classList.add("other-page")
+  
+          return () => {
+              document.body.classList.remove('other-page')
+          }
+      }, [])
+
   return (
     <div className="loading-wrapper">
       <Helmet>
