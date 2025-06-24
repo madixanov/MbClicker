@@ -202,7 +202,6 @@ div.avatar-container img:active {
   }
 }
 
-
 @keyframes fadeInOut {
   0% {
     opacity: 0;

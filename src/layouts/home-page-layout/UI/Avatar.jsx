@@ -1,7 +1,7 @@
 import { useState } from "react";
 import avatar from "../../../assets/images/avatar.webp";
 import useMbStore from "../../../store/mb-store";
-import "./avatar.css"; // подключим стили анимации
+import "../home-page.css"; // подключим стили анимации
 
 const Avatar = () => {
   const increment = useMbStore((state) => state.increment);
