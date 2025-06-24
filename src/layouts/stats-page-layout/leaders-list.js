@@ -1,4 +1,4 @@
-import player1 from '../../assets/images/player.jpg'
+import player1 from '../../assets/images/player.webp'
 
 const players = [
     {

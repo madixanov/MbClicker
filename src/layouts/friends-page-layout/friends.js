@@ -1,6 +1,6 @@
-import player1 from '../../assets/images/player1.jpg'
-import player2 from '../../assets/images/player2.jpg'
-import player3 from '../../assets/images/player3.jpg'
+import player1 from '../../assets/images/player1.webp'
+import player2 from '../../assets/images/player2.webp'
+import player3 from '../../assets/images/player3.webp'
 
 const friends = [
     {

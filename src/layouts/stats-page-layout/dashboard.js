@@ -1,6 +1,6 @@
-import weixce from '../../assets/images/weixce.jpg'
-import viktor from '../../assets/images/viktor.jpg'
-import david from '../../assets/images/david.jpg'
+import weixce from '../../assets/images/weixce.webp'
+import viktor from '../../assets/images/viktor.webp'
+import david from '../../assets/images/david.webp'
 
 const dashboard = [
     {
