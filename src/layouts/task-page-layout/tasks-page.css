@@ -24,14 +24,13 @@
 .task-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
-  gap: 60px;
-  padding: 5px 10px;
+  justify-content: space-between;
   align-items: center;
-  height: 50px;
+  gap: 20px;
+  padding: 5px 16px;
+  flex-wrap: wrap;
   width: 100%;
-  padding-left: 34px;
-  padding-right: 34px;
+  box-sizing: border-box;
 }
 
 .pfphoto {
@@ -39,12 +38,15 @@
   width: 50px;
   background-color: white;
   border-radius: 50%;
+  flex-shrink: 0;
 }
 
 .task-content {
   display: flex;
   flex-direction: column;
   gap: 5px;
+  flex: 1;
+  min-width: 0;
 }
 
 .task-content p {
@@ -56,7 +58,8 @@
   font-size: 12px;
   font-weight: 400;
   width: 100%;
-  text-wrap: wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 }
 
 .task-prize {
@@ -75,6 +78,7 @@
   border: none;
   text-align: center;
   padding: 7px 3px;
+  flex-shrink: 0;
 }
 
 .active-btn {
@@ -98,7 +102,6 @@
 .task-title h1 {
   margin: 0;
 }
-
 
 .tab-row {
   display: flex;
@@ -134,7 +137,6 @@
 }
 
 @media (max-width: 780px) {
-
   .active-tab,
   .non-active-tab {
     height: 40px;
@@ -142,19 +144,33 @@
 }
 
 @media (max-width: 480px) {
-
   .tab-row button {
     width: 100%;
   }
 
   .task-title {
     text-align: start;
-    padding-left: 34px;
-  }
-  
-  .task-container {
-    justify-content: space-between;
-    gap: 0;
+    padding-left: 16px;
   }
 
+  .task-container {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    padding: 10px 16px;
+  }
+
+  .task-btn {
+    width: 100%;
+  }
+
+  .pfphoto {
+    width: 40px;
+    height: 40px;
+  }
+
+  .task-name,
+  .task-prize {
+    font-size: 11px;
+  }
 }
