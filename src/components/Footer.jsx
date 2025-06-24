@@ -1,56 +1,66 @@
-.css-modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 999;
-  animation: fadeIn 0.2s ease-in-out;
-}
+import { lazy, Suspense, useEffect, useRef } from "react";
+import useModalStore from "../store/modal-store";
+import './footer.css';
+import ModalContainer from './UI/ModalContainer';
+import ModalOverlay from './UI/ModalOverlay';
 
-.css-modal-box {
-  background-color: #1e1e1e;
-  color: #fff;
-  padding: 20px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 320px;
-  position: relative;
-  animation: scaleIn 0.3s ease-out;
-  text-align: center;
-}
+const RouterIcon = lazy(() => import("./UI/RouterIcon"));
 
-.css-modal-close {
-  position: absolute;
-  top: 8px;
-  right: 12px;
-  font-size: 20px;
-  background: none;
-  border: none;
-  color: #fff;
-  cursor: pointer;
-}
+const Footer = () => {
+  const isModalDayOpen = useModalStore(state => state.isModalDayOpen);
+  const isModalThemeOpen = useModalStore(state => state.isModalThemeOpen);
+  const setModalDay = useModalStore(state => state.setModalDay);
+  const setModalTheme = useModalStore(state => state.setModalTheme);
 
-@keyframes fadeIn {
-  from {
-    background-color: rgba(0, 0, 0, 0);
-  }
-  to {
-    background-color: rgba(0, 0, 0, 0.6);
-  }
-}
+  const footerRef = useRef(null);
 
-@keyframes scaleIn {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
-}
+  useEffect(() => {
+    const footer = footerRef.current;
+    const initialHeight = window.innerHeight;
+
+    const handleResize = () => {
+      footer.style.display = window.innerHeight < initialHeight - 100 ? 'none' : 'flex';
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return (
+    <div className="footer-container" ref={footerRef}>
+      <Suspense fallback={null}>
+        <RouterIcon />
+        <ModalOverlay />
+
+        {isModalDayOpen && (
+          <CssModal
+            title="СУТКИ, ДНИ, ЧАСЫ"
+            content="ЧЕМ БОЛЬШЕ ДНЕЙ ТЕМ БОЛЬШЕ БОНУСОВ"
+            onClose={() => setModalDay(false)}
+          />
+        )}
+        {isModalThemeOpen && (
+          <CssModal
+            title="СВЕТЛАЯ ТЕМА"
+            content="ПОКА НЕДОСТУПНО."
+            onClose={() => setModalTheme(false)}
+          />
+        )}
+      </Suspense>
+    </div>
+  );
+};
+
+const CssModal = ({ title, content, onClose }) => {
+  return (
+    <div className="css-modal-overlay" onClick={onClose}>
+      <div className="css-modal-box" onClick={(e) => e.stopPropagation()}>
+        <button className="css-modal-close" onClick={onClose}>×</button>
+        <h2>{title}</h2>
+        <p>{content}</p>
+      </div>
+    </div>
+  );
+};
+
+export default Footer;
