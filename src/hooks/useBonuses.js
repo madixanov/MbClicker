@@ -1,26 +1,29 @@
+// hooks/useBonuses.js
 import { useEffect, useState } from "react";
-import usePlayerData from "./usePlayerData";
-import { fetchBonusesByPlayer } from "../services/bonusService";
+import axios from "axios";
 
 const useBonuses = () => {
-  const { player } = usePlayerData();
   const [bonuses, setBonuses] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
-    const loadBonuses = async () => {
-      if (!player?.documentId) return;
-
-      setLoading(true);
-      const data = await fetchBonusesByPlayer(player.documentId);
-      setBonuses(data);
-      setLoading(false);
+    const fetchBonuses = async () => {
+      try {
+        const response = await axios.get("/api/bonuses");
+        setBonuses(response.data); // если Strapi настроен без wrapper-а
+      } catch (err) {
+        console.error("Ошибка при получении бонусов:", err);
+        setError(err);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    loadBonuses();
-  }, [player?.documentId]);
+    fetchBonuses();
+  }, []);
 
-  return { bonuses, loading };
+  return { bonuses, loading, error };
 };
 
 export default useBonuses;

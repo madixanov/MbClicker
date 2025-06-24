@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-const Button = () => {
+const Button = ({ completed }) => {
     const [status, setStatus] = useState("idle");
 
     const handleClick = () => {
@@ -24,9 +24,9 @@ const Button = () => {
         <button
             aria-label={getLabel()}
             onClick={handleClick}
-            className={`task-btn ${status === "checking" ? "active-btn" : ""} ${status === "done" ? "completed" : ""}`}
+            className={`task-btn ${status === "checking" ? "active-btn" : ""} ${completed ? "completed" : ""}`}
         >
-            {getLabel()}
+            {completed ? 'ПОЛУЧИТЬ' : getLabel()}
         </button>
     );
 };
