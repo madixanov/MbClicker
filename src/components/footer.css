@@ -91,15 +91,16 @@
   width: 100%;
   max-width: 304px;
   display: flex;
-  justify-content: space-evenly;
+  justify-content: space-around;
   padding: 0 10px;
 }
 
 .labels-container p {
-  font-size: 12px;
+  font-size: 10px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.28);
   margin: 0;
   width: 40px;
   text-align: center;
 }
+
