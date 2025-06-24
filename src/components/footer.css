@@ -91,12 +91,12 @@
   width: 100%;
   max-width: 304px;
   display: flex;
-  justify-content: space-around;
+  justify-content: space-evenly;
   padding: 0 10px;
 }
 
 .labels-container p {
-  font-size: 14px;
+  font-size: 12px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.28);
   margin: 0;
