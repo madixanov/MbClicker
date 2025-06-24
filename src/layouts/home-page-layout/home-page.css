@@ -179,6 +179,30 @@ div.avatar-container img:active {
   transform: translateX(-50%); 
 }
 
+.popup-text {
+  position: absolute;
+  color: #ffffff;
+  font-size: 1.5rem;
+  font-weight: bold;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  animation: floatUp 1.2s ease-out forwards;
+  pointer-events: none;
+  z-index: 10;
+  transform: translate(-50%, -50%);
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translate(-50%, -50%) translateY(0);
+  }
+  100% {
+    opacity: 0;
+    transform: translate(-50%, -50%) translateY(-60px);
+  }
+}
+
+
 @keyframes fadeInOut {
   0% {
     opacity: 0;

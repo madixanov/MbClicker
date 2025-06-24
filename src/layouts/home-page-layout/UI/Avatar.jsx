@@ -1,35 +1,34 @@
 import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
 import avatar from "../../../assets/images/avatar.webp";
 import useMbStore from "../../../store/mb-store";
+import "./avatar.css"; // подключим стили анимации
 
 const Avatar = () => {
   const increment = useMbStore((state) => state.increment);
-  const getMbIncrement = useMbStore((state) => state.getMbIncrement); // 🔁 селектор
+  const getMbIncrement = useMbStore((state) => state.getMbIncrement);
   const [popups, setPopups] = useState([]);
 
   const handleClick = (e) => {
     increment();
-
-    const mbIncrement = getMbIncrement(); // ← получаем значение приращения
+    const mbIncrement = getMbIncrement();
 
     const container = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - container.left;
     const y = e.clientY - container.top;
 
+    const id = Date.now();
+
     const newPopup = {
-      id: Date.now(),
+      id,
       x,
       y,
       text: `+ ${mbIncrement}`,
-      xVariation: (Math.random() - 0.5) * 40,
-      scale: 0.8 + Math.random() * 0.4,
     };
 
-    setPopups((current) => [...current, newPopup]);
+    setPopups((curr) => [...curr, newPopup]);
 
     setTimeout(() => {
-      setPopups((current) => current.filter((popup) => popup.id !== newPopup.id));
+      setPopups((curr) => curr.filter((p) => p.id !== id));
     }, 1200);
   };
 
@@ -48,6 +47,9 @@ const Avatar = () => {
       <img
         src={avatar}
         alt="Avatar"
+        width="300"
+        height="300"
+        loading="eager"
         style={{
           display: "block",
           width: "100%",
@@ -56,44 +58,18 @@ const Avatar = () => {
         }}
       />
 
-      <AnimatePresence>
-        {popups.map((popup) => (
-          <motion.div
-            key={popup.id}
-            initial={{
-              opacity: 1,
-              x: popup.x,
-              y: popup.y,
-              rotate: 0,
-              scale: popup.scale,
-              position: "absolute",
-              pointerEvents: "none",
-              left: 0,
-              top: 0,
-              zIndex: 10,
-            }}
-            animate={{
-              opacity: [1, 0.8, 0],
-              y: popup.y - 60,
-              x: popup.x + popup.xVariation,
-              rotate: 0,
-            }}
-            transition={{
-              duration: 1.2,
-              ease: [0.2, 0.8, 0.4, 1],
-            }}
-            style={{
-              color: "#ffffff",
-              fontSize: "1.5rem",
-              fontWeight: "bold",
-              textShadow: "0 2px 8px rgba(0,0,0,0.5)",
-              transformOrigin: "center center",
-            }}
-          >
-            {popup.text}
-          </motion.div>
-        ))}
-      </AnimatePresence>
+      {popups.map((popup) => (
+        <div
+          key={popup.id}
+          className="popup-text"
+          style={{
+            left: popup.x,
+            top: popup.y,
+          }}
+        >
+          {popup.text}
+        </div>
+      ))}
     </div>
   );
 };
