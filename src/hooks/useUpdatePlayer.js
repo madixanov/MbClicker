@@ -8,9 +8,7 @@ const useUpdatePlayer = () => {
     const player = await fetchPlayerByTelegramId(user.id);
 
     try {
-      await updatePlayer(player.documentId, {
-        data: fields
-      });
+      await updatePlayer(player.documentId, fields);
     } catch (err) {
       console.error("❌ Ошибка при обновлении игрока:", err.response?.data || err);
     }
