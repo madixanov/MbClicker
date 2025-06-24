@@ -7,53 +7,82 @@ import ModalOverlay from './UI/ModalOverlay';
 const RouterIcon = lazy(() => import("./UI/RouterIcon"));
 
 const Footer = () => {
-    const isModalDayOpen = useModalStore(state => state.isModalDayOpen);
-    const isModalThemeOpen = useModalStore(state => state.isModalThemeOpen);
-    const setModalDay = useModalStore(state => state.setModalDay);
-    const setModalTheme = useModalStore(state => state.setModalTheme);
+  const isModalDayOpen = useModalStore(state => state.isModalDayOpen);
+  const isModalThemeOpen = useModalStore(state => state.isModalThemeOpen);
+  const setModalDay = useModalStore(state => state.setModalDay);
+  const setModalTheme = useModalStore(state => state.setModalTheme);
 
-    const footerRef = useRef(null);
+  const footerRef = useRef(null);
 
-    useEffect(() => {
-        const footer = footerRef.current;
-        const initialHeight = window.innerHeight;
+  const [showDay, setShowDay] = useState(false);
+  const [dayAnimation, setDayAnimation] = useState("");
 
-        const handleResize = () => {
-            if (window.innerHeight < initialHeight - 100) {
-                footer.style.display = 'none';
-            } else {
-                footer.style.display = 'flex';
-            }
-        };
+  const [showTheme, setShowTheme] = useState(false);
+  const [themeAnimation, setThemeAnimation] = useState("");
 
-        window.addEventListener('resize', handleResize);
-        return () => window.removeEventListener('resize', handleResize);
-    }, []);
+  // ⚙️ Контроль модалки "Day"
+  useEffect(() => {
+    if (isModalDayOpen) {
+      setShowDay(true);
+      setDayAnimation("show");
+    } else if (showDay) {
+      setDayAnimation("hide");
+      setTimeout(() => setShowDay(false), 300);
+    }
+  }, [isModalDayOpen]);
 
-    return (
-        <div className="footer-container" ref={footerRef}>
-            <Suspense fallback={null}>
-                <RouterIcon />
-                <ModalOverlay />
-                {isModalDayOpen && (
-                    <ModalContainer
-                        title="СУТКИ, ДНИ, ЧАСЫ"
-                        content={<p>ЧЕМ БОЛЬШЕ ДНЕЙ ТЕМ БОЛЬШЕ БОНУСОВ</p>}
-                        onClose={() => setModalDay(false)}
-                        className={isModalDayOpen ? 'hide' : 'show'}
-                    />
-                )}
-                {isModalThemeOpen && (
-                    <ModalContainer
-                        title="СВЕТЛАЯ ТЕМА"
-                        content={<p>ПОКА НЕДОСТУПНО.</p>}
-                        onClose={() => setModalTheme(false)}
-                        className={isModalThemeOpen ? 'hide' : 'show'}
-                    />
-                )}
-            </Suspense>
-        </div>
-    );
+  // ⚙️ Контроль модалки "Theme"
+  useEffect(() => {
+    if (isModalThemeOpen) {
+      setShowTheme(true);
+      setThemeAnimation("show");
+    } else if (showTheme) {
+      setThemeAnimation("hide");
+      setTimeout(() => setShowTheme(false), 300);
+    }
+  }, [isModalThemeOpen]);
+
+  useEffect(() => {
+    const footer = footerRef.current;
+    const initialHeight = window.innerHeight;
+
+    const handleResize = () => {
+      if (window.innerHeight < initialHeight - 100) {
+        footer.style.display = 'none';
+      } else {
+        footer.style.display = 'flex';
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  return (
+    <div className="footer-container" ref={footerRef}>
+      <Suspense fallback={null}>
+        <RouterIcon />
+        <ModalOverlay />
+        
+        {showDay && (
+          <ModalContainer
+            title="СУТКИ, ДНИ, ЧАСЫ"
+            content={<p>ЧЕМ БОЛЬШЕ ДНЕЙ ТЕМ БОЛЬШЕ БОНУСОВ</p>}
+            closeModal={() => setModalDay(false)}
+            className={`modal-container ${dayAnimation}`}
+          />
+        )}
+        {showTheme && (
+          <ModalContainer
+            title="СВЕТЛАЯ ТЕМА"
+            content={<p>ПОКА НЕДОСТУПНО.</p>}
+            closeModal={() => setModalTheme(false)}
+            className={`modal-container ${themeAnimation}`}
+          />
+        )}
+      </Suspense>
+    </div>
+  );
 };
 
 export default Footer;
