@@ -1,15 +1,33 @@
-.task-page {
+.gift-page {
   position: fixed;
   top: 0;
   bottom: 0;
-  left: 0;
   right: 0;
+  left: 0;
   padding-top: 54px;
-  padding-bottom: 180px;
+  padding-bottom: 150px;
   display: flex;
   flex-direction: column;
   overflow-y: auto;
   scroll-behavior: smooth;
+}
+
+.gift-main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  min-height: 133vh;
+  width: 100vw;
+  width: 100%;
+}
+
+.gift-title {
+  text-align: center;
+  margin: 0;
+  font-size: 28px;
+  font-weight: 700;
+  padding-top: 27px;
+  padding-bottom: 16px;
 }
 
 .tabs {
@@ -24,13 +42,14 @@
 .task-container {
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: center;
+  gap: 30px;
+  padding: 5px 10px;
   align-items: center;
-  gap: 20px;
-  padding: 5px 16px;
-  flex-wrap: wrap;
+  height: 50px;
   width: 100%;
-  box-sizing: border-box;
+  padding-left: 34px;
+  padding-right: 34px;
 }
 
 .pfphoto {
@@ -38,15 +57,13 @@
   width: 50px;
   background-color: white;
   border-radius: 50%;
-  flex-shrink: 0;
 }
 
 .task-content {
   display: flex;
   flex-direction: column;
   gap: 5px;
-  flex: 1;
-  min-width: 0;
+  margin-left: 12px;
 }
 
 .task-content p {
@@ -58,8 +75,7 @@
   font-size: 12px;
   font-weight: 400;
   width: 100%;
-  word-wrap: break-word;
-  overflow-wrap: break-word;
+  text-wrap: wrap;
 }
 
 .task-prize {
@@ -78,7 +94,6 @@
   border: none;
   text-align: center;
   padding: 7px 3px;
-  flex-shrink: 0;
 }
 
 .active-btn {
@@ -91,86 +106,19 @@
   color: black;
 }
 
-.task-title {
-  padding-top: 27px;
-  padding-bottom: 16px;
-  font-size: 15px;
-  font-weight: 700;
-  text-align: center;
-}
-
-.task-title h1 {
-  margin: 0;
-}
-
-.tab-row {
-  display: flex;
-  align-items: center;
-  width: 100%;
-  justify-content: center;
-  position: sticky;
-  top: 0;
-  z-index: 100;
-}
-
-.active-tab {
-  width: 180px;
-  height: 29px;
-  border-radius: 0 0 20px 20px;
-  border: none;
-  background-color: white;
-  color: black;
-  font-size: 13px;
-  font-weight: 500;
-  border-top: 1px solid #fff;
-}
-
-.non-active-tab {
-  width: 180px;
-  height: 29px;
-  color: white;
-  background-color: #000;
-  border: none;
-  border-top: 1px solid #fff;
-  font-size: 13px;
-  font-weight: 500;
-}
-
-@media (max-width: 780px) {
-  .active-tab,
-  .non-active-tab {
-    height: 40px;
-  }
-}
-
 @media (max-width: 480px) {
-  .tab-row button {
-    width: 100%;
+    .gift-main {
+    align-items: start;
   }
 
-  .task-title {
-    text-align: start;
-    padding-left: 16px;
+    .gift-title {
+    width: 277px;
+    text-align: unset;
+    padding-left: 34px;
   }
 
   .task-container {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-    padding: 10px 16px;
-  }
-
-  .task-btn {
-    width: 100%;
-  }
-
-  .pfphoto {
-    width: 40px;
-    height: 40px;
-  }
-
-  .task-name,
-  .task-prize {
-    font-size: 11px;
+    justify-content: space-evenly;
+    gap: 0;
   }
 }
