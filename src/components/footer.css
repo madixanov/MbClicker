@@ -25,7 +25,7 @@
 .router-icons-container {
   position: relative;
   width: 100%;
-  max-width: 310px;
+  max-width: 330px;
   height: 64px;
   display: flex;
   justify-content: space-around;
