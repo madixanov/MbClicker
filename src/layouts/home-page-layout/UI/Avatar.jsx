@@ -51,6 +51,7 @@ const Avatar = () => {
         height="300"
         loading="eager"
         decoding="async"
+        fetchPriority="high"
         style={{
           display: "block",
           width: "100%",
