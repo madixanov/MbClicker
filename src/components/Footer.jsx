@@ -36,7 +36,7 @@ const Footer = () => {
                 <RouterIcon />
                 <ModalOverlay />
                 {isModalDayOpen && (
-                    <Modal
+                    <ModalContainer
                         title="СУТКИ, ДНИ, ЧАСЫ"
                         content={<p>ЧЕМ БОЛЬШЕ ДНЕЙ ТЕМ БОЛЬШЕ БОНУСОВ</p>}
                         onClose={() => setModalDay(false)}
@@ -44,7 +44,7 @@ const Footer = () => {
                     />
                 )}
                 {isModalThemeOpen && (
-                    <Modal
+                    <ModalContainer
                         title="СВЕТЛАЯ ТЕМА"
                         content={<p>ПОКА НЕДОСТУПНО.</p>}
                         onClose={() => setModalTheme(false)}
