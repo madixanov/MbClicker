@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import avatar from "../../../assets/images/avatar.png";
+import avatar from "../../../assets/images/avatar.webp";
 import useMbStore from "../../../store/mb-store";
 
 const Avatar = () => {
