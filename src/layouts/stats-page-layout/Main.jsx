@@ -2,6 +2,7 @@ import { useState } from "react";
 import DashBoard from "./UI/DashBoard";
 import Leaders from "./UI/LeadersList";
 import './stats-page.css';
+import { Helmet } from "react-helmet";
 
 const tabs = [
     { key: 'daily', label: 'ЗА ВСЕ ВРЕМЯ' },
@@ -13,6 +14,10 @@ const Main = () => {
 
     return (
         <main className="stats-main">
+            <Helmet>
+                <meta name="description" content="Смотри свою статистику, соревнуйся, выходи в топ!" />
+            </Helmet>
+
             <h1>ТОП ИГРОКОВ</h1>
 
             <div className="tab-row">

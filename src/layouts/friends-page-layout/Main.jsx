@@ -4,6 +4,7 @@ import premium from '../../assets/icons/premium.png';
 import FriendsList from "./UI/FriendsList";
 import './friends-page.css';
 import BonusCard from "./UI/BonusCard";
+import { Helmet } from "react-helmet";
 
 const Main = () => {
     const [ copied, setCopied ] = useState(false);
@@ -23,6 +24,9 @@ const Main = () => {
 
     return (
         <main className="friends-main">
+            <Helmet>
+                <meta name="description" content="Играй вместе с друзьями, приглашай их и получи бонус!" />
+            </Helmet>
             <div className="link-container">
                 <h1>МОИ ДРУЗЬЯ</h1>
                 <h2>ТВОЯ ССЫЛКА</h2>

@@ -13,6 +13,7 @@ const Main = () => {
         <main className="home-main">
             <Helmet>
                 <link rel="preload" as="image" href={avatar} />
+                <meta name="description" content="Нажимай на своего Аватара, копи MB, играй в удовольствие" />
             </Helmet>
 
             <Suspense fallback={<LoadingPage />}>
