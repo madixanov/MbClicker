@@ -25,6 +25,7 @@ const TabContent = () => {
     if (!player || !bonuses?.length) return;
 
     const savedBonusIds = player.bonuses?.map(b => b.documentId) || [];
+    console.log("bonuses в player:", player.bonuses);
 
     const newCompletedBonuses = bonuses.filter(
       (b) => b.Completed && !savedBonusIds.includes(b.documentId)
