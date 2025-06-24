@@ -12,7 +12,6 @@ const usePlayerData = () => {
     const user = getTelegramUser();
 
     if (!user) {
-      console.warn("❌ Пользователь Telegram не найден");
       setLoading(false);
       return;
     }

@@ -5,7 +5,12 @@
     <link rel="icon" type="image/svg+xml" href="/vite.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>WXCXW VPN</title>
-    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+
+    <!-- ✅ Ускорим загрузку аватарки -->
+    <link rel="preload" as="image" href="/assets/images/avatar.png" type="image/png" />
+
+    <!-- ✅ Telegram Web App SDK без блокировки -->
+    <script async src="https://telegram.org/js/telegram-web-app.js"></script>
   </head>
   <body>
     <div id="root"></div>

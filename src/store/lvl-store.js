@@ -25,8 +25,6 @@ const useLvlStore = create((set, get) => ({
         const points = 1024 * 2 ** (level - 1);
 
         set({ level, points });
-
-        console.log("✅ Синхронизировано: уровень", level, "цель:", points);
       }
     } catch (err) {
       console.error("❌ Ошибка загрузки уровня:", err);
@@ -47,16 +45,10 @@ const useLvlStore = create((set, get) => ({
 
     try {
       const player = await fetchPlayerByTelegramId(user.id);
-      if (!player || !player.documentId) {
-        console.warn("⚠️ Игрок не найден или documentId отсутствует");
-        return;
-      }
 
       await updatePlayerWithFallback(player.documentId, {
         level: newLevel,
       });
-
-      console.log("🎉 Уровень обновлён в Strapi:", newLevel);
     } catch (err) {
       console.error("❌ Ошибка обновления уровня:", err);
     }
