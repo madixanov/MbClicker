@@ -1,43 +1,54 @@
-import { useEffect, useState } from "react";
-import axios from "axios";
+import { lazy, memo } from "react";
+import useBonuses from "../../../hooks/useBonuses";
+import BONUS_LINKS from "./bonus";
 
-const useBonuses = () => {
-  const [bonuses, setBonuses] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
+const Button = lazy(() => import("./Button"));
 
-  useEffect(() => {
-    const fetchBonuses = async () => {
-      try {
-        const response = await axios.get("https://mbclickerstrapi.onrender.com/api/bonuses", {
-          params: {
-            sort: "createdAt:desc",
-            fields: ["Name", "Prize", "Completed", "documentId"], // 👈 добавили нужные поля
-          },
-        });
+const getBonusLink = (bonusName) => {
+  if (!bonusName || typeof bonusName !== "string") return null;
 
-        console.log("Бонусы получены:", response.data);
-
-        const raw = response.data?.data || [];
-
-        const mapped = raw.map((item) => ({
-          id: item.id,
-          ...item.attributes, // если fields указаны — attributes будет содержать только нужное
-        }));
-
-        setBonuses(mapped);
-      } catch (err) {
-        console.error("Ошибка при получении бонусов:", err);
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    fetchBonuses();
-  }, []);
-
-  return { bonuses, loading, error };
+  const nameLower = bonusName.toLowerCase();
+  for (const key in BONUS_LINKS) {
+    if (nameLower.includes(key)) {
+      return BONUS_LINKS[key];
+    }
+  }
+  return null;
 };
 
-export default useBonuses;
+const TabContent = () => {
+  const { bonuses, loading } = useBonuses();
+
+  if (loading) return <p>Загрузка бонусов...</p>;
+  if (!Array.isArray(bonuses) || !bonuses.length) return <p>Бонусов пока нет</p>;
+
+  return (
+    <div className="tabs">
+      {bonuses
+        .filter((bonus) => bonus?.Name) // Отфильтровать только с Name
+        .map((bonus, index) => {
+          const bonusLink = getBonusLink(bonus.Name);
+
+          return (
+            <div className="task-container" key={index}>
+              <div className="pfphoto"></div>
+              <div className="task-content">
+                <p className="task-name">{bonus.Name}</p>
+                <p className="task-prize">+ {bonus.Prize} B</p>
+              </div>
+              <a
+                href={bonusLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                style={{ textDecoration: "none" }}
+              >
+                <Button completed={bonus.Completed} />
+              </a>
+            </div>
+          );
+        })}
+    </div>
+  );
+};
+
+export default memo(TabContent);
