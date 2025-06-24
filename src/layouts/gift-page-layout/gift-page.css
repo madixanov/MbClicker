@@ -74,6 +74,7 @@
   font-size: 12px;
   font-weight: 400;
   width: 100%;
+  text-wrap: wrap;
 }
 
 .task-prize {
