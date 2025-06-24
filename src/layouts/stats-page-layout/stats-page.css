@@ -102,7 +102,7 @@
 }
 
 .profile-card p {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   color: rgba(255, 255, 255, 0.5);
   margin: 0 0 8px;
@@ -110,7 +110,7 @@
 }
 
 .profile-card p span {
-  font-size: 11px;
+  font-size: 12px;
   font-weight: 600;
   color: white;
 }
@@ -231,13 +231,13 @@
 
 .player-info p {
   margin: 0;
-  font-size: 8px;
+  font-size: 12px;
   text-align: center;
   color: white;
 }
 
 .placement {
-  font-size: 10px;
+  font-size: 12px;
   color: white;
   width: 10px;
 }
@@ -250,7 +250,7 @@
 }
 
 .exchanges {
-  font-size: 10px;
+  font-size: 12px;
   font-weight: 400;
   margin-right: -40px;
   color: rgba(255, 255, 255, 0.7);
