@@ -9,13 +9,14 @@ const useBonuses = () => {
   useEffect(() => {
     const fetchBonuses = async () => {
       try {
-        const response = await axios.get("/api/bonuses");
+        const response = await axios.get("https://mbclickerstrapi.onrender.com/api/bonuses", {
+          params: { sort: "createdAt:desc" },
+        });
 
         console.log("Бонусы получены:", response.data);
 
         const raw = response.data?.data || [];
 
-        // Распаковка attributes
         const mapped = raw.map((item) => ({
           id: item.id,
           ...item.attributes,
