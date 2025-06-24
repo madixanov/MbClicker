@@ -10,7 +10,10 @@ const useBonuses = () => {
     const fetchBonuses = async () => {
       try {
         const response = await axios.get("https://mbclickerstrapi.onrender.com/api/bonuses", {
-          params: { sort: "createdAt:desc" },
+          params: {
+            sort: "createdAt:desc",
+            fields: ["Name", "Prize", "Completed", "documentId"], // 👈 добавили нужные поля
+          },
         });
 
         console.log("Бонусы получены:", response.data);
@@ -19,7 +22,7 @@ const useBonuses = () => {
 
         const mapped = raw.map((item) => ({
           id: item.id,
-          ...item.attributes,
+          ...item.attributes, // если fields указаны — attributes будет содержать только нужное
         }));
 
         setBonuses(mapped);
