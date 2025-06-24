@@ -7,7 +7,6 @@ const Button = () => {
         if (status !== "idle") return;
 
         setStatus("checking");
-        setTimeout(() => setStatus("done"), 3000);
     };
 
     const getLabel = () => {
