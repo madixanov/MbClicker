@@ -1,22 +1,51 @@
 .loading-wrapper {
-    height: 100vh;
-    width: 100vw;
-    background-color: #121212; /* тёмная тема */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    color: white;
-    font-family: 'Arial', sans-serif;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: #000;
+  color: white;
+  font-family: sans-serif;
+  text-align: center;
 }
 
-.loading-logo {
-    font-size: 64px;
-    margin-bottom: 20px;
+.loading-logo span {
+  font-size: 3rem;
+  animation: pulse-scale 2s ease-in-out infinite;
 }
 
 .loading-text {
-    font-size: 18px;
-    letter-spacing: 2px;
-    color: white;
+  font-size: 1.2rem;
+  margin-top: 1rem;
+  animation: fade-in-out 2s ease-in-out infinite;
+}
+
+/* 🔁 Пульсация эмодзи */
+@keyframes pulse-scale {
+  0% {
+    opacity: 0;
+    transform: scale(0.8);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.2);
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1);
+  }
+}
+
+/* 🔁 Мягкая мигающая надпись */
+@keyframes fade-in-out {
+  0% {
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+  }
 }
