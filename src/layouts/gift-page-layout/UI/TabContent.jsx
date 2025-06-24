@@ -5,20 +5,29 @@ import BONUS_LINKS from "./bonus";
 const Button = lazy(() => import("./Button"));
 
 const getBonusLink = (bonusName) => {
+  if (typeof bonusName !== "string") return null; // 💥 защита от undefined/null
+
   const nameLower = bonusName.toLowerCase();
-  for (const key in BONUS_LINKS) {
-    if (nameLower.includes(key)) {
-      return BONUS_LINKS[key];
+    for (const key in BONUS_LINKS) {
+        if (nameLower.includes(key)) {
+        return BONUS_LINKS[key];
+        }
     }
-  }
-  return null;
-};
+    return null;
+    };
+
 
 const TabContent = () => {
   const { bonuses, loading } = useBonuses();
 
   if (loading) return <p>Загрузка бонусов...</p>;
   if (!Array.isArray(bonuses) || !bonuses.length) return <p>Бонусов пока нет</p>;
+
+    bonuses.forEach((bonus) => {
+    if (!bonus.Name) {
+        console.warn("⚠️ У бонуса нет Name:", bonus);
+        }
+    });
 
   return (
     <div className="tabs">
