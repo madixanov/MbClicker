@@ -1,19 +1,23 @@
-import { lazy, useMemo, memo } from "react";
+import { lazy, memo } from "react";
+import useBonuses from "../../../hooks/useBonuses";
 
 const Button = lazy(() => import('./Button'));
 
-const TabContent = ({ tasks }) => {
+const TabContent = () => {
+    const { bonuses, loading } = useBonuses();
 
-    const memoizedTasks = useMemo(() => tasks, [])
+    if (loading) return <p>Загрузка бонусов...</p>;
+
+    if (!bonuses.length) return <p>Бонусов пока нет</p>;
 
     return (
         <div className="tabs">
-            {memoizedTasks.map((task, index) => (
+            {bonuses.map((bonus, index) => (
                 <div className="task-container" key={index}>
                     <div className="pfphoto"></div>
                     <div className="task-content">
-                        <p className="task-name">{task.name}</p>
-                        <p className="task-prize">{task.prize}</p>
+                        <p className="task-name">{bonus.name}</p>
+                        <p className="task-prize">{bonus.prize}</p>
                     </div>
                         <Button />
                 </div>
