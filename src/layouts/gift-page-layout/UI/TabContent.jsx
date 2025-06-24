@@ -1,7 +1,18 @@
 import { lazy, memo } from "react";
 import useBonuses from "../../../hooks/useBonuses";
+import BONUS_LINKS from "./bonus";
 
 const Button = lazy(() => import('./Button'));
+
+const getBonusLink = (bonusName) => {
+  const nameLower = bonusName.toLowerCase();
+  for (const key in BONUS_LINKS) {
+    if (nameLower.includes(key)) {
+      return BONUS_LINKS[key];
+    }
+  }
+  return null;
+};
 
 const TabContent = () => {
     const { bonuses, loading } = useBonuses();
@@ -12,16 +23,22 @@ const TabContent = () => {
 
     return (
         <div className="tabs">
-            {bonuses.map((bonus, index) => (
-                <div className="task-container" key={index}>
-                    <div className="pfphoto"></div>
-                    <div className="task-content">
-                        <p className="task-name">{bonus.Name}</p>
-                        <p className="task-prize">+ {bonus.Prize} B</p>
+            {bonuses.map((bonus, index) => {
+                const bonusLink = getBonusLink(bonus.Name);
+
+                return (
+                    <div className="task-container" key={index}>
+                        <div className="pfphoto"></div>
+                        <div className="task-content">
+                            <p className="task-name">{bonus.Name}</p>
+                            <p className="task-prize">+ {bonus.Prize} B</p>
+                        </div>
+                        <a href={bonusLink} target="_blank" rel="noopener noreferrer" style={{ textDecoration: 'none' }}>
+                            <Button />
+                        </a>
                     </div>
-                        <Button />
-                </div>
-            ))}
+                    )
+                })}
         </div>
     );
 };
