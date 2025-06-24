@@ -27,18 +27,11 @@ export default defineConfig({
       output: {
         manualChunks(id) {
           if (id.includes('node_modules')) {
+            if (id.includes('react-router-dom')) return 'router';
+            if (id.includes('zustand')) return 'zustand';
+            if (id.includes('framer-motion')) return 'motion';
             return 'vendor';
           }
-
-          if (id.includes('/pages/')) {
-            const parts = id.split('/pages/')[1].split('/');
-            const name = parts[0].replace(/\.(js|jsx|ts|tsx)$/, '');
-            return `page-${name}`;
-          }
-
-          // Можно ещё разбивать по store/компонентам
-          if (id.includes('/store/')) return 'store';
-          if (id.includes('/components/')) return 'components';
         }
       },
     },
