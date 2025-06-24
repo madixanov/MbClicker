@@ -1,4 +1,3 @@
-// hooks/useBonuses.js
 import { useEffect, useState } from "react";
 import axios from "axios";
 
@@ -11,7 +10,18 @@ const useBonuses = () => {
     const fetchBonuses = async () => {
       try {
         const response = await axios.get("/api/bonuses");
-        setBonuses(response.data); // если Strapi настроен без wrapper-а
+
+        console.log("Бонусы получены:", response.data);
+
+        const raw = response.data?.data || [];
+
+        // Распаковка attributes
+        const mapped = raw.map((item) => ({
+          id: item.id,
+          ...item.attributes,
+        }));
+
+        setBonuses(mapped);
       } catch (err) {
         console.error("Ошибка при получении бонусов:", err);
         setError(err);
