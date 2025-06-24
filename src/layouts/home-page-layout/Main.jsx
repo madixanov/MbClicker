@@ -12,7 +12,7 @@ const Main = () => {
     return (
         <main className="home-main">
             <Helmet>
-                <link rel="preload" as="image" href={avatar} />
+                <link rel="preload" as="image" href={avatar} type="image/webp" />
                 <meta name="description" content="Нажимай на своего Аватара, копи MB, играй в удовольствие" />
             </Helmet>
 
