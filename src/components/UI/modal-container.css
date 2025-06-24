@@ -66,3 +66,41 @@
   background-color: rgba(0, 0, 0, 0.6);
   z-index: 9998;
 }
+
+.modal-container.show {
+  animation: slideUp 0.3s ease-in-out forwards;
+}
+
+.modal-container.hide {
+  animation: slideDown 0.3s ease-in-out forwards;
+}
+
+.modal-overlay.show {
+  animation: fadeIn 0.3s ease-out forwards;
+}
+
+.modal-overlay.hide {
+  animation: fadeIn 0.3s reverse forwards;
+}
+
+@keyframes slideUp {
+  from {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideDown {
+  from {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateY(100%);
+    opacity: 0;
+  }
+}
