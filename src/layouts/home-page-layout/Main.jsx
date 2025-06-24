@@ -3,10 +3,10 @@ import './home-page.css';
 import LoadingPage from '../../pages/LoadingPage';
 import { Helmet } from "react-helmet";
 import avatar from '../../assets/images/avatar.webp';
+import Avatar from "./UI/Avatar";
 
 const ProgressBar = lazy(() => import("./UI/ProgressBar"));
 const MbCounter = lazy(() => import("./UI/MbCounter"));
-const Avatar = lazy(() => import("./UI/Avatar"));
 
 const Main = () => {
     return (
