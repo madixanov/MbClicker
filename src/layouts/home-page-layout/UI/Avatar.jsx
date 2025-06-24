@@ -55,6 +55,7 @@ const Avatar = () => {
           width: "100%",
           height: "auto",
           userSelect: "none",
+          aspectRatio: "3 / 5",
         }}
       />
 
