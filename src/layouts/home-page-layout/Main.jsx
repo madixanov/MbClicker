@@ -2,7 +2,7 @@ import { lazy, Suspense } from "react";
 import './home-page.css';
 import LoadingPage from '../../pages/LoadingPage';
 import { Helmet } from "react-helmet";
-import avatar from '../../assets/images/avatar.png';
+import avatar from '../../assets/images/avatar.webp';
 
 const ProgressBar = lazy(() => import("./UI/ProgressBar"));
 const MbCounter = lazy(() => import("./UI/MbCounter"));
