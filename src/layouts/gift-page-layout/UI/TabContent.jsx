@@ -16,8 +16,8 @@ const TabContent = () => {
                 <div className="task-container" key={index}>
                     <div className="pfphoto"></div>
                     <div className="task-content">
-                        <p className="task-name">{bonus.name}</p>
-                        <p className="task-prize">{bonus.prize}</p>
+                        <p className="task-name">{bonus.Name}</p>
+                        <p className="task-prize">+ {bonus.Prize} B</p>
                     </div>
                         <Button />
                 </div>
