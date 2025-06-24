@@ -1,19 +1,19 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useEffect } from "react";
-import LoadingPage from "./pages/LoadingPage";
-import AutoSaveClicks from "./components/AutoSaveClisk";
-import useTelegramAuth from "./hooks/useTelegramAuth";
-import { retryPendingUpdate } from "./services/playerService";
-import useSyncOnUnload from "./hooks/useSyncOnUnload";
-import useAppReady from "./hooks/useAppReady";
+import LoadingPage from "../pages/LoadingPage";
+import AutoSaveClicks from "./AutoSaveClisk";
+import useTelegramAuth from "../hooks/useTelegramAuth";
+import { retryPendingUpdate } from "../services/playerService";
+import useSyncOnUnload from "../hooks/useSyncOnUnload";
+import useAppReady from "../hooks/useAppReady";
 
 // Lazy загрузка страниц
-const HomePage = lazy(() => import("./pages/HomePage"));
-const ExchangePage = lazy(() => import("./pages/ExchangePage"));
-const TaskPage = lazy(() => import("./pages/TaskPage"));
-const GiftPage = lazy(() => import("./pages/GiftPage"));
-const StatsPage = lazy(() => import("./pages/StatsPage"));
-const FriendsPage = lazy(() => import("./pages/FriendsPage"));
+const HomePage = lazy(() => import("../pages/HomePage"));
+const ExchangePage = lazy(() => import("../pages/ExchangePage"));
+const TaskPage = lazy(() => import("../pages/TaskPage"));
+const GiftPage = lazy(() => import("../pages/GiftPage"));
+const StatsPage = lazy(() => import("../pages/StatsPage"));
+const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 
 const MainRouter = () => {
   useTelegramAuth();
