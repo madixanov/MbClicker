@@ -122,3 +122,42 @@
     gap: 0;
   }
 }
+
+.tab-row {
+  display: flex;
+  align-items: center;
+  width: 100%;
+  justify-content: center;
+  background: #000;
+  margin-bottom: 38px;
+}
+
+.active-tab {
+  width: 180px;
+  height: 29px;
+  border-radius: 0 0 20px 20px;
+  border: none;
+  background-color: white;
+  color: black;
+  font-size: 13px;
+  font-weight: 500;
+  border-top: 1px solid #fff;
+}
+
+.non-active-tab {
+  width: 180px;
+  height: 29px;
+  color: white;
+  background-color: #000;
+  border: none;
+  border-top: 1px solid #fff;
+  font-size: 13px;
+  font-weight: 500;
+}
+
+@media (max-width: 780px) {
+  .active-tab,
+  .non-active-tab {
+    height: 40px;
+  }
+}
