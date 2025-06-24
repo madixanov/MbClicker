@@ -41,7 +41,6 @@ const MbCounter = () => {
 
     const interval = setInterval(() => {
       updatePlayer({ clicks: mbCountAll });
-      console.log("📤 Обновлены клики:", mbCountAll);
     }, 15000); // ⏱️ раз в 15 сек
 
     return () => clearInterval(interval); // очищаем при размонтировании
@@ -62,7 +61,7 @@ const MbCounter = () => {
           <img src={exchange1} alt="exchange icon" className="exchange-icon" />
         </div>
       </div>
-      <p>МЕГАБАЙТ</p>
+      <p>БАЙТ</p>
     </div>
   );
 };
