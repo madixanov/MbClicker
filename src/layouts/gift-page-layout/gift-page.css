@@ -76,6 +76,7 @@
   font-weight: 400;
   width: 100%;
   text-wrap: wrap;
+  margin-left: 5px;
 }
 
 .task-prize {
@@ -118,7 +119,7 @@
   }
 
   .task-container {
-    justify-content: space-evenly;
+    justify-content: space-between;
     gap: 0;
   }
 }
