@@ -161,6 +161,7 @@ div.avatar-container img {
   -moz-user-select: none;
   -ms-user-select: none;
   -webkit-user-drag: none;
+  aspect-ratio: 3 / 5;
 }
 
 div.avatar-container img:active {
