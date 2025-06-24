@@ -17,7 +17,6 @@ const useTelegramAuth = () => {
 
       const user = getTelegramUser();
       if (!user) {
-        console.warn("❌ Пользователь Telegram не найден");
         isCreating.current = false;
         return;
       }
@@ -37,7 +36,6 @@ const useTelegramAuth = () => {
         if (!existingPlayer) {
           const res = await createPlayer(telegramUser);
           const newPlayer = res.data?.data;
-          console.log("🎉 Новый пользователь сохранён:", newPlayer);
 
           // ✅ сразу сохраняем в состояние
           if (newPlayer) {

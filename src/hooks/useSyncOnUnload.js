@@ -22,7 +22,6 @@ const useSyncOnUnload = () => {
           level,
           progress_tokens: progressTokens
         });
-        console.log("💾 Данные игрока синхронизированы перед выходом");
       } catch (err) {
         console.error("❌ Ошибка при синхронизации на выходе:", err);
       }

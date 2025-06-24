@@ -8,4 +8,13 @@ export default defineConfig({
     historyApiFallback: true,
   },
   base: '/',
+  build: {
+    minify: 'terser', // 👉 более эффективная минификация
+    terserOptions: {
+      compress: {
+        drop_console: true, // 👉 удаляет console.log
+        drop_debugger: true,
+      },
+    },
+  },
 })

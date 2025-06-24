@@ -54,11 +54,6 @@ const useMbStore = create((set, get) => ({
       mbCountAll: Number(player.clicks) || 0,
       progressTokens: Number(player.progress_tokens) || 0,
     });
-
-    console.log("🔁 Данные игрока загружены:", {
-      clicks: player.clicks,
-      progressTokens: player.progress_tokens,
-    });
   },
 
   saveTokensToStrapi: async () => {
@@ -73,8 +68,6 @@ const useMbStore = create((set, get) => ({
     await updatePlayerWithFallback(player.documentId, {
       progress_tokens: progressTokens,
     });
-
-    console.log("💾 Прогресс токены сохранены в Strapi:", progressTokens);
   },
 }));
 
