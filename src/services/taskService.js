@@ -17,12 +17,12 @@ export const fetchPlayerIdByDocumentId = async (documentId) => {
 
 export const completeTask = async (taskId, playerId) => {
   try {
-    const res = await axios.put(`https://mbclickerstrapi.onrender.com/api/tasks/${taskId}`, {
-      data: {
-        completedBy: {
-          connect: [{ id: playerId }],
-        },
-      },
+    const res = await axios.put(`https://mbclickerstrapi.onrender.com/api/tasks/${taskId}`, { 
+      data: { 
+        completedBy: { 
+          connect: [{ id: playerId }] 
+        } 
+      } 
     });
     return res.data;
   } catch (err) {
