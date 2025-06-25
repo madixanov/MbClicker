@@ -1,23 +1,39 @@
 import { useState } from "react";
+import axios from "axios";
 
-const Button = () => {
-    const [isActive, setIsActive] = useState(false);
-    const [isCompleted, setIsCompleted] = useState(false);
+const Button = ({ task, clicks, playerId }) => {
+    const [ claimed, setClaimed ] = useState(false);
 
-    const handleClick = () => {
-        if (isActive || isCompleted) return; 
-        setIsActive(true);
-        setTimeout(() => {
-            setIsCompleted(true);
-        }, 3000);
+    const isReady = clicks >= task.Goal;
+
+    const handleClaim = async () => {
+        if (!isReady || claimed) return;
+
+        try {
+            await axios.post("https://mbclickerstrapi.onrender.com/api/tasks", {
+                data: {
+                Name: task.Name,
+                Goal: task.Goal,
+                Prize: task.Prize,
+                Completed: true,
+                isTemplate: false,
+                player: playerId,
+                },
+            });
+
+        setClaimed(true);
+        } catch (err) {
+        console.error("Ошибка при сохранении задачи игроку:", err);
+        }
     };
 
+    if (claimed) {
+        return <span className="task-done">✅ Получено</span>;
+    }
+
     return (
-        <button
-            onClick={handleClick}
-            className={`task-btn ${isActive ? "active-btn" : ""} ${isCompleted ? "completed" : ""}`}
-        >
-            {isCompleted ? "ПОЛУЧИТЬ" : isActive ? "ПРОВЕРКА" : "ВЫПОЛНИТЬ"}
+        <button className="task-btn" onClick={handleClaim} disabled={!isReady}>
+        {isReady ? "ПОЛУЧИТЬ" : "Проверка"}
         </button>
     );
 };
