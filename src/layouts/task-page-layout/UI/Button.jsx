@@ -79,6 +79,7 @@ const Button = ({
 
         const prize = Number(task.Prize) || 0;
         const newClicks = mbCountAll + prize;
+        console.log(newClicks);
 
         await updatePlayer(playerId, { clicks: newClicks });
         mbStore.setMbCountAll(newClicks);
