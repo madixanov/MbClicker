@@ -30,11 +30,6 @@ const useMbStore = create((set, get) => ({
 
     const player = await fetchPlayerByTelegramId(user.id);
     if (!player || !player.documentId) return;
-
-    await updatePlayerWithFallback(player.documentId, {
-      clicks: newAll,
-      progress_tokens: newTokens,
-    });
   },
 
   resetCount: () =>
