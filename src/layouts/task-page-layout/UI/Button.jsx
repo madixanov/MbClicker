@@ -10,16 +10,42 @@ import useLvlStore from "../../../store/lvl-store";
 
 const Button = ({ task, clicks, playerId, onUpdateClicks }) => {
   const [realPlayerId, setRealPlayerId] = useState(null);
-  const [state, setState] = useState("initial"); // initial → ready → claimed
+  const [state, setState] = useState("initial");
   const [loading, setLoading] = useState(false);
   const [claimedManually, setClaimedManually] = useState(false);
-  const { level } = useLvlStore.getState();
-  const { mbCountAll } = useMbStore.getState();
 
+  const [progressValue, setProgressValue] = useState(0);
   const isLevelTask = task.Name.includes("LVL");
-  const progressValue = isLevelTask ? level : mbCountAll;
 
-  // ✅ Получаем реальные Strapi ID игрока
+  const mbStore = useMbStore();
+  const lvlStore = useLvlStore();
+
+  // 1. Прогресс задачи (автообновление при изменении Zustand)
+  useEffect(() => {
+    const unsubscribeMb = useMbStore.subscribe(
+      (state) => state.mbCountAll,
+      (mbCountAll) => {
+        if (!isLevelTask) setProgressValue(mbCountAll);
+      }
+    );
+    const unsubscribeLvl = useLvlStore.subscribe(
+      (state) => state.level,
+      (level) => {
+        if (isLevelTask) setProgressValue(level);
+      }
+    );
+
+    // начальное значение
+    if (isLevelTask) setProgressValue(lvlStore.level || 0);
+    else setProgressValue(mbStore.mbCountAll || 0);
+
+    return () => {
+      unsubscribeMb();
+      unsubscribeLvl();
+    };
+  }, [isLevelTask]);
+
+  // 2. Получаем реальные Strapi ID игрока
   useEffect(() => {
     const init = async () => {
       try {
@@ -32,7 +58,7 @@ const Button = ({ task, clicks, playerId, onUpdateClicks }) => {
     init();
   }, [playerId]);
 
-  // ✅ Проверка: задача уже завершена?
+  // 3. Проверка: выполнена ли задача?
   useEffect(() => {
     if (!realPlayerId || !task.completedBy || state === "claimed" || claimedManually) return;
 
@@ -45,7 +71,7 @@ const Button = ({ task, clicks, playerId, onUpdateClicks }) => {
     }
   }, [realPlayerId, task.completedBy, state, claimedManually]);
 
-  // ✅ Обработка клика
+  // 4. Обработка клика
   const handleClick = async () => {
     if (loading || !realPlayerId) return;
 
@@ -59,25 +85,16 @@ const Button = ({ task, clicks, playerId, onUpdateClicks }) => {
     } else if (state === "ready") {
       setLoading(true);
       try {
-        // 1. Завершаем задачу в Strapi
         await completeTask(task.documentId, playerId);
 
-        // 2. Считаем награду
         const prize = Number(task.Prize) || 0;
         const newClicks = Number(clicks) + prize;
 
-        // 3. Обновляем игрока в Strapi
         await updatePlayer(playerId, { clicks: newClicks });
+        mbStore.setMbCountAll(newClicks);
 
-        // 4. Обновляем Zustand
-        useMbStore.getState().setMbCountAll(newClicks);
+        if (onUpdateClicks) onUpdateClicks(newClicks);
 
-        // 5. Обновляем родительский UI, если нужно
-        if (onUpdateClicks) {
-          onUpdateClicks(newClicks);
-        }
-
-        // 6. Устанавливаем статус вручную
         setClaimedManually(true);
         setState("claimed");
       } catch (err) {
@@ -88,7 +105,7 @@ const Button = ({ task, clicks, playerId, onUpdateClicks }) => {
     }
   };
 
-  // 🟢 Если задача завершена — показываем галочку
+  // 5. UI: выполнено
   if (state === "claimed") {
     return (
       <span className="task-done">
@@ -97,7 +114,6 @@ const Button = ({ task, clicks, playerId, onUpdateClicks }) => {
     );
   }
 
-  // 🟡 Иначе — кнопка
   return (
     <button
       className={`task-btn ${state === "ready" ? "completed" : "active"}`}
