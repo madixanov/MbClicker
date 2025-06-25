@@ -73,9 +73,10 @@ const Button = ({
         await completeTask(task.documentId, playerId);
 
         const prize = Number(task.Prize) || 0;
-        mbStore.setMbCountAll(prize); // ✅ прибавляем к mbCountAll
+        const newClicks =  mbStore.mbCountAll + prize
+        mbStore.setMbCountAll(newClicks); // ✅ прибавляем к mbCountAll
 
-        if (onUpdateClicks) onUpdateClicks(mbStore.mbCountAll + prize);
+        if (onUpdateClicks) onUpdateClicks(newClicks);
 
         setClaimedManually(true);
         setState("claimed");
