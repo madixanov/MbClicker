@@ -15,7 +15,7 @@ const useSyncOnRouteChange = () => {
       console.log('Сохранили MB') // 💾 сохранить текущие данные
       await store.loadMbFromPlayer();
       console.log("ЗАгрузили MB")
-      await lvlStore.loadMbFromPlayer();
+      await lvlStore.loadLevelFromStrapi();
       console.log("Загрузили уровень")   // 📥 загрузить обновления
     };
 
