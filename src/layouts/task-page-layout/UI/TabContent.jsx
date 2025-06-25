@@ -29,7 +29,7 @@ const TabContent = () => {
                     <div className="pfphoto"></div>
                     <div className="task-content">
                         <p className="task-name">{task.Name}</p>
-                        <p className="task-prize">{task.Prize}</p>
+                        <p className="task-prize">+ {task.Prize} Bytes</p>
                     </div>
                         <Button />
                 </div>
