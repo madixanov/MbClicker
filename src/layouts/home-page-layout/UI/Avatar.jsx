@@ -18,6 +18,7 @@ const Avatar = () => {
   const saveToStrapi = async () => {
     if (!player || !player.telegramId) return;
     try {
+      console.log("Сохранение данных в Strapi...");
       await updatePlayer(player.telegramId, {
         clicks,
         progress_tokens: clicks, // если нужно
