@@ -22,7 +22,8 @@
 }
 
 .task-title {
-  text-align: center;
+  text-align: left; /* ✅ */
+  padding-left: 34px; /* ✅ */
   margin: 0;
   font-size: 28px;
   font-weight: 700;
@@ -48,8 +49,11 @@
   align-items: center;
   height: 50px;
   width: 100%;
+  max-width: 370px; /* ✅ одинаковая ширина */
+  margin: 0 auto; /* ✅ центрирование */
   padding-left: 34px;
   padding-right: 34px;
+  box-sizing: border-box;
 }
 
 .pfphoto {
@@ -64,6 +68,8 @@
   flex-direction: column;
   gap: 5px;
   margin-left: 12px;
+  flex: 1;
+  min-width: 0;
 }
 
 .task-content p {
@@ -96,6 +102,8 @@
   border: none;
   text-align: center;
   padding: 7px 3px;
+  flex-shrink: 0;
+  flex-grow: 0;
 }
 
 .task-btn.active {
@@ -109,11 +117,11 @@
 }
 
 @media (max-width: 480px) {
-    .gift-main {
+  .gift-main {
     align-items: start;
   }
 
-    .gift-title {
+  .gift-title {
     width: 277px;
     text-align: unset;
     padding-left: 34px;
@@ -159,7 +167,7 @@
 
 @media (max-width: 780px) {
   .task-title {
-    text-align: flex-start;
+    text-align: left;
     padding-left: 34px;
   }
 
