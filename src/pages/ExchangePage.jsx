@@ -1,28 +1,22 @@
 import { lazy } from "react";
 import { useEffect } from "react";
+import usePlayerData from "../hooks/usePlayerData";
 
 const Header = lazy(() => import('../components/Header'))
 const Footer = lazy(() => import('../components/Footer'))
 const Main = lazy(() => import('../layouts/exchange-page-layout/Main'))
 
 const ExchangePage = () => {
-    document.documentElement.classList.add("exchange-mode");
+
+    const { loadPlayer} = usePlayerData();
 
     useEffect(() => {
-        document.documentElement.classList.add("exchange-mode");
-
-        return () => {
-        document.documentElement.classList.remove("exchange-mode");
-        };
-    }, []);
-
-    useEffect(() => {
-        document.body.classList.add("other-page")
-
-        return () => {
-            document.body.classList.remove('other-page')
-        }
-    }, [])
+            loadPlayer();
+            document.body.classList.add("other-page")
+            return () => {
+                document.body.classList.remove('other-page')
+            }
+        }, [loadPlayer])
 
     return (
         <div className="exchange-content">

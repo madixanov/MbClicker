@@ -9,11 +9,7 @@ const TabContent = () => {
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [playerStrapiId, setPlayerStrapiId] = useState(null);
-    const { player, loadPlayer } = usePlayerData();
-
-    useEffect(() => {
-        loadPlayer();
-    }, [])
+    const { player } = usePlayerData();
 
     useEffect(() => {
         const load = async () => {
