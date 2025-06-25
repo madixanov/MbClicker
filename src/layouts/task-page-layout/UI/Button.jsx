@@ -3,10 +3,10 @@ import {
   completeTask,
   fetchPlayerIdByDocumentId,
   fetchTaskIdByDocumentId,
-  updatePlayerClicks,
 } from "../../../services/taskService";
 import { updatePlayer } from "../../../services/playerService";
 import completed from "../../../assets/icons/completed.svg";
+import useMbStore from "../../../store/mb-store";
 
 const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
   const [realPlayerId, setRealPlayerId] = useState(null);
@@ -64,11 +64,11 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
         // ✅ Обновляем клики и баланс (как пример)
         const prize = Number(task.Prize) || 0;
         const newClicks = Number(clicks) + prize;
-
-        await updatePlayerClicks(playerId, newClicks);
         await updatePlayer(playerId, {
           clicks: newClicks,      // сохраняем клики     // сохраняем как "баланс", если нужно
         });
+
+        useMbStore.getState().setMbCountAll(newClicks);
 
         // ✅ Обновляем UI
         if (onUpdateClicks) {
