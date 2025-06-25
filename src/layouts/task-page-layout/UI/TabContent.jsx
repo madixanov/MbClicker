@@ -1,7 +1,6 @@
 import { lazy, useEffect, useState } from "react";
 import { fetchTemplateTasks, fetchPlayerIdByDocumentId } from "../../../services/taskService";
 import usePlayerData from "../../../hooks/usePlayerData";
-import completed from "../../../assets/icons/completed.svg";
 
 const Button = lazy(() => import('./Button'));
 
@@ -54,9 +53,6 @@ const TabContent = () => {
             <p>Загрузка...</p>
         ) : (
             tasks.map((task) => {
-            const alreadyCompleted = task.completedBy?.some(
-                (user) => user.id === playerStrapiId
-            );
 
             return (
                 <div className="task-container" key={task.id}>
@@ -64,19 +60,12 @@ const TabContent = () => {
                 <div className="task-content">
                     <p className="task-name">{task.Name}</p>
                     <p className="task-prize">+ {task.Prize} КБ</p>
-                </div>
-
-                {alreadyCompleted ? (
-                    <span className="task-done">
-                        <img src={completed} alt="" />
-                    </span>
-                ) : (
-                    <Button
+                </div>(
+                <Button
                     task={task}
                     clicks={player.clicks}
                     playerId={player.documentId}
-                    />
-                )}
+                />
                 </div>
             );
             })
