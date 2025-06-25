@@ -16,16 +16,16 @@ const MbCounter = () => {
   const mbCountAll = useMbStore((state) => state.mbCountAll);
   const progressTokens = useMbStore((state) => state.progressTokens);
 
-  const [animatedCount, setAnimatedCount] = useState(player?.clicks ?? mbCountAll);
+  const [animatedCount, setAnimatedCount] = useState(mbCountAll);
   const prevCountRef = useRef(mbCountAll);
   const navigate = useNavigate();
 
-  // 🎞 Анимация при клике
+  // 🎞 Анимация при изменении счётчика
   useEffect(() => {
     if (prevCountRef.current === mbCountAll) return;
 
     const controls = animate(prevCountRef.current, mbCountAll, {
-      duration: 0.8,
+      duration: 0.6,
       ease: "easeOut",
       onUpdate: (latest) => {
         setAnimatedCount(Math.round(latest));
@@ -36,7 +36,7 @@ const MbCounter = () => {
     return () => controls.stop();
   }, [mbCountAll]);
 
-  // ⏳ Автообновление игрока в Strapi раз в 15 секунд
+  // ⏳ Автосохранение в Strapi раз в 15 секунд
   useEffect(() => {
     if (!player?.documentId) return;
 
@@ -49,6 +49,14 @@ const MbCounter = () => {
 
     return () => clearInterval(interval);
   }, [mbCountAll, progressTokens, player?.documentId]);
+
+  // ✅ Пересинхронизация animatedCount после обнуления
+  useEffect(() => {
+    if (mbCountAll === 0 && animatedCount !== 0) {
+      setAnimatedCount(0);
+      prevCountRef.current = 0;
+    }
+  }, [mbCountAll]);
 
   // 🔁 Переход на страницу обмена
   const handleClick = () => navigate("/exchange");
