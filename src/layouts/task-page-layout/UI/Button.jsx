@@ -1,43 +1,33 @@
 import { useState, useEffect } from "react";
 import {
   completeTask,
-  fetchPlayerIdByDocumentId,
+  // fetchPlayerIdByDocumentId ❌ — убираем
 } from "../../../services/taskService";
 import { updatePlayer } from "../../../services/playerService";
 import completed from "../../../assets/icons/completed.svg";
 import useMbStore from "../../../store/mb-store";
 import useLvlStore from "../../../store/lvl-store";
 
-const Button = ({ task, clicks, playerId, onUpdateClicks, onReady }) => {
-  const [realPlayerId, setRealPlayerId] = useState(null);
+const Button = ({
+  task,
+  clicks,
+  playerId,
+  strapiPlayerId,     // ✅ теперь получаем готовый ID
+  isClaimed,          // ✅ передаём, выполнена ли задача
+  onUpdateClicks,
+  onReady,
+}) => {
   const [state, setState] = useState("initial");
   const [loading, setLoading] = useState(false);
   const [claimedManually, setClaimedManually] = useState(false);
-  const { level } = useLvlStore.getState();
-  const { mbCountAll } = useMbStore.getState();
 
+  const [progressValue, setProgressValue] = useState(0);
   const isLevelTask = task.Name.includes("LVL");
-  const progressValue = isLevelTask ? level : mbCountAll;
-
-  // ✅ Получение Strapi ID
-  useEffect(() => {
-    const init = async () => {
-      try {
-        const strapiPlayerId = await fetchPlayerIdByDocumentId(playerId);
-        setRealPlayerId(strapiPlayerId);
-      } catch (err) {
-        console.error("Ошибка получения Strapi ID:", err);
-      } finally {
-        if (onReady) onReady(); // 👈 Обязательно вызываем
-      }
-    };
-    init();
-  }, [playerId]);
 
   const mbStore = useMbStore();
   const lvlStore = useLvlStore();
 
-  // 1. Прогресс задачи (автообновление при изменении Zustand)
+  // 1. Подписка на изменения в состоянии
   useEffect(() => {
     const unsubscribeMb = useMbStore.subscribe(
       (state) => state.mbCountAll,
@@ -53,8 +43,9 @@ const Button = ({ task, clicks, playerId, onUpdateClicks, onReady }) => {
     );
 
     // начальное значение
-    if (isLevelTask) setProgressValue(lvlStore.level || 0);
-    else setProgressValue(mbStore.mbCountAll || 0);
+    setProgressValue(
+      isLevelTask ? lvlStore.level || 0 : mbStore.mbCountAll || 0
+    );
 
     return () => {
       unsubscribeMb();
@@ -62,35 +53,17 @@ const Button = ({ task, clicks, playerId, onUpdateClicks, onReady }) => {
     };
   }, [isLevelTask]);
 
-  // 2. Получаем реальные Strapi ID игрока
+  // 2. Проверка — задача уже завершена?
   useEffect(() => {
-    const init = async () => {
-      try {
-        const strapiPlayerId = await fetchPlayerIdByDocumentId(playerId);
-        setRealPlayerId(strapiPlayerId);
-      } catch (err) {
-        console.error("Ошибка получения Strapi ID:", err);
-      }
-    };
-    init();
-  }, [playerId]);
-
-  // 3. Проверка: выполнена ли задача?
-  useEffect(() => {
-    if (!realPlayerId || !task.completedBy || state === "claimed" || claimedManually) return;
-
-    const alreadyCompleted = task.completedBy.some(
-      (user) => user.id === realPlayerId
-    );
-
-    if (alreadyCompleted) {
+    if (isClaimed || claimedManually) {
       setState("claimed");
     }
-  }, [realPlayerId, task.completedBy, state, claimedManually]);
+    if (onReady) onReady(); // ✅ сигнал, что кнопка готова
+  }, [isClaimed, claimedManually, onReady]);
 
-  // 4. Обработка клика
+  // 3. Обработка клика
   const handleClick = async () => {
-    if (loading || !realPlayerId) return;
+    if (loading || !strapiPlayerId) return;
 
     if (state === "initial") {
       const isReady = progressValue >= task.Goal;
@@ -122,7 +95,7 @@ const Button = ({ task, clicks, playerId, onUpdateClicks, onReady }) => {
     }
   };
 
-  // 5. UI: выполнено
+  // 4. UI
   if (state === "claimed") {
     return (
       <span className="task-done">
