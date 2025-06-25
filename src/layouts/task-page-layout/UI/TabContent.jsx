@@ -1,6 +1,7 @@
 import { lazy, useEffect, useState } from "react";
 import { fetchTemplateTasks, fetchPlayerIdByDocumentId } from "../../../services/taskService";
 import usePlayerData from "../../../hooks/usePlayerData";
+import completed from "../../../assets/icons/completed.svg";
 
 const Button = lazy(() => import('./Button'));
 
@@ -50,7 +51,9 @@ const TabContent = () => {
                 </div>
 
                 {alreadyCompleted ? (
-                    <span className="task-done">✅ ВЫПОЛНЕНО</span>
+                    <span className="task-done">
+                        <img src={completed} alt="" />
+                    </span>
                 ) : (
                     <Button
                     task={task}

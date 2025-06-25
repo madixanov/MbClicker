@@ -5,7 +5,7 @@ import {
   fetchTaskIdByDocumentId,
   updatePlayerClicks,
 } from "../../../services/taskService";
-import completed from "../../../assets/icons/completed.svg";
+
 
 const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
     const [realPlayerId, setRealPlayerId] = useState(null);
@@ -73,14 +73,6 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
         }
         }
     };
-
-    if (state === "claimed") {
-    return (
-        <button className="task-btn claimed" disabled >
-            <img src={completed} alt="Задача выполнена" />
-        </button>
-    );
-}
 
     return (
         <button
