@@ -47,7 +47,7 @@ const TabContent = () => {
                 <div className="pfphoto"></div>
                 <div className="task-content">
                     <p className="task-name">{task.Name}</p>
-                    <p className="task-prize">+ {task.Prize} КИЛОБАЙТ</p>
+                    <p className="task-prize">+ {task.Prize} КБ</p>
                 </div>
 
                 {alreadyCompleted ? (
