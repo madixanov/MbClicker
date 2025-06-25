@@ -38,7 +38,6 @@ const Avatar = () => {
     const y = e.clientY - container.top;
 
     const id = Date.now();
-
     const newPopup = {
       id,
       x,
@@ -52,10 +51,15 @@ const Avatar = () => {
       setPopups((curr) => curr.filter((p) => p.id !== id));
     }, 1200);
 
-    // Сброс таймера и установка нового
+    // ⛔️ Очищаем предыдущий таймер
     clearTimeout(saveTimeoutRef.current);
-    saveTimeoutRef.current = setTimeout(saveToStrapi, SAVE_DELAY);
-    console.log("Таймер сохранения установлен на 3 секунды");
+
+    // ✅ Ставим новый таймер на 3 секунды
+    saveTimeoutRef.current = setTimeout(() => {
+      console.log("⏳ Таймер истёк, сохраняем...");
+      saveToStrapi();
+      saveTimeoutRef.current = null; // сбрасываем
+    }, SAVE_DELAY);
   };
 
   useEffect(() => {
