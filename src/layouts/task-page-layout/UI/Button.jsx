@@ -57,7 +57,7 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
 
         // 2. Прибавить приз к кликам
         const newClicks = clicks + task.Prize;
-        await updatePlayerClicks(realPlayerId, newClicks);
+        await updatePlayerClicks(playerId, newClicks);
 
         // 3. Обновить UI
         if (onUpdateClicks) {
@@ -74,7 +74,7 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
   };
 
   if (state === "claimed") {
-    return <span className="task-done">✅ ВЫПОЛНЕНО</span>;
+    return <span className="task-done">✅</span>;
   }
 
   return (
