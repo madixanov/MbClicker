@@ -54,6 +54,7 @@ const Avatar = () => {
     // Сброс таймера и установка нового
     clearTimeout(saveTimeoutRef.current);
     saveTimeoutRef.current = setTimeout(saveToStrapi, SAVE_DELAY);
+    console.log("Таймер сохранения установлен на 3 секунды");
   };
 
   useEffect(() => {
