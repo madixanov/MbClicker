@@ -2,7 +2,7 @@ import { useState, useRef, useEffect } from "react";
 import avatar from "../../../assets/images/avatar.webp";
 import useMbStore from "../../../store/mb-store";
 import usePlayerData from "../../../hooks/usePlayerData";
-import { updatePlayerStats } from "../../../services/playerService"; // <-- Добавь это
+import { updatePlayer } from "../../../services/playerService"; // <-- Добавь это
 import "../home-page.css";
 
 const Avatar = () => {
@@ -18,7 +18,7 @@ const Avatar = () => {
   const saveToStrapi = async () => {
     if (!player || !player.telegramId) return;
     try {
-      await updatePlayerStats(player.telegramId, {
+      await updatePlayer(player.telegramId, {
         clicks,
         progress_tokens: clicks, // если нужно
       });
