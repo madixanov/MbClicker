@@ -158,6 +158,11 @@
 }
 
 @media (max-width: 780px) {
+  .task-title {
+    text-align: start;
+    padding-left: 34px;
+  }
+
   .active-tab,
   .non-active-tab {
     height: 40px;
