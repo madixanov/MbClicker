@@ -13,6 +13,22 @@ const TabContent = () => {
     const { player } = usePlayerData();
 
     useEffect(() => {
+        const refreshTasks = async () => {
+            try {
+            const updatedTasks = await fetchTemplateTasks();
+            setTasks(updatedTasks);
+            } catch (err) {
+            console.error("Ошибка при обновлении задач:", err);
+            }
+        };
+
+        // 🔁 Загружаем задачи, когда меняется количество кликов
+        if (player?.clicks && playerStrapiId) {
+            refreshTasks();
+        }
+        }, [player?.clicks, playerStrapiId]);
+
+    useEffect(() => {
         const load = async () => {
         try {
             const taskData = await fetchTemplateTasks();
