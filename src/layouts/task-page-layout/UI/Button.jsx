@@ -72,15 +72,23 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
     }
   };
 
-  return (
-    <button
-      className={`task-btn ${state === "ready" ? "completed" : "active"}`}
-      onClick={handleClick}
-      disabled={loading}
-    >
-      {loading ? "..." : state === "ready" ? "ПОЛУЧИТЬ" : state === "claimed" ? <img src={completed} alt="" /> : "ВЫПОЛНИТЬ"}
-    </button>
-  );
+    if (state === "claimed") {
+        return (
+            <span className="task-done">
+                <img src={completed} alt="" />
+            </span>
+    );
+}
+
+    return (
+        <button
+        className={`task-btn ${state === "ready" ? "completed" : "active"}`}
+        onClick={handleClick}
+        disabled={loading}
+        >
+            {loading ? "..." : state === "ready" ? "ПОЛУЧИТЬ" : "ВЫПОЛНИТЬ"}
+        </button>
+    );
 };
 
 export default Button;
