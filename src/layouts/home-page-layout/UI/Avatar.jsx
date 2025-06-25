@@ -16,7 +16,7 @@ const Avatar = () => {
   const SAVE_DELAY = 3000; // 3 сек бездействия
 
   const saveToStrapi = async () => {
-    if (!player || !player.telegramId) return;
+    if (!player || !player.documentId) return;
     try {
       console.log("Сохранение данных в Strapi...");
       await updatePlayer(player.documentId, {
