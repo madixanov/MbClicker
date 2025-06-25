@@ -6,6 +6,7 @@ import useTelegramAuth from "../hooks/useTelegramAuth";
 import { retryPendingUpdate } from "../services/playerService";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import useAppReady from "../hooks/useAppReady";
+import useSyncOnRouteChange from "../hooks/useSyncOnRouteChange";
 
 // Lazy загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -18,6 +19,7 @@ const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 const MainRouter = () => {
   useTelegramAuth();
   useSyncOnUnload();
+  useSyncOnRouteChange();
   const appReady = useAppReady();
 
   useEffect(() => {
