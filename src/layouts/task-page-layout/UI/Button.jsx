@@ -1,25 +1,28 @@
 import { useState } from "react";
 import axios from "axios";
 
-const Button = ({ task, clicks, playerId }) => {
-    const [ claimed, setClaimed ] = useState(false);
+const Button = ({ task, clicks, level, playerId }) => {
+    const [claimed, setClaimed] = useState(false);
 
-    const isReady = clicks >= task.Goal;
+    const isLevelTask = task.Name.includes("LVL");
+
+    const progressValue = isLevelTask ? level : clicks;
+    const isReady = progressValue >= task.Goal;
 
     const handleClaim = async () => {
         if (!isReady || claimed) return;
 
         try {
-            await axios.post("https://mbclickerstrapi.onrender.com/api/tasks", {
-                data: {
-                Name: task.Name,
-                Goal: task.Goal,
-                Prize: task.Prize,
-                Completed: true,
-                isTemplate: false,
-                player: playerId,
-                },
-            });
+        await axios.post("https://mbclickerstrapi.onrender.com/api/tasks", {
+            data: {
+            Name: task.Name,
+            Goal: task.Goal,
+            Prize: task.Prize,
+            Completed: true,
+            isTemplate: false,
+            player: playerId,
+            },
+        });
 
         setClaimed(true);
         } catch (err) {
