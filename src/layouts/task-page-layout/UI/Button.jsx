@@ -10,27 +10,27 @@ import completed from "../../../assets/icons/completed.svg";
 const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
   const [realPlayerId, setRealPlayerId] = useState(null);
   const [realTaskId, setRealTaskId] = useState(null);
-  const [state, setState] = useState("initial");
+  const [state, setState] = useState("initial"); // initial → ready → claimed
   const [loading, setLoading] = useState(false);
-  const [claimedOnce, setClaimedOnce] = useState(false); // ✅
 
   const isLevelTask = task.Name.includes("LVL");
   const progressValue = isLevelTask ? level : clicks;
 
+  // Получаем реальные Strapi ID игрока и задачи
   useEffect(() => {
     const init = async () => {
       try {
-        const strapiId = await fetchPlayerIdByDocumentId(playerId);
-        const taskId = await fetchTaskIdByDocumentId(task.documentId);
+        const strapiPlayerId = await fetchPlayerIdByDocumentId(playerId);
+        const strapiTaskId = await fetchTaskIdByDocumentId(task.documentId);
 
-        setRealPlayerId(strapiId);
-        setRealTaskId(taskId);
+        setRealPlayerId(strapiPlayerId);
+        setRealTaskId(strapiTaskId);
 
         const alreadyCompleted = task.completedBy?.some(
-          (user) => user.id === strapiId
+          (user) => user.id === strapiPlayerId
         );
 
-        if (alreadyCompleted || claimedOnce) {
+        if (alreadyCompleted) {
           setState("claimed");
         }
       } catch (err) {
@@ -39,7 +39,7 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
     };
 
     init();
-  }, [playerId, task.documentId, task.completedBy, claimedOnce]); // ✅ добавили claimedOnce
+  }, [playerId, task.documentId, task.completedBy]);
 
   const handleClick = async () => {
     if (loading || !realPlayerId || !realTaskId) return;
@@ -62,7 +62,6 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
           onUpdateClicks(newClicks);
         }
 
-        setClaimedOnce(true); // ✅ зафиксировали, что награда получена
         setState("claimed");
       } catch (err) {
         console.error("Ошибка при выполнении задачи:", err);
@@ -72,23 +71,25 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
     }
   };
 
-    if (state === "claimed") {
-        return (
-            <span className="task-done">
-                <img src={completed} alt="" />
-            </span>
-    );
-}
-
+  // ✅ Если выполнено — показываем галочку
+  if (state === "claimed") {
     return (
-        <button
-        className={`task-btn ${state === "ready" ? "completed" : "active"}`}
-        onClick={handleClick}
-        disabled={loading}
-        >
-            {loading ? "..." : state === "ready" ? "ПОЛУЧИТЬ" : "ВЫПОЛНИТЬ"}
-        </button>
+      <span className="task-done">
+        <img src={completed} alt="Выполнено" />
+      </span>
     );
+  }
+
+  // 🟡 Иначе — кнопка
+  return (
+    <button
+      className={`task-btn ${state === "ready" ? "completed" : "active"}`}
+      onClick={handleClick}
+      disabled={loading}
+    >
+      {loading ? "..." : state === "ready" ? "ПОЛУЧИТЬ" : "ВЫПОЛНИТЬ"}
+    </button>
+  );
 };
 
 export default Button;
