@@ -5,10 +5,15 @@ import usePlayerData from "../../../hooks/usePlayerData";
 const Button = lazy(() => import('./Button'));
 
 const TabContent = () => {
+
     const [tasks, setTasks] = useState([]);
     const [loading, setLoading] = useState(true);
     const [playerStrapiId, setPlayerStrapiId] = useState(null);
-    const { player } = usePlayerData();
+    const { player, loadPlayer } = usePlayerData();
+
+    useEffect(() => {
+        loadPlayer();
+    }, [])
 
     useEffect(() => {
         const load = async () => {
