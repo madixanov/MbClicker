@@ -56,19 +56,20 @@ const useMbStore = create((set, get) => ({
     });
   },
 
-  saveTokensToStrapi: async () => {
-    const user = getTelegramUser();
-    if (!user) return;
+    saveTokensToStrapi: async () => {
+      const user = getTelegramUser();
+      if (!user) return;
 
-    const player = await fetchPlayerByTelegramId(user.id);
-    if (!player || !player.documentId) return;
+      const player = await fetchPlayerByTelegramId(user.id);
+      if (!player || !player.documentId) return;
 
-    const { progressTokens } = get();
+      const { mbCountAll, progressTokens } = get();
 
-    await updatePlayerWithFallback(player.documentId, {
-      progress_tokens: progressTokens,
-    });
-  },
+      await updatePlayerWithFallback(player.documentId, {
+        clicks: mbCountAll,
+        progress_tokens: progressTokens,
+      });
+    },
 }));
 
 export default useMbStore;
