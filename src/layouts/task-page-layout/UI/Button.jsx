@@ -2,20 +2,22 @@ import { useState, useEffect } from "react";
 import {
   completeTask,
   fetchPlayerIdByDocumentId,
-  fetchTaskIdByDocumentId,
 } from "../../../services/taskService";
 import { updatePlayer } from "../../../services/playerService";
 import completed from "../../../assets/icons/completed.svg";
 import useMbStore from "../../../store/mb-store";
+import useLvlStore from "../../../store/lvl-store";
 
-const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
+const Button = ({ task, clicks, playerId, onUpdateClicks }) => {
   const [realPlayerId, setRealPlayerId] = useState(null);
   const [state, setState] = useState("initial"); // initial → ready → claimed
   const [loading, setLoading] = useState(false);
   const [claimedManually, setClaimedManually] = useState(false);
+  const { level } = useLvlStore.getState();
+  const { mbCountAll } = useMbStore.getState();
 
   const isLevelTask = task.Name.includes("LVL");
-  const progressValue = isLevelTask ? level : clicks;
+  const progressValue = isLevelTask ? level : mbCountAll;
 
   // ✅ Получаем реальные Strapi ID игрока
   useEffect(() => {
