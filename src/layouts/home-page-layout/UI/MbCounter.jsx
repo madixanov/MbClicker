@@ -64,7 +64,7 @@ const MbCounter = () => {
           <img src={exchange1} alt="exchange icon" className="exchange-icon" />
         </div>
       </div>
-      <p>БАЙТ</p>
+      <p>КИЛОБАЙТ</p>
     </div>
   );
 };
