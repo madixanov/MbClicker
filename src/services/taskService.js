@@ -34,3 +34,17 @@ export const completeTask = async (taskId, playerId) => {
     throw err;
   }
 };
+
+export const updatePlayerClicks = async (playerId, newClicks) => {
+  try {
+    const res = await axios.put(`${API}/players/${playerId}`, {
+      data: {
+        clicks: newClicks,
+      },
+    });
+    return res.data;
+  } catch (err) {
+    console.error("❌ Ошибка при обновлении кликов игрока:", err.response?.data || err);
+    throw err;
+  }
+};

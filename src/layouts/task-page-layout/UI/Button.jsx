@@ -2,10 +2,11 @@ import { useState, useEffect } from "react";
 import {
   completeTask,
   fetchPlayerIdByDocumentId,
-  fetchTaskIdByDocumentId
+  fetchTaskIdByDocumentId,
+  updatePlayerClicks,
 } from "../../../services/taskService";
 
-const Button = ({ task, clicks, level, playerId }) => {
+const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
   const [realPlayerId, setRealPlayerId] = useState(null);
   const [realTaskId, setRealTaskId] = useState(null);
   const [state, setState] = useState("initial"); // 'initial' | 'ready' | 'claimed'
@@ -51,7 +52,18 @@ const Button = ({ task, clicks, level, playerId }) => {
     } else if (state === "ready") {
       setLoading(true);
       try {
+        // 1. Отметить задачу как выполненную
         await completeTask(task.documentId, playerId);
+
+        // 2. Прибавить приз к кликам
+        const newClicks = clicks + task.Prize;
+        await updatePlayerClicks(realPlayerId, newClicks);
+
+        // 3. Обновить UI
+        if (onUpdateClicks) {
+          onUpdateClicks(newClicks);
+        }
+
         setState("claimed");
       } catch (err) {
         console.error("Ошибка при выполнении задачи:", err);
@@ -67,9 +79,7 @@ const Button = ({ task, clicks, level, playerId }) => {
 
   return (
     <button
-      className={`task-btn ${
-        state === "ready" ? "completed" : "active"
-      }`}
+      className={`task-btn ${state === "ready" ? "completed" : "active"}`}
       onClick={handleClick}
       disabled={loading}
     >
