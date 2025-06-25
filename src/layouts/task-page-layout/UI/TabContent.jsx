@@ -1,11 +1,13 @@
 import { lazy, useEffect, useState } from "react";
 import { fetchTemplateTasks } from "../../../services/taskService";
+import usePlayerData from "../../../hooks/usePlayerData";
 
 const Button = lazy(() => import('./Button'));
 
 const TabContent = () => {
     const [ tasks, setTasks ] = useState([]);
     const [ loading, setLoading ] = useState(true);
+    const { player } = usePlayerData();
 
     useEffect(() => {
         const loadTasks = async () => {
@@ -31,7 +33,7 @@ const TabContent = () => {
                         <p className="task-name">{task.Name}</p>
                         <p className="task-prize">+ {task.Prize} Bytes</p>
                     </div>
-                        <Button />
+                        <Button task={task} clicks={player.clicks} playerId={player.documentId}/>
                 </div>
             ))}
         </div>
