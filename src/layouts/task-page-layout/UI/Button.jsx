@@ -56,7 +56,7 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
         await completeTask(task.documentId, playerId);
 
         // 2. Прибавить приз к кликам
-        const newClicks = clicks + task.Prize;
+        const newClicks = Number(clicks) + Number(task.Prize);
         await updatePlayerClicks(playerId, newClicks);
 
         // 3. Обновить UI
