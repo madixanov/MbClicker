@@ -167,7 +167,7 @@
 
 @media (max-width: 780px) {
   .task-title {
-    text-align: left;
+    text-align: unset;
     padding-left: 34px;
   }
 
