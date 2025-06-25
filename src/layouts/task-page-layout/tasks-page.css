@@ -159,7 +159,7 @@
 
 @media (max-width: 780px) {
   .task-title {
-    text-align: start;
+    text-align: flex-start;
     padding-left: 34px;
   }
 
@@ -167,4 +167,17 @@
   .non-active-tab {
     height: 40px;
   }
+}
+
+.task-done {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+}
+
+.task-done img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: contain;
 }
