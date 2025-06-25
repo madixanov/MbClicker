@@ -25,14 +25,12 @@ export const completeTask = async (taskId, playerId) => {
   try {
     const res = await axios.put(`${API}/tasks/${taskId}`, {
       data: {
-        completedBy: {
-          connect: [{ id: playerId }],
-        },
+        completedBy: [playerId], // ✅ массив ID
       },
     });
     return res.data;
   } catch (err) {
-    console.error("❌ Ошибка при завершении задачи:", err);
+    console.error("❌ Ошибка при завершении задачи:", err.response?.data || err.message);
     throw err;
   }
 };
