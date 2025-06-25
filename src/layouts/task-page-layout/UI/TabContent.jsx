@@ -7,35 +7,27 @@ const Button = lazy(() => import('./Button'));
 
 const TabContent = () => {
   const [tasks, setTasks] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [playerStrapiId, setPlayerStrapiId] = useState(null);
-  const [readyTaskCount, setReadyTaskCount] = useState(0);
+  const [loading, setLoading] = useState(true);
   const { player } = usePlayerData();
 
-  const isFullyReady = !loading && tasks.length > 0 && readyTaskCount === tasks.length;
-
   useEffect(() => {
-    const refreshTasks = async () => {
+    const loadData = async () => {
       try {
-        const updatedTasks = await fetchTemplateTasks();
-        setTasks(updatedTasks);
-      } catch (err) {
-        console.error("Ошибка при обновлении задач:", err);
-      }
-    };
+        // Загружаем игрока и задачи
+        const [taskData, strapiId] = await Promise.all([
+          fetchTemplateTasks(),
+          fetchPlayerIdByDocumentId(player.documentId),
+        ]);
 
-    if (player?.clicks && playerStrapiId) {
-      refreshTasks();
-    }
-  }, [player?.clicks, playerStrapiId]);
+        // Добавляем поле `isClaimed` в каждую задачу
+        const enhancedTasks = taskData.map(task => {
+          const isClaimed = task.completedBy?.some(user => user.id === strapiId);
+          return { ...task, isClaimed };
+        });
 
-  useEffect(() => {
-    const load = async () => {
-      try {
-        const taskData = await fetchTemplateTasks();
-        setTasks(taskData);
-        const id = await fetchPlayerIdByDocumentId(player.documentId);
-        setPlayerStrapiId(id);
+        setTasks(enhancedTasks);
+        setPlayerStrapiId(strapiId);
       } catch (err) {
         console.error("Ошибка при загрузке задач или игрока:", err);
       } finally {
@@ -44,11 +36,11 @@ const TabContent = () => {
     };
 
     if (player?.documentId) {
-      load();
+      loadData();
     }
   }, [player?.documentId]);
 
-  if (!isFullyReady) {
+  if (loading || !playerStrapiId) {
     return <LoadingPage />;
   }
 
@@ -65,7 +57,8 @@ const TabContent = () => {
             task={task}
             clicks={player.clicks}
             playerId={player.documentId}
-            onReady={() => setReadyTaskCount((prev) => prev + 1)}
+            strapiPlayerId={playerStrapiId}
+            isClaimed={task.isClaimed} // ✅ передаём статус
           />
         </div>
       ))}
