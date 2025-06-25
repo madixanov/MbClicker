@@ -1,42 +1,68 @@
 import { lazy, useEffect, useState } from "react";
-import { fetchTemplateTasks } from "../../../services/taskService";
+import { fetchTemplateTasks, fetchPlayerIdByDocumentId } from "../../../services/taskService";
 import usePlayerData from "../../../hooks/usePlayerData";
 
 const Button = lazy(() => import('./Button'));
 
 const TabContent = () => {
-    const [ tasks, setTasks ] = useState([]);
-    const [ loading, setLoading ] = useState(true);
+    const [tasks, setTasks] = useState([]);
+    const [loading, setLoading] = useState(true);
+    const [playerStrapiId, setPlayerStrapiId] = useState(null);
     const { player } = usePlayerData();
 
     useEffect(() => {
-        const loadTasks = async () => {
-            try {
-                const data = await fetchTemplateTasks();
-                setTasks(data);
-            } catch (error) {
-                console.error("Error fetching tasks:", error);
-            } finally {
-                setLoading(false);
-            }
+        const load = async () => {
+        try {
+            const taskData = await fetchTemplateTasks();
+            setTasks(taskData);
+
+            const id = await fetchPlayerIdByDocumentId(player.documentId);
+            setPlayerStrapiId(id);
+        } catch (err) {
+            console.error("Ошибка при загрузке задач или игрока:", err);
+        } finally {
+            setLoading(false);
+        }
         };
 
-        loadTasks();
-    }, [])
+        if (player?.documentId) {
+        load();
+        }
+    }, [player?.documentId]);
 
     return (
         <div className="tabs">
-            {loading ? <p>Loading tasks...</p> : tasks.map((task) => (
-                <div className="task-container" key={task.documentId}>
-                    <div className="pfphoto"></div>
-                    <div className="task-content">
-                        <p className="task-name">{task.Name}</p>
-                        <p className="task-prize">+ {task.Prize} Bytes</p>
-                    </div>
-                        <Button task={task} clicks={player.clicks} playerId={player.documentId}/>
+        {loading ? (
+            <p>Загрузка...</p>
+        ) : (
+            tasks.map((task) => {
+            const alreadyCompleted = task.completedBy?.some(
+                (user) => user.id === playerStrapiId
+            );
+
+            return (
+                <div className="task-container" key={task.id}>
+                <div className="pfphoto"></div>
+                <div className="task-content">
+                    <p className="task-name">{task.Name}</p>
+                    <p className="task-prize">+ {task.Prize} Bytes</p>
                 </div>
-            ))}
-        </div>
+
+                {alreadyCompleted ? (
+                    <span className="task-done">✅ ВЫПОЛНЕНО</span>
+                ) : (
+                    <Button
+                    task={task}
+                    clicks={player.clicks}
+                    level={player.level}
+                    playerId={player.documentId}
+                    />
+                )}
+                </div>
+            );
+            })
+        )}
+    </div>
     );
 };
 
