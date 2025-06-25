@@ -6,14 +6,15 @@ import logo from "../../../assets/icons/logo.svg";
 import exchange from "../../../assets/icons/exchange.svg";
 import exchange1 from "../../../assets/icons/exchange1.svg";
 
-import useMbStore from "../../../store/mb-store.js";
-import usePlayerData from "../../../hooks/usePlayerData.js";
+import useMbStore from "../../../store/mb-store";
+import usePlayerData from "../../../hooks/usePlayerData";
 import useUpdatePlayer from "../../../hooks/useUpdatePlayer";
 
 const MbCounter = () => {
   const { player } = usePlayerData();
   const updatePlayer = useUpdatePlayer();
   const mbCountAll = useMbStore((state) => state.mbCountAll);
+  const progressTokens = useMbStore((state) => state.progressTokens);
 
   const [animatedCount, setAnimatedCount] = useState(player?.clicks ?? mbCountAll);
   const prevCountRef = useRef(mbCountAll);
@@ -35,21 +36,21 @@ const MbCounter = () => {
     return () => controls.stop();
   }, [mbCountAll]);
 
-  // ⏳ Обновление в Strapi — раз в 15 секунд
+  // ⏳ Автообновление игрока в Strapi раз в 15 секунд
   useEffect(() => {
-    if (!player || !player.documentId) return;
+    if (!player?.documentId) return;
 
     const interval = setInterval(() => {
-      updatePlayer({ 
+      updatePlayer({
         clicks: mbCountAll,
-        progress_tokens: useMbStore.getState().progressTokens
+        progress_tokens: progressTokens,
       });
-    }, 15000); // ⏱️ раз в 15 сек
+    }, 15000);
 
-    return () => clearInterval(interval); // очищаем при размонтировании
-  }, [mbCountAll, player?.documentId]);
+    return () => clearInterval(interval);
+  }, [mbCountAll, progressTokens, player?.documentId]);
 
-  // 🔁 Навигация
+  // 🔁 Переход на страницу обмена
   const handleClick = () => navigate("/exchange");
 
   return (

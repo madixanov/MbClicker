@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import getTelegramUser from "../utils/getTelegramUser";
 import { fetchPlayerByTelegramId } from "../services/playerService";
 import usePlayerStore from "../store/player-store";
@@ -10,7 +10,6 @@ const usePlayerData = () => {
 
   const loadPlayer = async () => {
     const user = getTelegramUser();
-
     if (!user) {
       setLoading(false);
       return;
