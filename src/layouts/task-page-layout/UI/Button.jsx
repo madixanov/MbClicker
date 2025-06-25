@@ -51,7 +51,7 @@ const Button = ({ task, clicks, level, playerId }) => {
     } else if (state === "ready") {
       setLoading(true);
       try {
-        await completeTask(realTaskId, realPlayerId);
+        await completeTask(task.documentId, playerId);
         setState("claimed");
       } catch (err) {
         console.error("Ошибка при выполнении задачи:", err);
