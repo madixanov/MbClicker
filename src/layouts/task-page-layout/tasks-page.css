@@ -1,4 +1,4 @@
-.gift-page {
+.task-page {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -12,7 +12,7 @@
   scroll-behavior: smooth;
 }
 
-.gift-main {
+.task-main {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -21,7 +21,7 @@
   width: 100%;
 }
 
-.gift-title {
+.task-title {
   text-align: center;
   margin: 0;
   font-size: 28px;
@@ -42,7 +42,7 @@
 .task-container {
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-between;
   gap: 30px;
   padding: 5px 10px;
   align-items: center;
@@ -96,12 +96,12 @@
   padding: 7px 3px;
 }
 
-.active-btn {
+.task-btn.active {
   background: #404040;
   color: white;
 }
 
-.completed {
+.task-btn.completed {
   background-color: #0BFF54;
   color: black;
 }

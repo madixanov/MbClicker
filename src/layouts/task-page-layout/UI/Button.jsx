@@ -35,7 +35,7 @@ const Button = ({ task, clicks, level, playerId }) => {
     }
 
     return (
-        <button className="task-btn" onClick={handleClaim} disabled={!isReady}>
+        <button className={`task-btn ${isReady ? 'completed' : 'active'}`} onClick={handleClaim} disabled={!isReady}>
         {isReady ? "ПОЛУЧИТЬ" : "Проверка"}
         </button>
     );
