@@ -39,7 +39,7 @@ const TabContent = () => {
             <div className="pfphoto"></div>
             <div className="task-content">
               <p className="task-name">{bonus.Name}</p>
-              <p className="task-prize">+ {bonus.Prize} Bytes</p>
+              <p className="task-prize">+ {bonus.Prize} КИЛОБАЙТ</p>
             </div>
             <a
               href={bonusLink}

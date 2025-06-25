@@ -12,7 +12,7 @@ const WithdrawContainer = () => {
     }
     
     const handleButtonClick = (value) => {
-        const cleanValue = value.replace(/\s*MB\s*/gi, "");
+        const cleanValue = value.replace(/\s*KB\s*/gi, "");
         setInputValue(cleanValue);
     }
 
@@ -31,7 +31,7 @@ const WithdrawContainer = () => {
                         <img src={logo} alt="" />
                     </div>
                 </div>
-                <p>ВСЕГО БАЙТ</p>
+                <p>ВСЕГО КИЛОБАЙТ</p>
             </div>
             <form onSubmit={(e) => e.preventDefault()}>
                 <p>СКОЛЬКО ВЫ ХОТИТЕ ОБМЕНЯТЬ?</p>
@@ -44,9 +44,9 @@ const WithdrawContainer = () => {
                         <input type="text" className="styled-input" onChange={handleChange} value={inputValue}/>
                         <div className="input-line"></div>
                         <div className="button-row">
-                            <button type="button" onClick={() => handleButtonClick("1 024 MB")}>1 024 MB</button>
-                            <button type="button" onClick={() => handleButtonClick("2 048 MB")}>2 048 MB</button>
-                            <button type="button" onClick={() => handleButtonClick("5 120 MB")}>5 120 MB</button>
+                            <button type="button" onClick={() => handleButtonClick("1 024 MB")}>1 024 KB</button>
+                            <button type="button" onClick={() => handleButtonClick("2 048 MB")}>2 048 KB</button>
+                            <button type="button" onClick={() => handleButtonClick("5 120 MB")}>5 120 KB</button>
                         </div>
                     </div>
                 </div>

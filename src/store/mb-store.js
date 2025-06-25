@@ -10,7 +10,8 @@ const useMbStore = create((set, get) => ({
 
   getMbIncrement: () => {
     const level = useLvlStore.getState().level || 1;
-    return level;
+    const increment = 10 + (level - 1);
+    return Math.min(increment, 15);
   },
 
   increment: async () => {
