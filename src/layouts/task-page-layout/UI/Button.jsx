@@ -10,7 +10,6 @@ import useLvlStore from "../../../store/lvl-store";
 
 const Button = ({
   task,
-  clicks,
   playerId,
   strapiPlayerId,     // ✅ теперь получаем готовый ID
   isClaimed,          // ✅ передаём, выполнена ли задача
@@ -26,6 +25,7 @@ const Button = ({
 
   const mbStore = useMbStore();
   const lvlStore = useLvlStore();
+  const mbCountAll = useMbStore((state) => state.mbCountAll)
 
   // 1. Подписка на изменения в состоянии
   useEffect(() => {
@@ -78,7 +78,7 @@ const Button = ({
         await completeTask(task.documentId, playerId);
 
         const prize = Number(task.Prize) || 0;
-        const newClicks = Number(clicks) + prize;
+        const newClicks = mbCountAll + prize;
 
         await updatePlayer(playerId, { clicks: newClicks });
         mbStore.setMbCountAll(newClicks);

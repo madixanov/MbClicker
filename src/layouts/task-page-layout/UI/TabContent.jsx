@@ -55,7 +55,6 @@ const TabContent = () => {
           </div>
           <Button
             task={task}
-            clicks={player.clicks}
             playerId={player.documentId}
             strapiPlayerId={playerStrapiId}
             isClaimed={task.isClaimed} // ✅ передаём статус
