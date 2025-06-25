@@ -15,20 +15,20 @@
 .task-main {
   display: flex;
   flex-direction: column;
-  align-items: center;
+  align-items: flex-start; /* ✅ чтобы выравнивалось по левому краю */
   min-height: 133vh;
-  width: 100vw;
   width: 100%;
 }
 
 .task-title {
-  text-align: left; /* ✅ */
-  padding-left: 34px; /* ✅ */
+  text-align: left;
+  padding-left: 34px;
   margin: 0;
   font-size: 28px;
   font-weight: 700;
   padding-top: 27px;
   padding-bottom: 16px;
+  width: 100%; /* ✅ растягивается */
 }
 
 .tabs {
@@ -38,6 +38,9 @@
   justify-content: center;
   gap: 20px;
   margin-top: 29px;
+  padding-left: 34px;
+  padding-right: 34px;
+  box-sizing: border-box;
 }
 
 .task-container {
@@ -45,14 +48,10 @@
   flex-direction: row;
   justify-content: space-between;
   gap: 30px;
-  padding: 5px 10px;
+  padding: 5px 34px; /* заменили padding-left/right */
   align-items: center;
   height: 50px;
-  width: 100%;
-  max-width: 370px; /* ✅ одинаковая ширина */
-  margin: 0 auto; /* ✅ центрирование */
-  padding-left: 34px;
-  padding-right: 34px;
+  width: 100%; /* ✅ убрано max-width */
   box-sizing: border-box;
 }
 
@@ -122,14 +121,16 @@
   }
 
   .gift-title {
-    width: 277px;
-    text-align: unset;
+    width: 100%;
+    text-align: left;
     padding-left: 34px;
   }
 
   .task-container {
-    justify-content: space-evenly;
-    gap: 0;
+    justify-content: space-between;
+    gap: 15px;
+    padding-left: 20px;
+    padding-right: 20px;
   }
 }
 
@@ -167,7 +168,7 @@
 
 @media (max-width: 780px) {
   .task-title {
-    text-align: unset;
+    align-self: flex-start;
     padding-left: 34px;
   }
 
