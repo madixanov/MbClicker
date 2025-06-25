@@ -74,7 +74,6 @@ const TabContent = () => {
                     <Button
                     task={task}
                     clicks={player.clicks}
-                    level={player.level}
                     playerId={player.documentId}
                     />
                 )}
