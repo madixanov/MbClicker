@@ -40,7 +40,10 @@ const MbCounter = () => {
     if (!player || !player.documentId) return;
 
     const interval = setInterval(() => {
-      updatePlayer({ clicks: mbCountAll });
+      updatePlayer({ 
+        clicks: mbCountAll,
+        progress_tokens: useMbStore.getState().progressTokens
+      });
     }, 15000); // ⏱️ раз в 15 сек
 
     return () => clearInterval(interval); // очищаем при размонтировании
