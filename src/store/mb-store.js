@@ -37,7 +37,7 @@ const useMbStore = create((set, get) => ({
   },
 
   // 🔄 Мгновенная установка счётчика (после получения task.Prize)
-  setMbCountAll: (value) => set((state) => ({mbCountAll: state.mbCountAll + value})),
+  setMbCountAll: (value) => set({ mbCountAll: value }),
 
   // 🔁 Сброс сессионных данных (при выходе/апгрейде)
   resetCount: () =>
