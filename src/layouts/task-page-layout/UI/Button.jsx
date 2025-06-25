@@ -5,6 +5,7 @@ import {
   fetchTaskIdByDocumentId,
   updatePlayerClicks,
 } from "../../../services/taskService";
+import { updatePlayer } from "../../../services/playerService";
 import completed from "../../../assets/icons/completed.svg";
 
 const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
@@ -26,12 +27,15 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
         setRealPlayerId(strapiPlayerId);
         setRealTaskId(strapiTaskId);
 
-        const alreadyCompleted = task.completedBy?.some(
-          (user) => user.id === strapiPlayerId
-        );
+        // ❗ Не перезаписываем состояние, если уже "claimed"
+        if (state !== "claimed") {
+          const alreadyCompleted = task.completedBy?.some(
+            (user) => user.id === strapiPlayerId
+          );
 
-        if (alreadyCompleted) {
-          setState("claimed");
+          if (alreadyCompleted) {
+            setState("claimed");
+          }
         }
       } catch (err) {
         console.error("Ошибка при инициализации кнопки:", err);
@@ -39,7 +43,7 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
     };
 
     init();
-  }, [playerId, task.documentId, task.completedBy]);
+  }, [playerId, task.documentId, task.completedBy, state]);
 
   const handleClick = async () => {
     if (loading || !realPlayerId || !realTaskId) return;
@@ -54,10 +58,19 @@ const Button = ({ task, clicks, level, playerId, onUpdateClicks }) => {
     } else if (state === "ready") {
       setLoading(true);
       try {
+        // ✅ Завершаем задачу
         await completeTask(task.documentId, playerId);
-        const newClicks = Number(clicks) + Number(task.Prize);
-        await updatePlayerClicks(playerId, newClicks);
 
+        // ✅ Обновляем клики и баланс (как пример)
+        const prize = Number(task.Prize) || 0;
+        const newClicks = Number(clicks) + prize;
+
+        await updatePlayerClicks(playerId, newClicks);
+        await updatePlayer(playerId, {
+          clicks: newClicks,      // сохраняем клики     // сохраняем как "баланс", если нужно
+        });
+
+        // ✅ Обновляем UI
         if (onUpdateClicks) {
           onUpdateClicks(newClicks);
         }
