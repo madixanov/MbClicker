@@ -85,3 +85,25 @@ export const fetchAllPlayers = async () => {
 
   return allPlayers;
 };
+
+export const fetchPlayerByInviteCode = async (inviteCode) => {
+  const res = await axios.get(`${API_BASE_URL}/players`, {
+    params: {
+      filters: {
+        invite_code: {
+          $eq: inviteCode,
+        },
+      },
+      publicationState: "preview", // если ты используешь черновики
+    },
+  });
+
+  return res.data?.data?.[0] || null;
+};
+
+export const addInvitedFriend = async (referrerId, invitedId) => {
+  const response = await axios.patch(`${API_BASE_URL}/players/${referrerId}/invited_friends`, {
+    friend_id: invitedId,
+  });
+  return response.data?.data;
+};
