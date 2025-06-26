@@ -16,7 +16,7 @@ const Main = () => {
                 <button className={activeTab === 'daily' ? 'active-tab' : 'non-active-tab'} onClick={() => setActiveTabs('daily')}>ЕЖЕДНЕВНЫЕ ЗАДАНИЯ</button>
                 <button className={activeTab === 'giveaways' ? 'active-tab' : 'non-active-tab'} onClick={() => setActiveTabs('giveaways')}>РОЗЫГРЫШИ</button>
             </div>
-            <TabContent tasks={tasks} />
+            <TabContent />
         </main>
     )
 }
