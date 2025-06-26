@@ -1,5 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
-import players from "../leaders-list";
+import { useEffect, useState } from "react";
 import { fetchLeaderboardPlayers } from "../../../services/playerService";
 
 const PlayerCard = ({ player, index }) => {
