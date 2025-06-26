@@ -38,7 +38,7 @@ const useTelegramAuth = () => {
         try {
           const referrer = await fetchPlayerByInviteCode(referrerCode);
           if (referrer) {
-            invited_by = referrer.id; // Получаем ID пригласившего
+            invited_by = referrer.documentId; // Получаем ID пригласившего
             console.log("🔗 Реферал найден:", invited_by);
           } else {
             console.warn("⚠️ Реферал по коду не найден:", referrerCode);
