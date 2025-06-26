@@ -1,5 +1,4 @@
 import { useState } from "react"
-import tasks from "./task-list"
 import TabContent from "./UI/TabContent"
 import "./tasks-page.css"
 import { Helmet } from "react-helmet"
