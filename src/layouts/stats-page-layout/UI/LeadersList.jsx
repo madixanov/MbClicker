@@ -5,7 +5,8 @@ import getTelegramUser from "../../../utils/getTelegramUser";
 
 const PlayerCard = ({ player, index }) => {
     const placement = index + 1;
-    
+    const p = player.attributes;
+
     const defaultAvatar = `data:image/svg+xml;utf8,
         <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
             <rect fill="white" width="100" height="100"/>
@@ -14,35 +15,34 @@ const PlayerCard = ({ player, index }) => {
         </svg>`;
 
     return (
-        <div className="player-container" key={player.name}>
+        <div className="player-container" key={p.name}>
             <div className="placement-player">
                 <p className="placement">{placement}</p>
                 <div className="player-info">
                     <div className="leaders-photo-container">
                         <img
-                                src={player.photo_url || defaultAvatar}
-                                alt={player.name}
-                                onError={(e) => {
-                                    e.target.onerror = null;
-                                    e.target.src = defaultAvatar;
-                                }}
-                                style={{ backgroundColor: "white" }}
-                            />
+                            src={p.photo_url || defaultAvatar}
+                            alt={p.name}
+                            onError={(e) => {
+                                e.target.onerror = null;
+                                e.target.src = defaultAvatar;
+                            }}
+                            style={{ backgroundColor: "white" }}
+                        />
                     </div>
-                    <p>{player.name}</p>
+                    <p>{p.name}</p>
                 </div>
             </div>
-            <p className="balance">{player.clicks.toLocaleString('ru-RU')}</p>
+            <p className="balance">{p.clicks?.toLocaleString('ru-RU') || 0}</p>
             <p className="exchanges">0</p>
         </div>
     );
 };
 
 const LeadersList = () => {
-    const [ players, setPlayers ] = useState([]);
+    const [players, setPlayers] = useState([]);
     const setPlacement = usePlacementStore((state) => state.setPlacement);
 
-    
     useEffect(() => {
         const loadPlayers = async () => {
             try {
@@ -51,24 +51,25 @@ const LeadersList = () => {
 
                 const telegramId = getTelegramUser()?.id;
 
-                // 🟩 Поиск индекса
-                const currentIndex = data.findIndex(p => p.telegramId === telegramId);
+                const currentIndex = data.findIndex(
+                    (p) => p.attributes?.telegramId === telegramId
+                );
 
-                // 🟩 Сохраняем в Zustand или стейт
                 if (currentIndex !== -1) {
-                    setPlacement(currentIndex + 1); // +1, т.к. место с 1
+                    setPlacement(currentIndex + 1); // 1-based индекс
                 }
             } catch (error) {
                 console.error("Ошибка при загрузке игроков:", error);
             }
-        }
+        };
 
         loadPlayers();
     }, []);
+
     return (
         <div className="leaders-list">
             {players.map((player, index) => (
-                <PlayerCard key={player.name} player={player} index={index} />
+                <PlayerCard key={player.id} player={player} index={index} />
             ))}
         </div>
     );
