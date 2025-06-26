@@ -60,3 +60,8 @@ export const fetchDashboardPlayers = async () => {
   const res = await axios.get(`${API_BASE_URL}/players?sort=clicks:desc&pagination[limit]=3`);
   return res.data?.data;;
 }
+
+export const fetchLeaderboardPlayers = async () => {
+  const res = await axios.get(`${API_BASE_URL}/players?sort=clicks:desc&pagination[limit]=10`);
+  return res.data?.data;
+}
