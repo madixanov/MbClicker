@@ -5,6 +5,7 @@ import {
   fetchPlayerByTelegramId,
   fetchPlayerByInviteCode,
   createPlayer,
+  updatePlayerWithFallback, // 🆕 Обязательно проверь, чтобы этот метод существовал
 } from "../services/playerService";
 import usePlayerData from "../hooks/usePlayerData";
 
@@ -12,21 +13,14 @@ const useTelegramAuth = () => {
   const isCreating = useRef(false);
   const { setPlayer } = usePlayerData();
 
-  console.log("🌐 URL:", window.location.href);
-  console.log("🔍 URLSearchParams start:", new URLSearchParams(window.location.search).get("start"));
-  console.log("🤖 Telegram initDataUnsafe:", window?.Telegram?.WebApp?.initDataUnsafe);
-  console.log("📦 Telegram start_param:", window?.Telegram?.WebApp?.initDataUnsafe?.start_param);
-
   const getInviteCodeFromUrl = () => {
     try {
-      // 1. Самый надёжный способ — через Telegram WebApp initDataUnsafe
       const startParam = window?.Telegram?.WebApp?.initDataUnsafe?.start_param;
       if (startParam) {
         console.log("📦 Получен start_param из initDataUnsafe:", startParam);
         return startParam;
       }
 
-      // 2. Альтернативный способ — через tgWebAppData в hash
       const hash = window.location.hash;
       const params = new URLSearchParams(hash.slice(1));
       const rawData = params.get("tgWebAppData");
@@ -61,7 +55,6 @@ const useTelegramAuth = () => {
       }
 
       const telegram_id = Number(user.id);
-      const invite_code = nanoid(8);
       const referrerCode = getInviteCodeFromUrl();
 
       let invited_by = null;
@@ -70,7 +63,7 @@ const useTelegramAuth = () => {
         try {
           const referrer = await fetchPlayerByInviteCode(referrerCode);
           if (referrer) {
-            invited_by = referrer.documentId; // documentId для Strapi 5
+            invited_by = referrer.documentId;
             console.log("🔗 Реферал найден:", invited_by);
           } else {
             console.warn("⚠️ Реферал по коду не найден:", referrerCode);
@@ -80,31 +73,35 @@ const useTelegramAuth = () => {
         }
       }
 
-      const telegramUser = {
-        telegram_id,
-        username: user.username || "",
-        photo_url: user.photo_url || "",
-        first_name: user.first_name || "",
-        last_name: user.last_name || "",
-        invite_code,
-        ...(invited_by && {
-          invited_by: {
-            connect: [invited_by], // ✅ подключаем связь
-          },
-        }),
-      };
-
       try {
         const existingPlayer = await fetchPlayerByTelegramId(telegram_id);
 
         if (!existingPlayer) {
+          const telegramUser = {
+            telegram_id,
+            username: user.username || "",
+            photo_url: user.photo_url || "",
+            first_name: user.first_name || "",
+            last_name: user.last_name || "",
+            invite_code: nanoid(8),
+            ...(invited_by && {
+              invited_by: { connect: [invited_by] },
+            }),
+          };
+
+          console.log("🆕 Создание нового игрока:", telegramUser);
           const res = await createPlayer(telegramUser);
           const newPlayer = res.data?.data;
-
-          if (newPlayer) {
-            setPlayer(newPlayer);
-          }
+          if (newPlayer) setPlayer(newPlayer);
         } else {
+          // 🧠 Обновим invited_by, если он ещё не установлен
+          if (!existingPlayer.invited_by && invited_by) {
+            console.log("🔁 Обновляем invited_by для существующего игрока");
+            await updatePlayerWithFallback(existingPlayer.documentId, {
+              invited_by: { connect: [invited_by] },
+            });
+          }
+
           setPlayer(existingPlayer);
         }
       } catch (err) {
