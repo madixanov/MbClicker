@@ -56,7 +56,7 @@ const LeadersList = () => {
 
         const userId = getTelegramUser()?.id;
 
-        const index = sortedPlayers.findIndex(p => p.documentId === userId);
+        const index = sortedPlayers.findIndex(p => p.telegram_id === userId);
         if (index !== -1) {
           setCurrentPlacement(index + 1);
           setCurrentPlayer(sortedPlayers[index]);
