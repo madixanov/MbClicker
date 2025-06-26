@@ -3,6 +3,7 @@ import DashBoard from "./UI/DashBoard";
 import Leaders from "./UI/LeadersList";
 import './stats-page.css';
 import { Helmet } from "react-helmet";
+import usePlacementStore from "../../store/placement-store";
 
 const tabs = [
     { key: 'daily', label: 'ЗА ВСЕ ВРЕМЯ' },
@@ -11,6 +12,7 @@ const tabs = [
 
 const Main = () => {
     const [activeTab, setActiveTab] = useState('daily');
+    const myPlacement = usePlacementStore((state) => state.placement);
 
     return (
         <main className="stats-main">
@@ -44,7 +46,7 @@ const Main = () => {
                         <p>ОБМЕНЫ</p>
                     </div>
                     <div className="your-placement-badge">
-                        ТЫ НА #3 В ТОПЕ
+                        ТЫ НА #{myPlacement} В ТОПЕ
                     </div>
                 </div>
 
