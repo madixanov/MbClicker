@@ -12,6 +12,11 @@ const useTelegramAuth = () => {
   const isCreating = useRef(false);
   const { setPlayer } = usePlayerData();
 
+  console.log("🌐 URL:", window.location.href);
+  console.log("🔍 URLSearchParams start:", new URLSearchParams(window.location.search).get("start"));
+  console.log("🤖 Telegram initDataUnsafe:", window?.Telegram?.WebApp?.initDataUnsafe);
+  console.log("📦 Telegram start_param:", window?.Telegram?.WebApp?.initDataUnsafe?.start_param);
+
   const getInviteCodeFromUrl = () => {
     const params = new URLSearchParams(window.location.search);
     console.log("🔗 Параметры URL:", params.toString());
