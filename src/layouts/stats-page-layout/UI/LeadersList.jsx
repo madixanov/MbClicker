@@ -52,8 +52,9 @@ const LeadersList = () => {
 
                 const userId = getTelegramUser()?.id;
                 const currentIndex = sortedPlayers.findIndex(
-                    (p) => p.documentId === userId
+                    (p) => p.telegram_id === userId
                 );
+                console.log("Текущий индекс пользователя в списке:", currentIndex);
 
                 if (currentIndex !== -1) {
                     setPlacement(currentIndex + 1);
