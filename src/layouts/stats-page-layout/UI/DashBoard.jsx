@@ -3,6 +3,12 @@ import { fetchDashboardPlayers } from "../../../services/playerService";
 
 const DashBoard = () => {
     const [ players, setPlayers ] = useState([]);
+    const defaultAvatar = `data:image/svg+xml;utf8,
+        <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+            <rect fill="white" width="100" height="100"/>
+            <circle cx="50" cy="35" r="20" fill="%23ccc"/>
+            <rect x="25" y="60" width="50" height="25" rx="10" fill="%23ccc"/>
+        </svg>`;
 
     useEffect(() => {
         const loadPlayers = async () => {
@@ -33,7 +39,15 @@ const DashBoard = () => {
                 return (
                     <div key={player.name} className={cardClass}>
                         <div className={imgClass}>
-                            <img src={player.photo_url} alt={player.name} />
+                            <img
+                                src={player.photo_url || defaultAvatar}
+                                alt={player.name}
+                                onError={(e) => {
+                                    e.target.onerror = null;
+                                    e.target.src = defaultAvatar;
+                                }}
+                                style={{ backgroundColor: "white" }}
+                            />
                         </div>
                         <h2>{player.name}</h2>
                         <p>БАЛАНС: <span>{player.clicks.toLocaleString('ru-RU')}</span></p>
