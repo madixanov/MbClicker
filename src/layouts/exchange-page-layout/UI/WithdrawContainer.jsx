@@ -44,9 +44,9 @@ const WithdrawContainer = () => {
                         <input type="text" className="styled-input" onChange={handleChange} value={inputValue}/>
                         <div className="input-line"></div>
                         <div className="button-row">
-                            <button type="button" onClick={() => handleButtonClick("1 024 MB")}>1 024 KB</button>
-                            <button type="button" onClick={() => handleButtonClick("2 048 MB")}>2 048 KB</button>
-                            <button type="button" onClick={() => handleButtonClick("5 120 MB")}>5 120 KB</button>
+                            <button type="button" onClick={() => handleButtonClick("1 024 MB")}>1 024 KБ</button>
+                            <button type="button" onClick={() => handleButtonClick("2 048 MB")}>2 048 KБ</button>
+                            <button type="button" onClick={() => handleButtonClick("5 120 MB")}>5 120 KБ</button>
                         </div>
                     </div>
                 </div>
