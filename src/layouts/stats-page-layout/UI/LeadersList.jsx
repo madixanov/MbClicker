@@ -14,7 +14,7 @@ const PlayerCard = ({ player, index }) => {
         </svg>`;
 
     return (
-        <div className="player-container" key={p.name}>
+        <div className="player-container" key={player.name}>
             <div className="placement-player">
                 <p className="placement">{placement}</p>
                 <div className="player-info">
@@ -39,23 +39,28 @@ const PlayerCard = ({ player, index }) => {
 };
 
 const LeadersList = () => {
-    const [ players, setPlayers ] = useState([]);
+    const [players, setPlayers] = useState([]);
     const setPlacement = usePlacementStore((state) => state.setPlacement);
 
     useEffect(() => {
         const loadPlayers = async () => {
             try {
                 const data = await fetchLeaderboardPlayers();
-                setPlayers(data);
 
+                // 📌 Сортируем по убыванию кликов
+                const sortedPlayers = [...data].sort((a, b) => b.clicks - a.clicks);
+                setPlayers(sortedPlayers);
+
+                // 📌 Получаем текущего пользователя
                 const telegramId = getTelegramUser()?.id;
 
-                const currentIndex = data.findIndex(
+                // 📌 Находим индекс игрока
+                const currentIndex = sortedPlayers.findIndex(
                     (p) => p.telegramId === telegramId
                 );
 
                 if (currentIndex !== -1) {
-                    setPlacement(currentIndex + 1); // 1-based индекс
+                    setPlacement(currentIndex + 1); // +1, т.к. позиции с 1
                 }
             } catch (error) {
                 console.error("Ошибка при загрузке игроков:", error);
