@@ -18,9 +18,10 @@ const useTelegramAuth = () => {
   console.log("📦 Telegram start_param:", window?.Telegram?.WebApp?.initDataUnsafe?.start_param);
 
   const getInviteCodeFromUrl = () => {
-    const params = new URLSearchParams(window.location.search);
-    console.log("🔗 Параметры URL:", params.toString());
-    return params.get("start") || null;
+    const hashParams = new URLSearchParams(window.location.hash.slice(1));
+    const start = hashParams.get("start");
+    console.log("▶️ START параметр из Telegram:", start);
+    return start;
   };
 
   useEffect(() => {
