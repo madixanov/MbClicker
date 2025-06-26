@@ -61,7 +61,27 @@ export const fetchDashboardPlayers = async () => {
   return res.data?.data;;
 }
 
-export const fetchLeaderboardPlayers = async () => {
-  const res = await axios.get(`${API_BASE_URL}/players?sort=clicks:desc&pagination[limit]=10`);
-  return res.data?.data;
-}
+export const fetchAllPlayers = async () => {
+  let page = 1;
+  const pageSize = 100;
+  let allPlayers = [];
+  let totalPages = 1;
+
+  do {
+    const res = await axios.get(`${API_BASE_URL}/players`, {
+      params: {
+        'pagination[page]': page,
+        'pagination[pageSize]': pageSize,
+        'sort[0]': 'clicks:desc',
+      },
+    });
+
+    const { data, meta } = res.data;
+
+    allPlayers.push(...data);
+    totalPages = meta.pagination.pageCount;
+    page++;
+  } while (page <= totalPages);
+
+  return allPlayers;
+};
