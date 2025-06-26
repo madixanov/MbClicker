@@ -12,7 +12,7 @@ const Main = () => {
     const inputRef = useRef(null);
     const { player } = usePlayerData();
 
-    const linkValue = `https://t.me/mbclicker_tester_bot?start=${player.invite_code}`
+    const linkValue = `https://t.me/bengal_click_bot?start=${player.invite_code}`
 
     const handleCopyClick = async () => {
         try {
