@@ -14,7 +14,7 @@ const useTelegramAuth = () => {
 
   const getInviteCodeFromUrl = () => {
     const params = new URLSearchParams(window.location.search);
-    return params.get("start") || null; // Телеграм передаёт код в ?start=...
+    return params.get("start") || null;
   };
 
   useEffect(() => {
@@ -29,8 +29,8 @@ const useTelegramAuth = () => {
       }
 
       const telegram_id = Number(user.id);
-      const invite_code = nanoid(8); // Сгенерировать свой invite_code
-      const referrerCode = getInviteCodeFromUrl(); // код пригласившего
+      const invite_code = nanoid(8);
+      const referrerCode = getInviteCodeFromUrl();
 
       let invited_by = null;
 
@@ -38,7 +38,7 @@ const useTelegramAuth = () => {
         try {
           const referrer = await fetchPlayerByInviteCode(referrerCode);
           if (referrer) {
-            invited_by = referrer.documentId; // Получаем ID пригласившего
+            invited_by = referrer.documentId; // documentId для Strapi 5
             console.log("🔗 Реферал найден:", invited_by);
           } else {
             console.warn("⚠️ Реферал по коду не найден:", referrerCode);
@@ -55,7 +55,11 @@ const useTelegramAuth = () => {
         first_name: user.first_name || "",
         last_name: user.last_name || "",
         invite_code,
-        invited_by, // ← устанавливаем ID пригласившего
+        ...(invited_by && {
+          invited_by: {
+            connect: [invited_by], // ✅ подключаем связь
+          },
+        }),
       };
 
       try {
@@ -80,7 +84,6 @@ const useTelegramAuth = () => {
 
     initAuth();
   }, [setPlayer]);
-
 };
 
 export default useTelegramAuth;
