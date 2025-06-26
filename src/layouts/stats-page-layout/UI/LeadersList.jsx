@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import { fetchLeaderboardPlayers } from "../../../services/playerService";
+import usePlacementStore from "../../../store/placement-store";
+import getTelegramUser from "../../../utils/getTelegramUser";
 
 const PlayerCard = ({ player, index }) => {
     const placement = index + 1;
@@ -38,11 +40,24 @@ const PlayerCard = ({ player, index }) => {
 
 const LeadersList = () => {
     const [ players, setPlayers ] = useState([]);
+    const setPlacement = usePlacementStore((state) => state.setPlacement);
+
+    
     useEffect(() => {
         const loadPlayers = async () => {
             try {
                 const data = await fetchLeaderboardPlayers();
                 setPlayers(data);
+
+                const telegramId = getTelegramUser()?.id;
+
+                // 🟩 Поиск индекса
+                const currentIndex = data.findIndex(p => p.telegramId === telegramId);
+
+                // 🟩 Сохраняем в Zustand или стейт
+                if (currentIndex !== -1) {
+                    setPlacement(currentIndex + 1); // +1, т.к. место с 1
+                }
             } catch (error) {
                 console.error("Ошибка при загрузке игроков:", error);
             }
