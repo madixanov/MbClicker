@@ -3,11 +3,11 @@ import tg from '../../../assets/icons/tg.png'
 import premium from '../../../assets/icons/premium.png'
 
 const FriendsList = () => {
-    // const bgColors = ['#D9FF00', '#FFC839', '#FF0000' ]
+    const bgColors = ['#D9FF00', '#FFC839', '#FF0000' ]
 
     return (
         <div className="friends-list">
-            {/* {friends.map(
+            {friends.map(
                 (friend, index) => {
                     const bgColor = bgColors[index % bgColors.length]
 
@@ -28,7 +28,7 @@ const FriendsList = () => {
                         <p>{friend.role === 'premium' ? '+ 30 000' : '+ 10 000'}</p>
                     </div>
             )}
-            )} */}
+            )}
         </div>
     )
 }
