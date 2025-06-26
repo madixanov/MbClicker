@@ -4,26 +4,13 @@ import { fetchLeaderboardPlayers } from "../../../services/playerService";
 
 const PlayerCard = ({ player, index }) => {
     const placement = index + 1;
-    const [ players, setPlayers ] = useState([]);
+    
     const defaultAvatar = `data:image/svg+xml;utf8,
         <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
             <rect fill="white" width="100" height="100"/>
             <circle cx="50" cy="35" r="20" fill="%23ccc"/>
             <rect x="25" y="60" width="50" height="25" rx="10" fill="%23ccc"/>
         </svg>`;
-
-    useEffect(() => {
-        const loadPlayers = async () => {
-            try {
-                const data = await fetchLeaderboardPlayers();
-                setPlayers(data);
-            } catch (error) {
-                console.error("Ошибка при загрузке игроков:", error);
-            }
-        }
-
-        loadPlayers();
-    }, []);
 
     return (
         <div className="player-container" key={player.name}>
@@ -51,6 +38,19 @@ const PlayerCard = ({ player, index }) => {
 };
 
 const LeadersList = () => {
+    const [ players, setPlayers ] = useState([]);
+    useEffect(() => {
+        const loadPlayers = async () => {
+            try {
+                const data = await fetchLeaderboardPlayers();
+                setPlayers(data);
+            } catch (error) {
+                console.error("Ошибка при загрузке игроков:", error);
+            }
+        }
+
+        loadPlayers();
+    }, []);
     return (
         <div className="leaders-list">
             {players.map((player, index) => (
