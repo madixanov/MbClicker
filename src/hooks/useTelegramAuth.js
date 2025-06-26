@@ -1,14 +1,15 @@
 import { useEffect, useRef } from "react";
+import { nanoid } from "nanoid"; // ✅ импортируем nanoid
 import getTelegramUser from "../utils/getTelegramUser";
 import {
   fetchPlayerByTelegramId,
   createPlayer,
 } from "../services/playerService";
-import usePlayerData from "../hooks/usePlayerData"; // ✅ импорт хука
+import usePlayerData from "../hooks/usePlayerData";
 
 const useTelegramAuth = () => {
-  const isCreating = useRef(false); // 🔒 защита от повторов
-  const { setPlayer } = usePlayerData(); // ✅ доступ к setPlayer
+  const isCreating = useRef(false);
+  const { setPlayer } = usePlayerData();
 
   useEffect(() => {
     const initAuth = async () => {
@@ -28,6 +29,7 @@ const useTelegramAuth = () => {
         photo_url: user.photo_url || "",
         first_name: user.first_name || "",
         last_name: user.last_name || "",
+        invite_code: nanoid(8), // ✅ генерируем код из 8 символов
       };
 
       try {
@@ -37,13 +39,12 @@ const useTelegramAuth = () => {
           const res = await createPlayer(telegramUser);
           const newPlayer = res.data?.data;
 
-          // ✅ сразу сохраняем в состояние
           if (newPlayer) {
             setPlayer(newPlayer);
           }
         } else {
           console.log("✅ Пользователь уже существует (id:", existingPlayer.id, ")");
-          setPlayer(existingPlayer); // ✅ гарантированная установка
+          setPlayer(existingPlayer);
         }
       } catch (err) {
         if (
@@ -60,7 +61,7 @@ const useTelegramAuth = () => {
     };
 
     initAuth();
-  }, [setPlayer]); // 🔁 зависимость для React (хотя setPlayer стабилен)
+  }, [setPlayer]);
 };
 
 export default useTelegramAuth;
