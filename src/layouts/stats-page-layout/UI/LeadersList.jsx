@@ -5,7 +5,6 @@ import getTelegramUser from "../../../utils/getTelegramUser";
 
 const PlayerCard = ({ player, index }) => {
     const placement = index + 1;
-    const p = player.attributes;
 
     const defaultAvatar = `data:image/svg+xml;utf8,
         <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
@@ -21,8 +20,8 @@ const PlayerCard = ({ player, index }) => {
                 <div className="player-info">
                     <div className="leaders-photo-container">
                         <img
-                            src={p.photo_url || defaultAvatar}
-                            alt={p.name}
+                            src={player.photo_url || defaultAvatar}
+                            alt={player.name}
                             onError={(e) => {
                                 e.target.onerror = null;
                                 e.target.src = defaultAvatar;
@@ -30,17 +29,17 @@ const PlayerCard = ({ player, index }) => {
                             style={{ backgroundColor: "white" }}
                         />
                     </div>
-                    <p>{p.name}</p>
+                    <p>{player.name}</p>
                 </div>
             </div>
-            <p className="balance">{p.clicks?.toLocaleString('ru-RU') || 0}</p>
+            <p className="balance">{player.clicks?.toLocaleString('ru-RU') || 0}</p>
             <p className="exchanges">0</p>
         </div>
     );
 };
 
 const LeadersList = () => {
-    const [players, setPlayers] = useState([]);
+    const [ players, setPlayers ] = useState([]);
     const setPlacement = usePlacementStore((state) => state.setPlacement);
 
     useEffect(() => {
@@ -52,7 +51,7 @@ const LeadersList = () => {
                 const telegramId = getTelegramUser()?.id;
 
                 const currentIndex = data.findIndex(
-                    (p) => p.attributes?.telegramId === telegramId
+                    (p) => p.telegramId === telegramId
                 );
 
                 if (currentIndex !== -1) {
@@ -69,7 +68,7 @@ const LeadersList = () => {
     return (
         <div className="leaders-list">
             {players.map((player, index) => (
-                <PlayerCard key={player.id} player={player} index={index} />
+                <PlayerCard key={player.documentId} player={player} index={index} />
             ))}
         </div>
     );
