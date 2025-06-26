@@ -5,12 +5,14 @@ import FriendsList from "./UI/FriendsList";
 import './friends-page.css';
 import BonusCard from "./UI/BonusCard";
 import { Helmet } from "react-helmet";
+import usePlayerData from "../../hooks/usePlayerData";
 
 const Main = () => {
     const [ copied, setCopied ] = useState(false);
     const inputRef = useRef(null);
+    const { player } = usePlayerData();
 
-    const linkValue = 'YOUR LINK HERE'
+    const linkValue = `https://t.me/mbclicker_tester_bot?start=${player.invite_code}`
 
     const handleCopyClick = async () => {
         try {
