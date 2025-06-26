@@ -14,6 +14,7 @@ const useTelegramAuth = () => {
 
   const getInviteCodeFromUrl = () => {
     const params = new URLSearchParams(window.location.search);
+    console.log("🔗 Параметры URL:", params.toString());
     return params.get("start") || null;
   };
 
