@@ -41,7 +41,7 @@ const TabContent = () => {
   }, [player?.documentId]);
 
   if (loading || !playerStrapiId) {
-    return <LoadingPage />;
+    return <p>Загрузка заданий...</p>;
   }
 
   return (

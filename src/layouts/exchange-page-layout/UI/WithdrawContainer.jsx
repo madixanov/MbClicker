@@ -26,7 +26,7 @@ const WithdrawContainer = () => {
                         <img src={exchange} alt="" />
                         <img src={exchange1} alt="" />
                     </div>
-                    <h1 className="budget-h1">{mbCountAll.toLocaleString('ru-RU')} B</h1>
+                    <h1 className="budget-h1">{mbCountAll.toLocaleString('ru-RU')} КБ</h1>
                     <div className="logo">
                         <img src={logo} alt="" />
                     </div>
