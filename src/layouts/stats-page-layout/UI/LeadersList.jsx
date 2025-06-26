@@ -47,20 +47,16 @@ const LeadersList = () => {
             try {
                 const data = await fetchLeaderboardPlayers();
 
-                // 📌 Сортируем по убыванию кликов
                 const sortedPlayers = [...data].sort((a, b) => b.clicks - a.clicks);
                 setPlayers(sortedPlayers);
 
-                // 📌 Получаем текущего пользователя
-                const telegramId = getTelegramUser()?.id;
-
-                // 📌 Находим индекс игрока
+                const userId = getTelegramUser()?.id;
                 const currentIndex = sortedPlayers.findIndex(
-                    (p) => p.telegramId === telegramId
+                    (p) => p.documentId === userId
                 );
 
                 if (currentIndex !== -1) {
-                    setPlacement(currentIndex + 1); // +1, т.к. позиции с 1
+                    setPlacement(currentIndex + 1);
                 }
             } catch (error) {
                 console.error("Ошибка при загрузке игроков:", error);
@@ -68,7 +64,7 @@ const LeadersList = () => {
         };
 
         loadPlayers();
-    }, []);
+}, []);
 
     return (
         <div className="leaders-list">
