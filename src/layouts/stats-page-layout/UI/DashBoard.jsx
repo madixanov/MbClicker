@@ -49,7 +49,7 @@ const DashBoard = () => {
                                 style={{ backgroundColor: "white" }}
                             />
                         </div>
-                        <h2>{player.name}</h2>
+                        <h2>{player.username}</h2>
                         <p>БАЛАНС: <span>{player.clicks.toLocaleString('ru-RU')}</span></p>
                         <p>ОБМЕНЫ: <span>0</span></p>
                     </div>
