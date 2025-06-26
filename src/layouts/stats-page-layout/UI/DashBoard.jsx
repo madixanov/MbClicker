@@ -1,11 +1,24 @@
-import dashboard from "../dashboard";
+import { useEffect, useState } from "react";
+import { fetchDashboardPlayers } from "../../../services/playerService";
 
 const DashBoard = () => {
-    const sortedPlayers = [...dashboard].sort((a, b) => b.balance - a.balance);
+    const [ players, setPlayers ] = useState([]);
+
+    useEffect(() => {
+        const loadPlayers = async () => {
+            try {
+                const data = await fetchDashboardPlayers();
+                setPlayers(data);
+            } catch (error) {
+                console.error("Ошибка при загрузке игроков:", error);
+            }
+        };
+        loadPlayers();
+    }, [])
 
     return (
         <div className="dash-board">
-            {sortedPlayers.map((player, index) => {
+            {players.map((player, index) => {
                 let cardClass = "profile-card";
                 let imgClass = "pfp-container";
 
@@ -20,11 +33,11 @@ const DashBoard = () => {
                 return (
                     <div key={player.name} className={cardClass}>
                         <div className={imgClass}>
-                            <img src={player.img} alt={player.name} />
+                            <img src={player.photo_url} alt={player.name} />
                         </div>
                         <h2>{player.name}</h2>
-                        <p>БАЛАНС: <span>{player.balance.toLocaleString('ru-RU')}</span></p>
-                        <p>ОБМЕНЫ: <span>{player.exchanges.toLocaleString('ru-RU')}</span></p>
+                        <p>БАЛАНС: <span>{player.clicks.toLocaleString('ru-RU')}</span></p>
+                        <p>ОБМЕНЫ: <span>0</span></p>
                     </div>
                 );
             })}
