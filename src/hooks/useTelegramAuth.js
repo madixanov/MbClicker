@@ -18,10 +18,35 @@ const useTelegramAuth = () => {
   console.log("📦 Telegram start_param:", window?.Telegram?.WebApp?.initDataUnsafe?.start_param);
 
   const getInviteCodeFromUrl = () => {
-    const hashParams = new URLSearchParams(window.location.hash.slice(1));
-    const start = hashParams.get("start");
-    console.log("▶️ START параметр из Telegram:", start);
-    return start;
+    try {
+      // 1. Самый надёжный способ — через Telegram WebApp initDataUnsafe
+      const startParam = window?.Telegram?.WebApp?.initDataUnsafe?.start_param;
+      if (startParam) {
+        console.log("📦 Получен start_param из initDataUnsafe:", startParam);
+        return startParam;
+      }
+
+      // 2. Альтернативный способ — через tgWebAppData в hash
+      const hash = window.location.hash;
+      const params = new URLSearchParams(hash.slice(1));
+      const rawData = params.get("tgWebAppData");
+
+      if (rawData) {
+        const decoded = decodeURIComponent(rawData);
+        const innerParams = new URLSearchParams(decoded);
+        const start = innerParams.get("start");
+        if (start) {
+          console.log("📦 Получен start из tgWebAppData:", start);
+          return start;
+        }
+      }
+
+      console.warn("📭 Не удалось извлечь invite_code (start_param)");
+      return null;
+    } catch (err) {
+      console.error("❌ Ошибка при извлечении start_param:", err);
+      return null;
+    }
   };
 
   useEffect(() => {
