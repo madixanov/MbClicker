@@ -29,7 +29,7 @@ const PlayerCard = ({ player, index, isCurrentUser }) => {
               style={{ backgroundColor: "white" }}
             />
           </div>
-          <p>{player.name}</p>
+          <p>{player.username}</p>
         </div>
       </div>
       <p className="balance">{player.clicks?.toLocaleString('ru-RU') || 0}</p>
