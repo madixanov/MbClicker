@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
+import { useEffect } from "react";
 import useMbStore from "../store/mb-store";
-import usePlayerData from "../hooks/usePlayerData";
 
 export const fetchPlayerByTelegramId = async (telegram_id) => {
   const res = await axios.get(`${API_BASE_URL}/players`, {
@@ -127,6 +127,9 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
 };
 
 const giveReferralBonus = async (documentId) => {
+  const mbCountAll = useMbStore((state) => state.mbCountAll)
+  const setMbCountAll = useMbStore((state) => state.setMbCountAll)
+
   try {
     // Получаем текущего игрока
     const res = await axios.get(API_URL, {
@@ -173,6 +176,8 @@ const giveReferralBonus = async (documentId) => {
           referal_bonus_given: true,
         },
       });
+
+      setMbCountAll(mbCountAll + 2500);
     }
   } catch (err) {
     console.error("Ошибка при начислении бонусов:", err);
