@@ -1,3 +1,6 @@
+import axios from "axios";
+import { API_BASE_URL } from "../config/api";
+
 // Если у тебя аргумент — это telegramId, то:
 
 export const referralBonus = async (telegramId, onLocalBonus) => {
@@ -76,3 +79,4 @@ export const referralBonus = async (telegramId, onLocalBonus) => {
     console.error("❌ Ошибка при начислении бонусов:", err);
   }
 };
+
