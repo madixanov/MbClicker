@@ -1,9 +1,24 @@
 import friends from "../friends";
 import tg from '../../../assets/icons/tg.png'
 import premium from '../../../assets/icons/premium.png'
+import { fetchPlayerWithFriends } from "../../../services/playerService";
+import usePlayerStore from "../../../store/player-store";
 
 const FriendsList = () => {
     const bgColors = ['#D9FF00', '#FFC839', '#FF0000' ]
+    const [ friends, setFriends ] = useState([]);
+    const { player } = usePlayerStore();
+
+    useEffect(() => {
+        const loadFriends = async () => {
+            if (!plaer) return;
+            const updatePlayer = await fetchPlayerWithFriends(player.telegram_id);
+            const friendsList = updatePlayer?.invited_friends || [];
+            setFriends(friendsList);
+        }
+
+        loadFriends();
+    }, [player])
 
     return (
         <div className="friends-list">
@@ -14,18 +29,18 @@ const FriendsList = () => {
                     return (
                     <div className="friend-container" key={index}>
                         <div className="friend-avatar">
-                            <img src={friend.img} alt={friend.name} className="friend-photo"/>
-                            <img src={friend.role === 'premium' ? premium : tg} alt={friend.role} className="friend-role-icon" />
+                            <img src={friend.photo_url} alt={friend.username} className="friend-photo"/>
+                            <img src={tg} alt={friend.role} className="friend-role-icon" />
                             <div className="friend-number" style={{ backgroundColor: bgColor}}>{index+1}</div>
                         </div>
                         <div className="friend-info">
-                            <p>{friend.name}</p>
+                            <p>{friend.username}</p>
                             <div className="player-balance">
-                                <div className="div-b"><div>{friend.balance.toLocaleString('ru-RU')}</div> <span>WXCXW</span></div>
-                            <div className="div-e"><div>{friend.exchanges}</div><span>ОБМЕНЫ</span></div>
+                                <div className="div-b"><div>{friend.clicks.toLocaleString('ru-RU')}</div> <span>WXCXW</span></div>
+                            <div className="div-e"><div>0</div><span>ОБМЕНЫ</span></div>
                             </div>
                         </div>
-                        <p>{friend.role === 'premium' ? '+ 30 000' : '+ 10 000'}</p>
+                        <p>+ 10 000</p>
                     </div>
             )}
             )}
