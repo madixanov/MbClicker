@@ -127,9 +127,6 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
 };
 
 const giveReferralBonus = async (documentId) => {
-  const mbCountAll = useMbStore((state) => state.mbCountAll)
-  const setMbCountAll = useMbStore((state) => state.setMbCountAll)
-
   try {
     // Получаем текущего игрока
     const res = await axios.get(API_URL, {
@@ -176,8 +173,6 @@ const giveReferralBonus = async (documentId) => {
           referal_bonus_given: true,
         },
       });
-
-      setMbCountAll(mbCountAll + 2500);
     }
   } catch (err) {
     console.error("Ошибка при начислении бонусов:", err);
