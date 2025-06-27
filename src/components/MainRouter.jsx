@@ -18,21 +18,23 @@ const StatsPage = lazy(() => import("../pages/StatsPage"));
 const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 
 const MainRouter = () => {
-  const { player } = usePlayerData();
+  const { player, loadPlayer } = usePlayerData();
 
   useTelegramAuth();
   useSyncOnUnload();
 
   useEffect(() => {
-    const bonusKey = "referralBonusApplied";
+  const bonusKey = "referralBonusApplied";
 
-    if (player?.documentId && !localStorage.getItem(bonusKey)) {
-      referralBonus(player.documentId, () => {
-        localStorage.setItem(bonusKey, "true");
-        window.location.reload(); // перезагрузка ОДИН раз
-      });
-    }
-  }, [player?.documentId]);
+  if (player?.documentId && !localStorage.getItem(bonusKey)) {
+    referralBonus(player.documentId, async () => {
+      localStorage.setItem(bonusKey, "true");
+
+      // Заново загружаем игрока и вызываем ререндер
+      await loadPlayer();
+    });
+  }
+}, [player?.documentId]);
 
   const appReady = useAppReady();
 
