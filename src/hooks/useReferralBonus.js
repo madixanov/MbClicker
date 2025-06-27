@@ -30,7 +30,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     console.log("✅ Игрок найден:", current);
 
     // Проверяем есть ли inviter
-    if (!current.attributes.invited_by || !current.attributes.invited_by.data) {
+    if (!current.invited_by || !current.invited_by) {
       console.warn("❌ invited_by отсутствует — бонус не будет выдан");
       return;
     }
@@ -40,8 +40,8 @@ export const referralBonus = async (documentId, onLocalBonus) => {
       return;
     }
 
-    const inviterData = current.attributes.invited_by.data;
-    const inviterDocumentId = inviterData.attributes.documentId;
+    const inviterData = current.invited_by;
+    const inviterDocumentId = inviterData.documentId;
 
     console.log("▶️ Ищем пригласившего по documentId:", inviterDocumentId);
 
@@ -60,7 +60,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     console.log("📥 Ответ API (поиск пригласившего):", JSON.stringify(inviterRes.data, null, 2));
 
-    if (!inviterRes.data.data.length) {
+    if (!inviterRes.data.length) {
       console.warn("❌ Пригласивший не найден");
       return;
     }
@@ -74,8 +74,8 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     console.log(`Текущий кликов у игрока: ${currentClicks}, у пригласившего: ${inviterClicks}`);
 
     // Важно: для PUT запросов используем system id, а не documentId
-    const inviterId = inviter.id;
-    const playerId = current.id;
+    const inviterId = inviter.documentId;
+    const playerId = current.documentId;
 
     console.log("✅ Начисляем бонусы");
 
@@ -99,7 +99,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
       params: { populate: "*" },
     });
 
-    const updatedInviter = updatedInviterRes.data.data;
+    const updatedInviter = updatedInviterRes.data;
     console.log("🔄 Обновлённые данные пригласившего:", updatedInviter);
 
     // Здесь можно обновить локальное состояние, если нужно
