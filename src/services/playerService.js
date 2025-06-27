@@ -125,57 +125,57 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
   return res.data?.data?.[0] || null;
 };
 
-async function updateReferralBonus(playerId) {
-  const { mbCountAll, setMbCountAll } = useMbStore(); 
+const updateReferralBonus = async (telegramId) => {
+  const { setMbCountAll } = useMbStore.getState();
+  const { player, setPlayer } = usePlayerStore.getState();
 
   // Получаем игрока с invited_friends и invited_by
-  const player = await strapi.entityService.findOne('api::player.player', playerId, {
-    populate: ['invited_friends', 'invited_by'],
-  });
+  const playerData = await fetchPlayerByTelegramId(telegramId);
+  if (!playerData) return;
 
-  // Текущий бонус из zustand или из player
-  let currentMbCountAll = mbCountAll || player.clicks || 0;
+  const playerId = playerData.documentId;
+  const fields = playerData;
 
-  // --- 1. Проверяем бонус за приглашение самого игрока ---
+  const invited_by = fields.invited_by?.data;
+  const invited_friends = fields.invited_friends?.data || [];
+  const alreadyBonusedIds = fields.invited_friends_id || [];
 
-  // Допустим, у тебя есть булево поле player.bonus_given_for_invited_by
-  // Если нет, можно добавить его в Strapi
-  let bonusGivenForInvitedBy = player.referal_bonus_given || false;
+  let bonus = 0;
+  const updatedFields = {};
 
-  // Если есть invited_by и бонус ещё не начислен
-  if (player.invited_by && !bonusGivenForInvitedBy) {
-    currentMbCountAll += 2500;
-    bonusGivenForInvitedBy = true;
+  // 🎁 Бонус за то, что игрок был приглашён
+  if (invited_by && !fields.referal_bonus_given) {
+    bonus += 2500;
+    updatedFields.referal_bonus_given = true;
   }
 
-  // --- 2. Проверяем бонус за приглашённых друзей ---
-
-  const invitedFriendsIds = player.invited_friends.map(f => f.documentId);
-  const invitedFriendsIdField = player.invited_friends_id || [];
-
-  const newFriends = invitedFriendsIds.filter(id => !invitedFriendsIdField.includes(id));
+  // 🎁 Бонус за приглашённых друзей
+  const newFriends = invited_friends.filter(friend => {
+    const friendId = friend.documentId;
+    return !alreadyBonusedIds.includes(friendId);
+  });
 
   if (newFriends.length > 0) {
-    currentMbCountAll += 2500 * newFriends.length;
+    bonus += 2500 * newFriends.length;
+    updatedFields.invited_friends_id = [
+      ...alreadyBonusedIds,
+      ...newFriends.map(f => f.id),
+    ];
   }
 
-  // Обновляем zustand
-  setMbCountAll(currentMbCountAll);
+  if (bonus > 0) {
+    const newMbCount = (mbCountAll || 0) + bonus;
+    setMbCountAll(newMbCount);
+    
+    await updatePlayer(playerId, updatedFields);
+    setPlayer({
+      ...player,
+      ...fields,
+      ...updatedFields,
+    });
 
-  // Обновляем поля в Strapi
-  await strapi.entityService.update('api::player.player', playerId, {
-    data: {
-      mbCountAll: currentMbCountAll,
-      invited_friends_id: [...invitedFriendsIdField, ...newFriends],
-      bonus_given_for_invited_by: bonusGivenForInvitedBy,
-    },
-  });
-
-  return {
-    mbCountAll: currentMbCountAll,
-    newBonusForFriends: newFriends.length,
-    bonusGivenForInvitedBy,
-  };
-}
+    console.log("🎉 Бонус начислен:", bonus);
+  }
+};
 
 export default updateReferralBonus;
