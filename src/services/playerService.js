@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
+import useMbStore from "../store/mb-store";
 
 export const fetchPlayerByTelegramId = async (telegram_id) => {
   const res = await axios.get(`${API_BASE_URL}/players`, {
@@ -123,3 +124,57 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
 
   return res.data?.data?.[0] || null;
 };
+
+async function updateReferralBonus(playerId) {
+  const { mbCountAll, setMbCountAll } = useMbStore(); 
+
+  // Получаем игрока с invited_friends и invited_by
+  const player = await strapi.entityService.findOne('api::player.player', playerId, {
+    populate: ['invited_friends', 'invited_by'],
+  });
+
+  // Текущий бонус из zustand или из player
+  let currentMbCountAll = mbCountAll || player.clicks || 0;
+
+  // --- 1. Проверяем бонус за приглашение самого игрока ---
+
+  // Допустим, у тебя есть булево поле player.bonus_given_for_invited_by
+  // Если нет, можно добавить его в Strapi
+  let bonusGivenForInvitedBy = player.referal_bonus_given || false;
+
+  // Если есть invited_by и бонус ещё не начислен
+  if (player.invited_by && !bonusGivenForInvitedBy) {
+    currentMbCountAll += 2500;
+    bonusGivenForInvitedBy = true;
+  }
+
+  // --- 2. Проверяем бонус за приглашённых друзей ---
+
+  const invitedFriendsIds = player.invited_friends.map(f => f.documentId);
+  const invitedFriendsIdField = player.invited_friends_id || [];
+
+  const newFriends = invitedFriendsIds.filter(id => !invitedFriendsIdField.includes(id));
+
+  if (newFriends.length > 0) {
+    currentMbCountAll += 2500 * newFriends.length;
+  }
+
+  // Обновляем zustand
+  setMbCountAll(currentMbCountAll);
+
+  // Обновляем поля в Strapi
+  await strapi.entityService.update('api::player.player', playerId, {
+    data: {
+      mbCountAll: currentMbCountAll,
+      invited_friends_id: [...invitedFriendsIdField, ...newFriends],
+      bonus_given_for_invited_by: bonusGivenForInvitedBy,
+    },
+  });
+
+  return {
+    mbCountAll: currentMbCountAll,
+    newBonusForFriends: newFriends.length,
+    bonusGivenForInvitedBy,
+  };
+}
+
