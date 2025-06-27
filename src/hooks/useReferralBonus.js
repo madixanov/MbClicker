@@ -92,8 +92,6 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     console.log("🎉 Бонусы успешно выданы");
 
-    if (onLocalBonus) onLocalBonus();
-
   } catch (err) {
     console.error("❌ Ошибка в referralBonusDebug:", err);
   }

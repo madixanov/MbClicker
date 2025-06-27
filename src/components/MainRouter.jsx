@@ -7,7 +7,6 @@ import { retryPendingUpdate } from "../services/playerService";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import useAppReady from "../hooks/useAppReady";
 import usePlayerData from "../hooks/usePlayerData";
-import useMbStore from "../store/mb-store";
 import { referralBonus } from "../hooks/useReferralBonus";
 
 // Lazy загрузка страниц
@@ -24,13 +23,9 @@ const MainRouter = () => {
   useTelegramAuth();
   useSyncOnUnload();
 
-  const mbCountAll = useMbStore((s) => s.mbCountAll);
-  const setMbCountAll = useMbStore((s) => s.setMbCountAll);
-
   useEffect(() => {
     if (player?.documentId) {
       referralBonus(player.documentId, () => {
-        setMbCountAll(mbCountAll + 2500);
       });
     }
   }, [player]);
