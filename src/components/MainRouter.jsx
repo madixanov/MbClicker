@@ -29,7 +29,7 @@ const MainRouter = () => {
 
   useEffect(() => {
     if (player?.documentId) {
-      referralBonus(player.telegram_id, () => {
+      referralBonus(player.documentId, () => {
         setMbCountAll(mbCountAll + 2500);
       });
     }
