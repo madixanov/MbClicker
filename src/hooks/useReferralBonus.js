@@ -14,8 +14,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     const res = await axios.get(`${API_BASE_URL}/players`, {
       params: {
         filters: { documentId: { $eq: documentId } },
-        populate: ['*'], // или "*" если хочешь все поля
-        pagination: { page: 1, pageSize: 5 }, // на всякий случай лимит
+        populate: '*', // или "*" если хочешь все поля // на всякий случай лимит
       },
     });
 
