@@ -129,7 +129,7 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
 const giveReferralBonus = async (documentId) => {
   try {
     // Получаем текущего игрока
-    const res = await axios.get(API_URL, {
+    const res = await axios.get(API_BASE_URL, {
       params: {
         filters: {
           documentId: { $eq: documentId },
@@ -149,7 +149,7 @@ const giveReferralBonus = async (documentId) => {
       const inviterRes = await axios.get(API_URL, {
         params: {
           filters: {
-            telegram_id: { $eq: current.invited_by },
+            documentId: { $eq: current.invited_by },
           },
         },
       });
@@ -160,14 +160,14 @@ const giveReferralBonus = async (documentId) => {
       const inviterId = inviter.documentId;
 
       // Обновляем пригласившего
-      await axios.put(`${API_URL}/${inviterId}`, {
+      await axios.put(`${API_BASE_URL}/${inviterId}`, {
         data: {
           clicks: (inviter.clicks || 0) + 2500,
         },
       });
 
       // Обновляем текущего игрока
-      await axios.put(`${API_URL}/${playerId}`, {
+      await axios.put(`${API_BASE_URL}/${playerId}`, {
         data: {
           clicks: (current.clicks || 0) + 2500,
           referal_bonus_given: true,
