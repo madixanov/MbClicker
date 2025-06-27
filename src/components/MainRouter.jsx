@@ -27,8 +27,8 @@ const MainRouter = () => {
     if (player?.documentId) {
       referralBonus(player.documentId, () => {
       });
-      window.location.reload();
     }
+    window.location.reload();
   }, [player]);
   const appReady = useAppReady();
 
