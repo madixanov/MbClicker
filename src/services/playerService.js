@@ -169,7 +169,7 @@ const giveReferralBonus = async (documentId) => {
       // Обновляем текущего игрока
       await axios.put(`${API_URL}/${playerId}`, {
         data: {
-          clicks: (data.clicks || 0) + 2500,
+          clicks: (current.clicks || 0) + 2500,
           referal_bonus_given: true,
         },
       });
