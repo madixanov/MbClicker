@@ -53,7 +53,7 @@ const Main = () => {
                 </div>
 
                 <div className="bonus">
-                    <BonusCard img={tg} value="10 000" type="обычный" />
+                    <BonusCard img={tg} value="2 500" type="обычный" />
                 </div>
             </div>
 
