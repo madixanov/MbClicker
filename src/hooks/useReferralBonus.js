@@ -10,11 +10,11 @@ export const referralBonus = async (documentId, onLocalBonus) => {
   try {
     console.log("▶️ Ищем игрока с documentId:", documentId);
 
-    // Запрос с фильтром и populate invited_by для relation
+    // Получаем игрока с фильтром и populate invited_by
     const res = await axios.get(`${API_BASE_URL}/players`, {
       params: {
         filters: { documentId: { $eq: documentId } },
-        populate: '*', // или "*" если хочешь все поля // на всякий случай лимит
+        populate: "*",
       },
     });
 
@@ -29,17 +29,19 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     console.log("✅ Игрок найден:", current);
 
-    if (!current.invited_by) {
+    // Проверяем есть ли inviter
+    if (!current.attributes.invited_by || !current.attributes.invited_by.data) {
       console.warn("❌ invited_by отсутствует — бонус не будет выдан");
       return;
     }
 
-    if (current.referal_bonus_given) {
+    if (current.attributes.referal_bonus_given) {
       console.warn("⚠️ Бонус уже был выдан ранее");
       return;
     }
 
-    const inviterDocumentId = current.invited_by.documentId;
+    const inviterData = current.attributes.invited_by.data;
+    const inviterDocumentId = inviterData.attributes.documentId;
 
     console.log("▶️ Ищем пригласившего по documentId:", inviterDocumentId);
 
@@ -48,6 +50,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
       return;
     }
 
+    // Получаем пригласившего
     const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
       params: {
         filters: { documentId: { $eq: inviterDocumentId } },
@@ -64,14 +67,15 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     const inviter = inviterRes.data.data[0];
 
-    // Проконтролируй поля clicks у current и inviter
-    const currentClicks = Number(current.clicks) || 0;
-    const inviterClicks = Number(inviter.clicks) || 0;
+    // Получаем clicks и id для PUT запросов
+    const currentClicks = Number(current.attributes.clicks) || 0;
+    const inviterClicks = Number(inviter.attributes.clicks) || 0;
 
     console.log(`Текущий кликов у игрока: ${currentClicks}, у пригласившего: ${inviterClicks}`);
 
-    const inviterId = inviter.documentId;
-    const playerId = current.documentId;
+    // Важно: для PUT запросов используем system id, а не documentId
+    const inviterId = inviter.id;
+    const playerId = current.id;
 
     console.log("✅ Начисляем бонусы");
 
@@ -89,6 +93,17 @@ export const referralBonus = async (documentId, onLocalBonus) => {
         referal_bonus_given: true,
       },
     });
+
+    // Дополнительно: можно сделать повторный запрос, чтобы получить обновленные данные пригласившего
+    const updatedInviterRes = await axios.get(`${API_BASE_URL}/players/${inviterId}`, {
+      params: { populate: "*" },
+    });
+
+    const updatedInviter = updatedInviterRes.data.data;
+    console.log("🔄 Обновлённые данные пригласившего:", updatedInviter);
+
+    // Здесь можно обновить локальное состояние, если нужно
+    // onLocalBonus(updatedInviter); // например, передать обновленного пригласившего
 
     console.log("🎉 Бонусы успешно выданы");
 
