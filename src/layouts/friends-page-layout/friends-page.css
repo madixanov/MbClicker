@@ -296,11 +296,15 @@
   height: 28px;
   border: none;
   border-radius: 100px;
-  background-color: #60FF82;
+  background-color: #fff;
   font-size: 12px;
   font-weight: 600;
   color: black;
   margin: 0;
+}
+
+.submit-btn.copied {
+  background-color: #60FF82;
 }
 
 /* Стили для скролла */
