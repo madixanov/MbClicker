@@ -24,14 +24,17 @@ const MainRouter = () => {
   useSyncOnUnload();
 
   useEffect(() => {
-    if (player?.documentId) {
+    const bonusKey = "referralBonusApplied";
+
+    if (player?.documentId && !localStorage.getItem(bonusKey)) {
       referralBonus(player.documentId, () => {
+        localStorage.setItem(bonusKey, "true");
+        window.location.reload(); // перезагрузка ОДИН раз
       });
     }
-  }, [player]);
+  }, [player?.documentId]);
 
   const appReady = useAppReady();
-  window.location.reload();
 
   useEffect(() => {
     retryPendingUpdate();
