@@ -3,7 +3,7 @@ import { lazy, Suspense, useEffect } from "react";
 import LoadingPage from "../pages/LoadingPage";
 import AutoSaveClicks from "./AutoSaveClisk";
 import useTelegramAuth from "../hooks/useTelegramAuth";
-import { retryPendingUpdate, updateReferralBonus } from "../services/playerService";
+import { retryPendingUpdate, useReferralBonus } from "../services/playerService";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import useAppReady from "../hooks/useAppReady";
 import usePlayerData from "../hooks/usePlayerData";
@@ -21,7 +21,7 @@ const MainRouter = () => {
 
   useTelegramAuth();
   useSyncOnUnload();
-  updateReferralBonus(player.telegram_id);
+  useReferralBonus(player.documentId);
   const appReady = useAppReady();
 
   useEffect(() => {
