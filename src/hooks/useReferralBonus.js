@@ -14,11 +14,9 @@ export const referralBonus = async (telegramId, onLocalBonus) => {
 
     // Ищем игрока по telegram_id
     const res = await axios.get(`${API_BASE_URL}/players`, {
-      params: {
         filters: { telegram_id: { $eq: telegramId } },
         populate: "*",
-      },
-    });
+      },);
 
     const current = res.data.data[0];
     if (!current) {
@@ -44,9 +42,7 @@ export const referralBonus = async (telegramId, onLocalBonus) => {
 
     // Ищем пригласившего по telegram_id
     const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
-      params: {
         filters: { telegram_id: { $eq: current.invited_by } },
-      },
     });
 
     const inviter = inviterRes.data.data[0];
@@ -60,16 +56,13 @@ export const referralBonus = async (telegramId, onLocalBonus) => {
     console.log("✅ Начисляем бонус пригласившему и текущему игроку");
 
     await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
-      data: {
         clicks: (inviter.clicks || 0) + 2500,
-      },
     });
 
     await axios.put(`${API_BASE_URL}/players/${playerId}`, {
-      data: {
+
         clicks: (current.clicks || 0) + 2500,
         referal_bonus_given: true,
-      },
     });
 
     console.log("🎉 Бонус успешно выдан");
