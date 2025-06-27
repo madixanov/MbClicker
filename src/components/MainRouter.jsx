@@ -18,20 +18,18 @@ const StatsPage = lazy(() => import("../pages/StatsPage"));
 const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 
 const MainRouter = () => {
-  const { player, loadPlayer } = usePlayerData();
+  const { player } = usePlayerData();
 
   useTelegramAuth();
   useSyncOnUnload();
 
   useEffect(() => {
-    if (player?.attributes?.documentId) {
-      referralBonus(player.attributes.documentId, async () => {
-        // После начисления бонуса обновляем данные игрока в Zustand
-        await loadPlayer();
+    if (player?.documentId) {
+      referralBonus(player.documentId, () => {
       });
+      window.location.reload();
     }
-  }, [player?.documentId, loadPlayer]);
-
+  }, [player]);
   const appReady = useAppReady();
 
   useEffect(() => {
