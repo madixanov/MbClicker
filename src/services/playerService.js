@@ -114,7 +114,7 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
   const res = await axios.get(`${API_BASE_URL}/players`, {
     params: {
       filters: {
-        telegram_id: {
+        documentId: {
           $eq: telegram_id,
         },
       },
