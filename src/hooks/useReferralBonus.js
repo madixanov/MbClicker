@@ -1,8 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 
-// Если у тебя аргумент — это documentId, то:
-
 export const referralBonus = async (documentId, onLocalBonus) => {
   if (!documentId) {
     console.warn("❌ Нет documentId — бонус не проверяется");
@@ -12,11 +10,13 @@ export const referralBonus = async (documentId, onLocalBonus) => {
   try {
     console.log("▶️ Проверяем бонус для игрока:", documentId);
 
-    // Ищем игрока по documentId
+    // Ищем игрока по documentId с populate всех полей (чтобы получить invited_by)
     const res = await axios.get(`${API_BASE_URL}/players`, {
+      params: {
         filters: { documentId: { $eq: documentId } },
         populate: "*",
-      },);
+      },
+    });
 
     const current = res.data.data[0];
     if (!current) {
@@ -42,7 +42,9 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     // Ищем пригласившего по documentId
     const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
+      params: {
         filters: { documentId: { $eq: current.invited_by } },
+      },
     });
 
     const inviter = inviterRes.data.data[0];
@@ -55,14 +57,19 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     console.log("✅ Начисляем бонус пригласившему и текущему игроку");
 
+    // Обновляем пригласившего - передаем данные в поле data
     await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
+      data: {
         clicks: (inviter.clicks || 0) + 2500,
+      },
     });
 
+    // Обновляем текущего игрока
     await axios.put(`${API_BASE_URL}/players/${playerId}`, {
-
+      data: {
         clicks: (current.clicks || 0) + 2500,
         referal_bonus_given: true,
+      },
     });
 
     console.log("🎉 Бонус успешно выдан");
@@ -72,4 +79,3 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     console.error("❌ Ошибка при начислении бонусов:", err);
   }
 };
-
