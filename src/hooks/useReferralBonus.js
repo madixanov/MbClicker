@@ -1,13 +1,14 @@
 import { useEffect, useRef } from "react";
 import usePlayerStore from "../store/player-store";
+import useMbStore from "../store/mb-store";
 import {
   fetchPlayerByTelegramId,
-  fetchPlayerByInviteCode,
   updatePlayerWithFallback,
 } from "../services/playerService";
 
 const useReferralBonus = () => {
   const { player, setPlayer } = usePlayerStore();
+  const { setMbCountAll, mbCountAll } = useMbStore();
   const hasProcessed = useRef(false);
 
   useEffect(() => {
@@ -16,43 +17,50 @@ const useReferralBonus = () => {
       hasProcessed.current = true;
 
       try {
-        // Обновим данные игрока из Strapi (на всякий случай)
-        const currentPlayer = await fetchPlayerByTelegramId(player.telegram_id);
-        if (!currentPlayer) return;
+        const freshPlayer = await fetchPlayerByTelegramId(player.telegram_id);
+        if (!freshPlayer) return;
 
-        const invitedBy = currentPlayer.invited_by;
-        const received = currentPlayer.referral_bonus_received;
+        const { documentId, invited_by, referral_bonus_given, clicks} = freshPlayer;
+        let localUpdate = false;
 
-        // 🎁 Бонус приглашённому
-        if (invitedBy && !received) {
-          await updatePlayerWithFallback(currentPlayer.documentId, {
-            referral_bonus_received: true,
-            mbCountAll: (currentPlayer.mbCountAll || 0) + 2500,
+        // 🎁 Бонус для приглашённого
+        if (invited_by && !referral_bonus_given) {
+
+          // Обновляем только флаг в Strapi
+          await updatePlayerWithFallback(documentId, {
+            referral_bonus_given: true,
+            clicks: clicks + 2500
           });
+
+          // Обновляем локально mbCountAll
+
           console.log("🎉 Бонус приглашённому выдан");
         }
 
-        // 🎁 Бонус пригласившему
-        if (invitedBy && !invitedBy.bonus_given) {
-          await updatePlayerWithFallback(invitedBy.documentId, {
+        // 🎁 Бонус для пригласившего
+        if (invited_by && !invited_by.bonus_given) {
+          await updatePlayerWithFallback(invited_by.documentId, {
             bonus_given: true,
-            mbCountAll: (invitedBy.mbCountAll || 0) + 10000,
           });
+          setMbCountAll(mbCountAll + 2500);
+
           console.log("🎁 Бонус пригласителю выдан");
         }
 
-        // Обновим игрока в store
-        const updatedPlayer = await fetchPlayerByTelegramId(player.telegram_id);
-        if (updatedPlayer) {
-          setPlayer(updatedPlayer);
+        if (localUpdate) {
+          const updated = await fetchPlayerByTelegramId(player.telegram_id);
+          if (updated) {
+            setPlayer(updated);
+          }
         }
+
       } catch (err) {
         console.error("❌ Ошибка при выдаче бонусов:", err);
       }
     };
 
     processBonus();
-  }, [player, setPlayer]);
+  }, [player, setPlayer, setMbCountAll]);
 };
 
 export default useReferralBonus;
