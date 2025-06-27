@@ -5,7 +5,7 @@ import {
   fetchPlayerByTelegramId,
   fetchPlayerByInviteCode,
   createPlayer,
-  updatePlayerWithFallback, // 🆕 Обязательно проверь, чтобы этот метод существовал
+  updatePlayerWithFallback,
 } from "../services/playerService";
 import usePlayerData from "../hooks/usePlayerData";
 
@@ -13,32 +13,38 @@ const useTelegramAuth = () => {
   const isCreating = useRef(false);
   const { setPlayer } = usePlayerData();
 
-  const getInviteCodeFromUrl = () => {
+  const getInviteCode = () => {
     try {
-      const startParam = window?.Telegram?.WebApp?.initDataUnsafe?.start_param;
-      if (startParam) {
-        console.log("📦 Получен start_param из initDataUnsafe:", startParam);
-        return startParam;
+      const initStart = window?.Telegram?.WebApp?.initDataUnsafe?.start_param;
+      if (initStart) {
+        console.log("📦 [start_param] Из initDataUnsafe:", initStart);
+        return initStart;
       }
 
       const hash = window.location.hash;
       const params = new URLSearchParams(hash.slice(1));
-      const rawData = params.get("tgWebAppData");
+      const tgWebAppData = params.get("tgWebAppData");
 
-      if (rawData) {
-        const decoded = decodeURIComponent(rawData);
+      if (tgWebAppData) {
+        const decoded = decodeURIComponent(tgWebAppData);
         const innerParams = new URLSearchParams(decoded);
         const start = innerParams.get("start");
         if (start) {
-          console.log("📦 Получен start из tgWebAppData:", start);
+          console.log("📦 [start] Из tgWebAppData:", start);
           return start;
         }
       }
 
-      console.warn("📭 Не удалось извлечь invite_code (start_param)");
+      const localRef = localStorage.getItem("ref_code");
+      if (localRef) {
+        console.log("📦 [start] Из localStorage:", localRef);
+        return localRef;
+      }
+
+      console.warn("📭 invite_code не найден ни в initData, ни в localStorage");
       return null;
     } catch (err) {
-      console.error("❌ Ошибка при извлечении start_param:", err);
+      console.error("❌ Ошибка при извлечении invite_code:", err);
       return null;
     }
   };
@@ -50,23 +56,23 @@ const useTelegramAuth = () => {
 
       const user = getTelegramUser();
       if (!user) {
+        console.warn("❌ Пользователь Telegram не найден");
         isCreating.current = false;
         return;
       }
 
       const telegram_id = Number(user.id);
-      const referrerCode = getInviteCodeFromUrl();
-
+      const refCode = getInviteCode();
       let invited_by = null;
 
-      if (referrerCode) {
+      if (refCode) {
         try {
-          const referrer = await fetchPlayerByInviteCode(referrerCode);
+          const referrer = await fetchPlayerByInviteCode(refCode);
           if (referrer) {
             invited_by = referrer.documentId;
             console.log("🔗 Реферал найден:", invited_by);
           } else {
-            console.warn("⚠️ Реферал по коду не найден:", referrerCode);
+            console.warn("⚠️ Реферал по коду не найден:", refCode);
           }
         } catch (err) {
           console.error("❌ Ошибка при поиске пригласившего:", err);
@@ -92,9 +98,15 @@ const useTelegramAuth = () => {
           console.log("🆕 Создание нового игрока:", telegramUser);
           const res = await createPlayer(telegramUser);
           const newPlayer = res.data?.data;
-          if (newPlayer) setPlayer(newPlayer);
+
+          if (newPlayer) {
+            console.log("✅ Новый игрок успешно создан:", newPlayer);
+            setPlayer(newPlayer);
+          }
         } else {
-          // 🧠 Обновим invited_by, если он ещё не установлен
+          console.log("👤 Игрок уже существует:", existingPlayer);
+
+          // Обновим invited_by только если ещё не установлен
           if (!existingPlayer.invited_by && invited_by) {
             console.log("🔁 Обновляем invited_by для существующего игрока");
             await updatePlayerWithFallback(existingPlayer.documentId, {
@@ -105,7 +117,7 @@ const useTelegramAuth = () => {
           setPlayer(existingPlayer);
         }
       } catch (err) {
-        console.error("❌ Ошибка при авторизации:", err);
+        console.error("❌ Ошибка при авторизации игрока:", err);
       } finally {
         isCreating.current = false;
       }
