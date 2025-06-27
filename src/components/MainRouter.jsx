@@ -21,7 +21,7 @@ const MainRouter = () => {
 
   useTelegramAuth();
   useSyncOnUnload();
-  updateReferralBonus(player.documentId);
+  updateReferralBonus(player.telegram_id);
   const appReady = useAppReady();
 
   useEffect(() => {
