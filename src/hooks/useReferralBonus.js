@@ -1,81 +1,101 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 
-export const referralBonus = async (documentId, onLocalBonus) => {
+export const referralBonusDebug = async (documentId, onLocalBonus) => {
   if (!documentId) {
     console.warn("❌ Нет documentId — бонус не проверяется");
     return;
   }
 
   try {
-    console.log("▶️ Проверяем бонус для игрока:", documentId);
+    console.log("▶️ Ищем игрока с documentId:", documentId);
 
-    // Ищем игрока по documentId с populate всех полей (чтобы получить invited_by)
+    // Запрос с фильтром и populate invited_by для relation
     const res = await axios.get(`${API_BASE_URL}/players`, {
       params: {
         filters: { documentId: { $eq: documentId } },
-        populate: "*",
+        populate: ["invited_by"], // или "*" если хочешь все поля
+        pagination: { page: 1, pageSize: 5 }, // на всякий случай лимит
       },
     });
 
-    const current = res.data.data[0];
-    if (!current) {
-      console.warn("❌ Игрок не найден в базе");
+    console.log("📥 Ответ API (поиск игрока):", JSON.stringify(res.data, null, 2));
+
+    if (!res.data.data.length) {
+      console.warn("❌ Игрок НЕ найден в базе");
       return;
     }
 
-    console.log("✅ Игрок найден:", current);
+    const current = res.data.data[0];
 
-    const playerId = current.documentId;
+    console.log("✅ Игрок найден:", current);
 
     if (!current.invited_by) {
       console.warn("❌ invited_by отсутствует — бонус не будет выдан");
       return;
     }
 
-    if (current.referal_bonus_given) {
+    if (current.attributes.referal_bonus_given) {
       console.warn("⚠️ Бонус уже был выдан ранее");
       return;
     }
 
-    console.log("▶️ Бонус НЕ выдан, ищем пригласившего");
+    const inviterDocumentId = current.attributes.invited_by.data?.attributes?.documentId;
 
-    // Ищем пригласившего по documentId
-    const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
-      params: {
-        filters: { documentId: { $eq: current.invited_by } },
-      },
-    });
+    console.log("▶️ Ищем пригласившего по documentId:", inviterDocumentId);
 
-    const inviter = inviterRes.data.data[0];
-    if (!inviter) {
-      console.warn("❌ Пригласивший не найден по documentId:", current.invited_by);
+    if (!inviterDocumentId) {
+      console.warn("❌ В invited_by нет documentId");
       return;
     }
 
-    const inviterId = inviter.documentId;
+    const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
+      params: {
+        filters: { documentId: { $eq: inviterDocumentId } },
+        populate: "*",
+      },
+    });
 
-    console.log("✅ Начисляем бонус пригласившему и текущему игроку");
+    console.log("📥 Ответ API (поиск пригласившего):", JSON.stringify(inviterRes.data, null, 2));
 
-    // Обновляем пригласившего - передаем данные в поле data
+    if (!inviterRes.data.data.length) {
+      console.warn("❌ Пригласивший не найден");
+      return;
+    }
+
+    const inviter = inviterRes.data.data[0];
+
+    // Проконтролируй поля clicks у current и inviter
+    const currentClicks = Number(current.attributes.clicks) || 0;
+    const inviterClicks = Number(inviter.attributes.clicks) || 0;
+
+    console.log(`Текущий кликов у игрока: ${currentClicks}, у пригласившего: ${inviterClicks}`);
+
+    const inviterId = inviter.id;
+    const playerId = current.id;
+
+    console.log("✅ Начисляем бонусы");
+
+    // Обновляем пригласившего
     await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
       data: {
-        clicks: (inviter.clicks || 0) + 2500,
+        clicks: inviterClicks + 2500,
       },
     });
 
     // Обновляем текущего игрока
     await axios.put(`${API_BASE_URL}/players/${playerId}`, {
       data: {
-        clicks: (current.clicks || 0) + 2500,
+        clicks: currentClicks + 2500,
         referal_bonus_given: true,
       },
     });
 
-    console.log("🎉 Бонус успешно выдан");
+    console.log("🎉 Бонусы успешно выданы");
 
     if (onLocalBonus) onLocalBonus();
+
   } catch (err) {
-    console.error("❌ Ошибка при начислении бонусов:", err);
+    console.error("❌ Ошибка в referralBonusDebug:", err);
   }
 };
