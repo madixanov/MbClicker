@@ -126,55 +126,64 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
   return res.data?.data?.[0] || null;
 };
 
-export const updateReferralBonus = async (telegramId) => {
-  const { setMbCountAll } = useMbStore.getState();
-  const { player, setPlayer } = usePlayerData();
-
-  // Получаем игрока с invited_friends и invited_by
-  const playerData = await fetchPlayerByTelegramId(telegramId);
-  if (!playerData) return;
-
-  const playerId = playerData.documentId;
-  const fields = playerData;
-
-  const invited_by = fields.invited_by?.data;
-  const invited_friends = fields.invited_friends?.data || [];
-  const alreadyBonusedIds = fields.invited_friends_id || [];
-
-  let bonus = 0;
-  const updatedFields = {};
-
-  // 🎁 Бонус за то, что игрок был приглашён
-  if (invited_by && !fields.referal_bonus_given) {
-    bonus += 2500;
-    updatedFields.referal_bonus_given = true;
-  }
-
-  // 🎁 Бонус за приглашённых друзей
-  const newFriends = invited_friends.filter(friend => {
-    const friendId = friend.documentId;
-    return !alreadyBonusedIds.includes(friendId);
-  });
-
-  if (newFriends.length > 0) {
-    bonus += 2500 * newFriends.length;
-    updatedFields.invited_friends_id = [
-      ...alreadyBonusedIds,
-      ...newFriends.map(f => f.id),
-    ];
-  }
-
-  if (bonus > 0) {
-    const newMbCount = (mbCountAll || 0) + bonus;
-    setMbCountAll(newMbCount);
-
-    await updatePlayer(playerId, updatedFields);
-    setPlayer({
-      ...player,
-      ...fields,
-      ...updatedFields,
+const giveReferralBonus = async (documentId) => {
+  try {
+    // Получаем текущего игрока
+    const res = await axios.get(API_URL, {
+      params: {
+        filters: {
+          documentId: { $eq: documentId },
+        },
+        populate: "*",
+      },
     });
 
-    console.log("🎉 Бонус начислен:", bonus);
+    const current = res.data.data[0];
+    if (!current) return;
+
+    const playerId = current.documentId;
+
+    // Проверка: invited_by есть, бонус не выдан
+    if (current.invited_by && !current.referal_bonus_given) {
+      // Получаем пригласившего игрока
+      const inviterRes = await axios.get(API_URL, {
+        params: {
+          filters: {
+            telegram_id: { $eq: current.invited_by },
+          },
+        },
+      });
+
+      const inviter = inviterRes.data.data[0];
+      if (!inviter) return;
+
+      const inviterId = inviter.documentId;
+
+      // Обновляем пригласившего
+      await axios.put(`${API_URL}/${inviterId}`, {
+        data: {
+          clicks: (inviter.clicks || 0) + 2500,
+        },
+      });
+
+      // Обновляем текущего игрока
+      await axios.put(`${API_URL}/${playerId}`, {
+        data: {
+          clicks: (data.clicks || 0) + 2500,
+          referal_bonus_given: true,
+        },
+      });
+    }
+  } catch (err) {
+    console.error("Ошибка при начислении бонусов:", err);
   }
+};
+
+// Использовать этот хук при загрузке компонента
+export const useReferralBonus = (documentId) => {
+  useEffect(() => {
+    if (documentId) {
+      giveReferralBonus(documentId);
+    }
+  }, [documentId]);
 };
