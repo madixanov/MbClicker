@@ -186,9 +186,14 @@ const giveReferralBonus = async (documentId) => {
 
 // Использовать этот хук при загрузке компонента
 export const useReferralBonus = (documentId) => {
+  const mbCountAll = useMbStore((state) => state.mbCountAll);
+  const setMbCountAll = useMbStore((state) => state.setMbCountAll);
+
   useEffect(() => {
     if (documentId) {
-      giveReferralBonus(documentId);
+      giveReferralBonus(documentId, () => {
+        setMbCountAll(mbCountAll + 2500);
+      });
     }
   }, [documentId]);
 };
