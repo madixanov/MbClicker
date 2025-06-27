@@ -18,7 +18,7 @@ const useReferralBonus = () => {
     }
 
     // 🎁 Бонус за друзей
-    const alreadyBonusedIds = player.bonused_friend_ids || [];
+    const alreadyBonusedIds = player.bonused_friends_id || [];
     const invitedFriends = player.invited_friends || [];
 
     const newFriends = invitedFriends.filter((friend) => {
@@ -34,7 +34,7 @@ const useReferralBonus = () => {
         ...newFriends.map((f) => f.telegram_id || f.documentId),
       ];
 
-      updatedFields.bonused_friend_ids = newBonusedIds;
+      updatedFields.bonused_friends_id = newBonusedIds;
     }
 
     // ✅ Применить бонус и сохранить изменения в Strapi
