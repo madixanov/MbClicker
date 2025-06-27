@@ -15,27 +15,31 @@ const useTelegramAuth = () => {
 
   const getInviteCode = () => {
     try {
-      // 1️⃣ Сначала пробуем взять из Telegram initData
+      // 1️⃣ initDataUnsafe от Telegram
       const startParam = window?.Telegram?.WebApp?.initDataUnsafe?.start_param;
       if (startParam) {
         console.log("📦 [start_param] из Telegram:", startParam);
+        localStorage.setItem("ref_code", startParam);
         return startParam;
       }
 
-      // 2️⃣ Затем проверяем URL (если пришёл ?invite=...)
-      const params = new URLSearchParams(window.location.search);
-      const urlInvite = params.get("invite");
+      // 2️⃣ ?invite=... из URL (например, при запуске без start_param)
+      const urlParams = new URLSearchParams(window.location.search);
+      const urlInvite = urlParams.get("invite");
       if (urlInvite) {
         console.log("📦 [invite] из URL:", urlInvite);
-        localStorage.setItem("ref_code", urlInvite); // сохранить для следующего раза
+        // Сохраняем только если ещё не сохранено
+        if (!localStorage.getItem("ref_code")) {
+          localStorage.setItem("ref_code", urlInvite);
+        }
         return urlInvite;
       }
 
-      // 3️⃣ И наконец — localStorage
-      const localRef = localStorage.getItem("ref_code");
-      if (localRef) {
-        console.log("📦 [invite] из localStorage:", localRef);
-        return localRef;
+      // 3️⃣ localStorage на случай, если ранее уже заходил по ссылке
+      const savedInvite = localStorage.getItem("ref_code");
+      if (savedInvite) {
+        console.log("📦 [invite] из localStorage:", savedInvite);
+        return savedInvite;
       }
 
       console.warn("📭 Invite-код не найден ни в initData, ни в URL, ни в localStorage");
@@ -87,9 +91,7 @@ const useTelegramAuth = () => {
             first_name: user.first_name || "",
             last_name: user.last_name || "",
             invite_code: nanoid(8),
-            ...(invited_by && {
-              invited_by: { connect: [invited_by] },
-            }),
+            ...(invited_by && { invited_by: { connect: [invited_by] } }),
           };
 
           console.log("🆕 Создание нового игрока:", newPlayerData);
@@ -120,6 +122,8 @@ const useTelegramAuth = () => {
 
     initAuth();
   }, [setPlayer]);
+
+  return null;
 };
 
 export default useTelegramAuth;
