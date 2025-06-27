@@ -1,4 +1,4 @@
-import tg from '../../../assets/icons/tg.png'
+import tg from '../../../assets/icons/tg.svg'
 import { useState, useEffect } from "react";
 import { fetchPlayerWithFriends } from "../../../services/playerService";
 import usePlayerStore from "../../../store/player-store";
