@@ -107,3 +107,19 @@ export const addInvitedFriend = async (referrerId, invitedId) => {
   });
   return response.data?.data;
 };
+
+export const fetchPlayerWithFriends = async (telegram_id) => {
+  const res = await axios.get(`${API_BASE_URL}/players`, {
+    params: {
+      filters: {
+        telegram_id: {
+          $eq: telegram_id,
+        },
+      },
+      populate: ["invited_friends"], // 👈 вот ключ
+      publicationState: "preview",
+    },
+  });
+
+  return res.data?.data?.[0] || null;
+};
