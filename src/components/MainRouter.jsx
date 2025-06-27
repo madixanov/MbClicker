@@ -19,6 +19,7 @@ const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 const MainRouter = () => {
   useTelegramAuth();
   useSyncOnUnload();
+  useReferralBonus();
   const appReady = useAppReady();
 
   useEffect(() => {
