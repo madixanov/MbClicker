@@ -60,7 +60,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     console.log("📥 Ответ API (поиск пригласившего):", JSON.stringify(inviterRes.data, null, 2));
 
-    if (!inviterRes.data.length) {
+    if (!inviterRes.length) {
       console.warn("❌ Пригласивший не найден");
       return;
     }
