@@ -1,6 +1,6 @@
 import tg from '../../../assets/icons/tg.png'
 import { useState, useEffect } from "react";
-import { fetchPlayerWithFriends } from "../../../services/playerService";
+import { fetchPlayerWithFriends, updatePlayerWithFallback } from "../../../services/playerService";
 import usePlayerStore from "../../../store/player-store";
 import useMbStore from "../../../store/mb-store";
 
@@ -14,11 +14,23 @@ const FriendsList = () => {
     useEffect(() => {
         const loadFriends = async () => {
             if (!player) return;
+
             const updatePlayer = await fetchPlayerWithFriends(player.telegram_id);
             const friendsList = updatePlayer?.invited_friends || [];
             setFriends(friendsList);
-            const bonus = friendsList.length * 2500;
-            setMbCountAll(mbCountAll + bonus);
+
+            if (!updatePlayer?.bonus_given) {
+                const bonus = friendsList.length * 2500;
+                setMbCountAll(mbCountAll + bonus);
+
+                await updatePlayerWithFallback(updatePlayer.documentId, {
+                    bonus_given: true
+                })
+
+                console.log(`🎁 Бонус начислен: ${bonus}`)
+            } else {
+            console.log("⏩ Бонус уже был начислен ранее")
+            }
         }
 
         loadFriends();
