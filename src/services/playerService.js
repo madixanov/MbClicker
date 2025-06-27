@@ -1,6 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 import useMbStore from "../store/mb-store";
+import usePlayerData from "../hooks/usePlayerData";
 
 export const fetchPlayerByTelegramId = async (telegram_id) => {
   const res = await axios.get(`${API_BASE_URL}/players`, {
