@@ -128,7 +128,7 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
 
 export const updateReferralBonus = async (telegramId) => {
   const { setMbCountAll } = useMbStore.getState();
-  const { player, setPlayer } = usePlayerData.getState();
+  const { player, setPlayer } = usePlayerData();
 
   // Получаем игрока с invited_friends и invited_by
   const playerData = await fetchPlayerByTelegramId(telegramId);
