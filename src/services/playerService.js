@@ -125,7 +125,7 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
   return res.data?.data?.[0] || null;
 };
 
-const updateReferralBonus = async (telegramId) => {
+export const updateReferralBonus = async (telegramId) => {
   const { setMbCountAll } = useMbStore.getState();
   const { player, setPlayer } = usePlayerStore.getState();
 
@@ -166,7 +166,7 @@ const updateReferralBonus = async (telegramId) => {
   if (bonus > 0) {
     const newMbCount = (mbCountAll || 0) + bonus;
     setMbCountAll(newMbCount);
-    
+
     await updatePlayer(playerId, updatedFields);
     setPlayer({
       ...player,
@@ -177,5 +177,3 @@ const updateReferralBonus = async (telegramId) => {
     console.log("🎉 Бонус начислен:", bonus);
   }
 };
-
-export default updateReferralBonus;
