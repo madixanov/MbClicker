@@ -250,16 +250,16 @@
   font-weight: 500;
 }
 
-.div-b div{
+.div-b div {
   display: flex;
   align-items: center;
-  text-align: center;
   justify-content: center;
-  width: 51px;
-  height: 13px;
+  padding: 0 8px; /* ✅ вместо фиксированной ширины */
+  height: 18px;
   border-radius: 100px;
   background-color: #3DA14C;
-  box-shadow: 0 0 12px (255, 255, 255, 0.24);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.24);
+  min-width: 18px; /* ✅ гарантирует ширину даже при "0" */
 }
 
 .div-b span {
@@ -277,22 +277,23 @@
   font-weight: 500;
 }
 
-.div-e div{
+.div-e div {
   display: flex;
   align-items: center;
-  text-align: center;
   justify-content: center;
-  width: 30px;
-  height: 13px;
+  padding: 0 6px; /* ✅ более узкий */
+  height: 16px;
   border-radius: 100px;
   background-color: #4C59AD;
-  box-shadow: 0 0 12px (255, 255, 255, 0.24);
+  box-shadow: 0 0 12px rgba(255, 255, 255, 0.24);
+  min-width: 14px;
 }
 
 .div-e span {
   font-weight: 500;
   font-size: 8px;
 }
+
 
 .submit-btn {
   width: 114.95px;
