@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 
-export const referralBonusDebug = async (documentId, onLocalBonus) => {
+export const referralBonus = async (documentId, onLocalBonus) => {
   if (!documentId) {
     console.warn("❌ Нет documentId — бонус не проверяется");
     return;
