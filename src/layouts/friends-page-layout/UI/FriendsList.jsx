@@ -2,11 +2,14 @@ import tg from '../../../assets/icons/tg.png'
 import { useState, useEffect } from "react";
 import { fetchPlayerWithFriends } from "../../../services/playerService";
 import usePlayerStore from "../../../store/player-store";
+import useMbStore from "../../../store/mb-store";
 
 const FriendsList = () => {
     const bgColors = ['#D9FF00', '#FFC839', '#FF0000' ]
     const [ friends, setFriends ] = useState([]);
     const { player } = usePlayerStore();
+    const setMbCountAll = useMbStore((state) => state.setMbCountAll);
+    const mbCountAll = useMbStore((state) => state.mbCountAll);
 
     useEffect(() => {
         const loadFriends = async () => {
@@ -14,6 +17,8 @@ const FriendsList = () => {
             const updatePlayer = await fetchPlayerWithFriends(player.telegram_id);
             const friendsList = updatePlayer?.invited_friends || [];
             setFriends(friendsList);
+            const bonus = friendsList.length * 2500;
+            setMbCountAll(mbCountAll + bonus);
         }
 
         loadFriends();
@@ -39,7 +44,7 @@ const FriendsList = () => {
                             <div className="div-e"><div>0</div><span>ОБМЕНЫ</span></div>
                             </div>
                         </div>
-                        <p>+ 10 000</p>
+                        <p>+ 2 500</p>
                     </div>
             )}
             )}
