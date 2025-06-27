@@ -65,8 +65,8 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     const inviter = inviterRes.data.data[0];
 
     // Проконтролируй поля clicks у current и inviter
-    const currentClicks = Number(current.attributes.clicks) || 0;
-    const inviterClicks = Number(inviter.attributes.clicks) || 0;
+    const currentClicks = Number(current.clicks) || 0;
+    const inviterClicks = Number(inviter.clicks) || 0;
 
     console.log(`Текущий кликов у игрока: ${currentClicks}, у пригласившего: ${inviterClicks}`);
 
