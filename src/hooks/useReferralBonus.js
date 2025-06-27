@@ -14,7 +14,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     const res = await axios.get(`${API_BASE_URL}/players`, {
       params: {
         filters: { documentId: { $eq: documentId } },
-        populate: ["invited_by"], // или "*" если хочешь все поля
+        populate: ['*'], // или "*" если хочешь все поля
         pagination: { page: 1, pageSize: 5 }, // на всякий случай лимит
       },
     });
@@ -35,12 +35,12 @@ export const referralBonus = async (documentId, onLocalBonus) => {
       return;
     }
 
-    if (current.attributes.referal_bonus_given) {
+    if (current.referal_bonus_given) {
       console.warn("⚠️ Бонус уже был выдан ранее");
       return;
     }
 
-    const inviterDocumentId = current.attributes.invited_by.data?.attributes?.documentId;
+    const inviterDocumentId = current.invited_by.data?.documentId;
 
     console.log("▶️ Ищем пригласившего по documentId:", inviterDocumentId);
 
