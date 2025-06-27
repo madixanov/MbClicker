@@ -28,9 +28,10 @@ const MainRouter = () => {
       referralBonus(player.documentId, () => {
       });
     }
-    window.location.reload();
   }, [player]);
+
   const appReady = useAppReady();
+  window.location.reload();
 
   useEffect(() => {
     retryPendingUpdate();
