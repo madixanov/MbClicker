@@ -1,66 +1,55 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import usePlayerStore from "../store/player-store";
-import useMbStore from "../store/mb-store";
-import {
-  fetchPlayerByTelegramId,
-  updatePlayerWithFallback,
-} from "../services/playerService";
+import { updatePlayer } from "../services/playerService";
 
 const useReferralBonus = () => {
-  const { player, setPlayer } = usePlayerStore();
-  const { setMbCountAll, mbCountAll } = useMbStore();
-  const hasProcessed = useRef(false);
+  const { player, setMbCountAll, setPlayer } = usePlayerStore();
 
   useEffect(() => {
-    const processBonus = async () => {
-      if (hasProcessed.current || !player) return;
-      hasProcessed.current = true;
+    if (!player) return;
 
-      try {
-        const freshPlayer = await fetchPlayerByTelegramId(player.telegram_id);
-        if (!freshPlayer) return;
+    let bonus = 0;
+    const updatedFields = {};
 
-        const { documentId, invited_by, referral_bonus_given, clicks} = freshPlayer;
-        let localUpdate = false;
+    // 🎁 Бонус за приглашение (invited_by)
+    if (player.invited_by && !player.bonus_given) {
+      bonus += 2500;
+      updatedFields.bonus_given = true;
+    }
 
-        // 🎁 Бонус для приглашённого
-        if (invited_by && !referral_bonus_given) {
+    // 🎁 Бонус за друзей
+    const alreadyBonusedIds = player.bonused_friend_ids || [];
+    const invitedFriends = player.invited_friends || [];
 
-          // Обновляем только флаг в Strapi
-          await updatePlayerWithFallback(documentId, {
-            referral_bonus_given: true,
-            clicks: clicks + 2500
-          });
+    const newFriends = invitedFriends.filter((friend) => {
+      const friendId = friend.telegram_id || friend.documentId;
+      return !alreadyBonusedIds.includes(friendId);
+    });
 
-          // Обновляем локально mbCountAll
+    if (newFriends.length > 0) {
+      bonus += 2500 * newFriends.length;
 
-          console.log("🎉 Бонус приглашённому выдан");
-        }
+      const newBonusedIds = [
+        ...alreadyBonusedIds,
+        ...newFriends.map((f) => f.telegram_id || f.documentId),
+      ];
 
-        // 🎁 Бонус для пригласившего
-        if (invited_by && !invited_by.bonus_given) {
-          await updatePlayerWithFallback(invited_by.documentId, {
-            bonus_given: true,
-          });
-          setMbCountAll(mbCountAll + 2500);
+      updatedFields.bonused_friend_ids = newBonusedIds;
+    }
 
-          console.log("🎁 Бонус пригласителю выдан");
-        }
+    // ✅ Применить бонус и сохранить изменения в Strapi
+    if (bonus > 0) {
+      setMbCountAll((prev) => prev + bonus);
 
-        if (localUpdate) {
-          const updated = await fetchPlayerByTelegramId(player.telegram_id);
-          if (updated) {
-            setPlayer(updated);
-          }
-        }
-
-      } catch (err) {
-        console.error("❌ Ошибка при выдаче бонусов:", err);
-      }
-    };
-
-    processBonus();
-  }, [player, setPlayer, setMbCountAll]);
+      updatePlayer(player.documentId, updatedFields)
+        .then(() => {
+          setPlayer({ ...player, ...updatedFields });
+        })
+        .catch((err) => {
+          console.error("Ошибка при обновлении игрока:", err);
+        });
+    }
+  }, [player]);
 };
 
 export default useReferralBonus;
