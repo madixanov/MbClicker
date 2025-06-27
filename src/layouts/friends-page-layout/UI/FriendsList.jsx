@@ -11,7 +11,7 @@ const FriendsList = () => {
 
     useEffect(() => {
         const loadFriends = async () => {
-            if (!plaer) return;
+            if (!player) return;
             const updatePlayer = await fetchPlayerWithFriends(player.telegram_id);
             const friendsList = updatePlayer?.invited_friends || [];
             setFriends(friendsList);
