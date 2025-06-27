@@ -70,8 +70,8 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     console.log(`Текущий кликов у игрока: ${currentClicks}, у пригласившего: ${inviterClicks}`);
 
-    const inviterId = inviter.id;
-    const playerId = current.id;
+    const inviterId = inviter.documentId;
+    const playerId = current.documentId;
 
     console.log("✅ Начисляем бонусы");
 
