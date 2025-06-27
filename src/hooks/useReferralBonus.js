@@ -39,7 +39,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
       return;
     }
 
-    const inviterDocumentId = current.invited_by.data?.documentId;
+    const inviterDocumentId = current.invited_by.documentId;
 
     console.log("▶️ Ищем пригласившего по documentId:", inviterDocumentId);
 
