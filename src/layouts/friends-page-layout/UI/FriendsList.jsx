@@ -1,40 +1,7 @@
 import tg from '../../../assets/icons/tg.png'
-import { useState, useEffect } from "react";
-import { fetchPlayerWithFriends, updatePlayerWithFallback } from "../../../services/playerService";
-import usePlayerStore from "../../../store/player-store";
-import useMbStore from "../../../store/mb-store";
 
 const FriendsList = () => {
     const bgColors = ['#D9FF00', '#FFC839', '#FF0000' ]
-    const [ friends, setFriends ] = useState([]);
-    const { player } = usePlayerStore();
-    const setMbCountAll = useMbStore((state) => state.setMbCountAll);
-    const mbCountAll = useMbStore((state) => state.mbCountAll);
-
-    useEffect(() => {
-        const loadFriends = async () => {
-            if (!player) return;
-
-            const updatePlayer = await fetchPlayerWithFriends(player.telegram_id);
-            const friendsList = updatePlayer?.invited_friends || [];
-            setFriends(friendsList);
-
-            if (!updatePlayer?.bonus_given) {
-                const bonus = friendsList.length * 2500;
-                setMbCountAll(mbCountAll + bonus);
-
-                await updatePlayerWithFallback(updatePlayer.documentId, {
-                    bonus_given: true
-                })
-
-                console.log(`🎁 Бонус начислен: ${bonus}`)
-            } else {
-            console.log("⏩ Бонус уже был начислен ранее")
-            }
-        }
-
-        loadFriends();
-    }, [player])
 
     return (
         <div className="friends-list">
