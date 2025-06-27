@@ -54,7 +54,6 @@ const Main = () => {
 
                 <div className="bonus">
                     <BonusCard img={tg} value="10 000" type="обычный" />
-                    <BonusCard img={premium} value="30 000" type="premium" />
                 </div>
             </div>
 

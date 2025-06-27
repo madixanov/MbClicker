@@ -113,11 +113,7 @@
 }
 
 .tg-bonus {
-  border-radius: 15px 15px 0 0;
-}
-
-.premium-bonus {
-  border-radius: 0 0 15px 15px;
+  border-radius: 15px;
 }
 
 .tg-bonus p, .premium-bonus p{
