@@ -3,7 +3,7 @@ import { API_BASE_URL } from "../config/api";
 
 // Если у тебя аргумент — это telegramId, то:
 
-export const referralBonus = async (telegramId, onLocalBonus) => {
+export const referralBonus = async (documentId, onLocalBonus) => {
   if (!telegramId) {
     console.warn("❌ Нет telegramId — бонус не проверяется");
     return;
@@ -14,7 +14,7 @@ export const referralBonus = async (telegramId, onLocalBonus) => {
 
     // Ищем игрока по telegram_id
     const res = await axios.get(`${API_BASE_URL}/players`, {
-        filters: { telegram_id: { $eq: telegramId } },
+        filters: { documentId: { $eq: documentId } },
         populate: "*",
       },);
 
@@ -42,7 +42,7 @@ export const referralBonus = async (telegramId, onLocalBonus) => {
 
     // Ищем пригласившего по telegram_id
     const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
-        filters: { telegram_id: { $eq: current.invited_by } },
+        filters: { documentId: { $eq: current.invited_by } },
     });
 
     const inviter = inviterRes.data.data[0];
