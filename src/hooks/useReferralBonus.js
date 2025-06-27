@@ -1,18 +1,18 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 
-// Если у тебя аргумент — это telegramId, то:
+// Если у тебя аргумент — это documentId, то:
 
 export const referralBonus = async (documentId, onLocalBonus) => {
-  if (!telegramId) {
-    console.warn("❌ Нет telegramId — бонус не проверяется");
+  if (!documentId) {
+    console.warn("❌ Нет documentId — бонус не проверяется");
     return;
   }
 
   try {
-    console.log("▶️ Проверяем бонус для игрока:", telegramId);
+    console.log("▶️ Проверяем бонус для игрока:", documentId);
 
-    // Ищем игрока по telegram_id
+    // Ищем игрока по documentId
     const res = await axios.get(`${API_BASE_URL}/players`, {
         filters: { documentId: { $eq: documentId } },
         populate: "*",
@@ -40,14 +40,14 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     console.log("▶️ Бонус НЕ выдан, ищем пригласившего");
 
-    // Ищем пригласившего по telegram_id
+    // Ищем пригласившего по documentId
     const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
         filters: { documentId: { $eq: current.invited_by } },
     });
 
     const inviter = inviterRes.data.data[0];
     if (!inviter) {
-      console.warn("❌ Пригласивший не найден по telegram_id:", current.invited_by);
+      console.warn("❌ Пригласивший не найден по documentId:", current.invited_by);
       return;
     }
 
