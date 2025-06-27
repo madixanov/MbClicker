@@ -3,10 +3,12 @@ import { lazy, Suspense, useEffect } from "react";
 import LoadingPage from "../pages/LoadingPage";
 import AutoSaveClicks from "./AutoSaveClisk";
 import useTelegramAuth from "../hooks/useTelegramAuth";
-import { retryPendingUpdate, useReferralBonus } from "../services/playerService";
+import { retryPendingUpdate } from "../services/playerService";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import useAppReady from "../hooks/useAppReady";
 import usePlayerData from "../hooks/usePlayerData";
+import useMbStore from "../store/mb-store";
+import { referralBonus } from "../services/playerService";
 
 // Lazy загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -21,10 +23,15 @@ const MainRouter = () => {
 
   useTelegramAuth();
   useSyncOnUnload();
+
+  const mbCountAll = useMbStore((s) => s.mbCountAll);
+  const setMbCountAll = useMbStore((s) => s.setMbCountAll);
+
   useEffect(() => {
     if (player?.documentId) {
-      console.log("Игрок загружен, запускаем бонус");
-      useReferralBonus(player.documentId); // ВНИМАНИЕ! useReferralBonus - это не хук, а обычная функция
+      referralBonus(player.documentId, () => {
+        setMbCountAll(mbCountAll + 2500);
+      });
     }
   }, [player]);
   const appReady = useAppReady();

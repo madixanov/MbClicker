@@ -1,55 +1,50 @@
-import { useEffect } from "react";
-import usePlayerStore from "../store/player-store";
-import { updatePlayer } from "../services/playerService";
+import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
-const useReferralBonus = () => {
-  const { player, setMbCountAll, setPlayer } = usePlayerStore();
+export const referralBonus = async (documentId, onLocalBonus) => {
+  if (!documentId) return;
 
-  useEffect(() => {
-    if (!player) return;
-
-    let bonus = 0;
-    const updatedFields = {};
-
-    // 🎁 Бонус за приглашение (invited_by)
-    if (player.invited_by && !player.bonus_given) {
-      bonus += 2500;
-      updatedFields.bonus_given = true;
-    }
-
-    // 🎁 Бонус за друзей
-    const alreadyBonusedIds = player.bonused_friends_id || [];
-    const invitedFriends = player.invited_friends || [];
-
-    const newFriends = invitedFriends.filter((friend) => {
-      const friendId = friend.telegram_id || friend.documentId;
-      return !alreadyBonusedIds.includes(friendId);
+  try {
+    const res = await axios.get(`${API_BASE_URL}/players`, {
+      params: {
+        filters: { documentId: { $eq: documentId } },
+        populate: "*",
+      },
     });
 
-    if (newFriends.length > 0) {
-      bonus += 2500 * newFriends.length;
+    const current = res.data.data[0];
+    if (!current) return;
 
-      const newBonusedIds = [
-        ...alreadyBonusedIds,
-        ...newFriends.map((f) => f.telegram_id || f.documentId),
-      ];
+    const playerId = current.documentId;
 
-      updatedFields.bonused_friends_id = newBonusedIds;
+    if (current.invited_by && !current.referal_bonus_given) {
+      const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
+        params: {
+          filters: { documentId: { $eq: current.invited_by } },
+        },
+      });
+
+      const inviter = inviterRes.data.data[0];
+      if (!inviter) return;
+
+      const inviterId = inviter.documentId;
+
+      await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
+        data: {
+          clicks: (inviter.clicks || 0) + 2500,
+        },
+      });
+
+      await axios.put(`${API_BASE_URL}/players/${playerId}`, {
+        data: {
+          clicks: (current.clicks || 0) + 2500,
+          referal_bonus_given: true,
+        },
+      });
+
+      if (onLocalBonus) onLocalBonus(); // обновление Zustand
     }
-
-    // ✅ Применить бонус и сохранить изменения в Strapi
-    if (bonus > 0) {
-      setMbCountAll((prev) => prev + bonus);
-
-      updatePlayer(player.documentId, updatedFields)
-        .then(() => {
-          setPlayer({ ...player, ...updatedFields });
-        })
-        .catch((err) => {
-          console.error("Ошибка при обновлении игрока:", err);
-        });
-    }
-  }, [player]);
+  } catch (err) {
+    console.error("Ошибка при начислении бонусов:", err);
+  }
 };
-
-export default useReferralBonus;
