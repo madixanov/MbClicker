@@ -1,5 +1,5 @@
 import { useState, useRef } from "react";
-import tg from '../../assets/icons/tg.png';
+import tg from '../../assets/icons/tg.svg';
 import premium from '../../assets/icons/premium.png';
 import FriendsList from "./UI/FriendsList";
 import './friends-page.css';
