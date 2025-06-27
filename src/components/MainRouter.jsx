@@ -6,6 +6,7 @@ import useTelegramAuth from "../hooks/useTelegramAuth";
 import { retryPendingUpdate, updateReferralBonus } from "../services/playerService";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import useAppReady from "../hooks/useAppReady";
+import usePlayerData from "../hooks/usePlayerData";
 
 // Lazy загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -16,9 +17,11 @@ const StatsPage = lazy(() => import("../pages/StatsPage"));
 const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 
 const MainRouter = () => {
+  const { player } = usePlayerData();
+
   useTelegramAuth();
   useSyncOnUnload();
-  updateReferralBonus();
+  updateReferralBonus(player.documentId);
   const appReady = useAppReady();
 
   useEffect(() => {
