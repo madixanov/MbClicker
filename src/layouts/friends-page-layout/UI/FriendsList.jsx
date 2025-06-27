@@ -1,4 +1,3 @@
-import friends from "../friends";
 import tg from '../../../assets/icons/tg.png'
 import { useState, useEffect } from "react";
 import { fetchPlayerWithFriends } from "../../../services/playerService";
