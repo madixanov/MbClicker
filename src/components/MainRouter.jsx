@@ -21,7 +21,12 @@ const MainRouter = () => {
 
   useTelegramAuth();
   useSyncOnUnload();
-  useReferralBonus(player.documentId);
+  useEffect(() => {
+    if (player?.documentId) {
+      console.log("Игрок загружен, запускаем бонус");
+      useReferralBonus(player.documentId); // ВНИМАНИЕ! useReferralBonus - это не хук, а обычная функция
+    }
+  }, [player]);
   const appReady = useAppReady();
 
   useEffect(() => {
