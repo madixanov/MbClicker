@@ -3,10 +3,9 @@ import { lazy, Suspense, useEffect } from "react";
 import LoadingPage from "../pages/LoadingPage";
 import AutoSaveClicks from "./AutoSaveClisk";
 import useTelegramAuth from "../hooks/useTelegramAuth";
-import { retryPendingUpdate } from "../services/playerService";
+import { retryPendingUpdate, updateReferralBonus } from "../services/playerService";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import useAppReady from "../hooks/useAppReady";
-import useReferralBonus from "../hooks/useReferralBonus";
 
 // Lazy загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -19,7 +18,7 @@ const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 const MainRouter = () => {
   useTelegramAuth();
   useSyncOnUnload();
-  useReferralBonus();
+  updateReferralBonus();
   const appReady = useAppReady();
 
   useEffect(() => {

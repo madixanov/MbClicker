@@ -178,3 +178,4 @@ async function updateReferralBonus(playerId) {
   };
 }
 
+export default updateReferralBonus;
