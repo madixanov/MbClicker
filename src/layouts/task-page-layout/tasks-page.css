@@ -158,6 +158,7 @@
   .task-btn {
     width: 80px; /* Уменьшаем кнопку */
     flex-shrink: 0; /* Запрещаем уменьшение кнопки */
+    font-size: 10px;
   }
 
   .task-done {
