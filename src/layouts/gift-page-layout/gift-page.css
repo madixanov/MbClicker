@@ -144,7 +144,8 @@
 
   .task-btn {
     width: 80px; /* Уменьшаем кнопку */
-    flex-shrink: 0; /* Запрещаем уменьшение кнопки */
+    flex-shrink: 0;
+    font-size: 10px; /* Запрещаем уменьшение кнопки */
   }
 
   .task-done {
