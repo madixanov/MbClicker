@@ -12,7 +12,7 @@ const WithdrawContainer = () => {
     }
     
     const handleButtonClick = (value) => {
-        const cleanValue = value.replace(/\s*KB\s*/gi, "");
+        const cleanValue = value.replace(/\s*КБ\s*/gi, "");
         setInputValue(cleanValue);
     }
 
@@ -44,9 +44,9 @@ const WithdrawContainer = () => {
                         <input type="text" className="styled-input" onChange={handleChange} value={inputValue}/>
                         <div className="input-line"></div>
                         <div className="button-row">
-                            <button type="button" onClick={() => handleButtonClick("1 024 MB")}>1 024 KБ</button>
-                            <button type="button" onClick={() => handleButtonClick("2 048 MB")}>2 048 KБ</button>
-                            <button type="button" onClick={() => handleButtonClick("5 120 MB")}>5 120 KБ</button>
+                            <button type="button" onClick={() => handleButtonClick("1 024 КБ")}>1 024 KБ</button>
+                            <button type="button" onClick={() => handleButtonClick("2 048 КБ")}>2 048 KБ</button>
+                            <button type="button" onClick={() => handleButtonClick("5 120 КБ")}>5 120 KБ</button>
                         </div>
                     </div>
                 </div>
