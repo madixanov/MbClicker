@@ -8,72 +8,108 @@ const useMbStore = create((set, get) => ({
   mbCountAll: 0,            // Общие клики (глобально)
   mbCount: 0,               // Клики за сессию (локально)
   progressTokens: 0,        // Прогресс до следующего уровня
+  inviteCode: '',           // Реферальный код
+  isProcessing: false,      // Флаг для отслеживания операций
 
-  // 📈 Формула инкремента
+  // 🔄 Установка реферального кода с валидацией
+  setInviteCode: (value) => {
+    if (typeof value === 'string' && value.trim() !== '') {
+      set({ inviteCode: value.trim() });
+      localStorage.setItem('pendingInviteCode', value.trim());
+    }
+  },
+
+  // 📈 Формула инкремента (мемоизированная)
   getMbIncrement: () => {
     const level = useLvlStore.getState().level || 1;
-    const increment = 10 + (level - 1);
-    return Math.min(increment, 15);
+    const baseIncrement = 10;
+    const levelBonus = Math.min(level - 1, 5); // Максимум +5 за уровни
+    return baseIncrement + levelBonus;
   },
 
-  // 🔁 При клике увеличиваем счётчики
+  // 🔁 Оптимизированная функция инкремента
   increment: async () => {
-    const increment = get().getMbIncrement();
-    const newAll = get().mbCountAll + increment;
-    const newLocal = get().mbCount + increment;
-    const newTokens = get().progressTokens + increment;
+    const { getMbIncrement, mbCountAll, mbCount, progressTokens } = get();
+    const increment = getMbIncrement();
+    
+    const newState = {
+      mbCountAll: mbCountAll + increment,
+      mbCount: mbCount + increment,
+      progressTokens: progressTokens + increment,
+    };
 
-    set({
-      mbCountAll: newAll,
-      mbCount: newLocal,
-      progressTokens: newTokens,
-    });
+    set(newState);
 
+    // Асинхронное сохранение без блокировки UI
     const user = getTelegramUser();
     if (!user) return;
 
-    const player = await fetchPlayerByTelegramId(user.id);
-    if (!player || !player.documentId) return;
+    try {
+      const player = await fetchPlayerByTelegramId(user.id);
+      if (player?.documentId) {
+        await updatePlayerWithFallback(player.documentId, {
+          clicks: newState.mbCountAll,
+          progress_tokens: newState.progressTokens,
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка при сохранении кликов:', error);
+    }
   },
 
-  // 🔄 Мгновенная установка счётчика (после получения task.Prize)
-  setMbCountAll: (value) => set({ mbCountAll: value }),
+  // 🔄 Установка общего количества кликов
+  setMbCountAll: (value) => {
+    if (typeof value === 'number' && value >= 0) {
+      set({ mbCountAll: value });
+    }
+  },
 
-  // 🔁 Сброс сессионных данных (при выходе/апгрейде)
-  resetCount: () =>
-    set({
-      mbCount: 0,
-      progressTokens: 0,
-    }),
+  // 🔄 Сброс сессионных данных
+  resetCount: () => set({ mbCount: 0, progressTokens: 0 }),
 
-  // 📤 Загрузка данных игрока из Strapi
+  // 📤 Загрузка данных игрока с обработкой ошибок
   loadMbFromPlayer: async () => {
-    const user = getTelegramUser();
-    if (!user) return;
+    set({ isProcessing: true });
+    try {
+      const user = getTelegramUser();
+      if (!user) return;
 
-    const player = await fetchPlayerByTelegramId(user.id);
-    if (!player) return;
-
-    set({
-      mbCountAll: Number(player.clicks) || 0,
-      progressTokens: Number(player.progress_tokens) || 0,
-    });
+      const player = await fetchPlayerByTelegramId(user.id);
+      if (player) {
+        set({
+          mbCountAll: Number(player.clicks) || 0,
+          progressTokens: Number(player.progress_tokens) || 0,
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка загрузки данных игрока:', error);
+    } finally {
+      set({ isProcessing: false });
+    }
   },
 
-  // 💾 Сохранение прогресса игрока в Strapi (используется в автосохранении)
+  // 💾 Оптимизированное автосохранение
   saveTokensToStrapi: async () => {
-    const user = getTelegramUser();
-    if (!user) return;
+    if (get().isProcessing) return;
+    
+    set({ isProcessing: true });
+    try {
+      const user = getTelegramUser();
+      if (!user) return;
 
-    const player = await fetchPlayerByTelegramId(user.id);
-    if (!player || !player.documentId) return;
-
-    const { mbCountAll, progressTokens } = get();
-
-    await updatePlayerWithFallback(player.documentId, {
-      clicks: mbCountAll,
-      progress_tokens: progressTokens,
-    });
+      const player = await fetchPlayerByTelegramId(user.id);
+      if (player?.documentId) {
+        const { mbCountAll, progressTokens } = get();
+        await updatePlayerWithFallback(player.documentId, {
+          clicks: mbCountAll,
+          progress_tokens: progressTokens,
+        });
+      }
+    } catch (error) {
+      console.error('Ошибка автосохранения:', error);
+    } finally {
+      set({ isProcessing: false });
+    }
   },
 }));
 
