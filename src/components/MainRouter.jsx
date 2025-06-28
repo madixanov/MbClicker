@@ -28,7 +28,7 @@ const MainRouter = () => {
   useEffect(() => {
   const bonusKey = "referralBonusApplied";
 
-  if (player?.documentId && !localStorage.getItem(bonusKey) && !player.referal_bonus_given) {
+  if (player?.documentId && !localStorage.getItem(bonusKey)) {
     const newCount = mbCountAll + 2500
     referralBonus(player.documentId, async () => {
       localStorage.setItem(bonusKey, "true");
