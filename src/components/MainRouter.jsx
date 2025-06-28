@@ -20,24 +20,53 @@ const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 
 const MainRouter = () => {
   const { player, loadPlayer } = usePlayerData();
-  const { mbCountAll, setMbCountAll } = useMbStore();
+  const { mbCountAll, setMbCountAll, setInviteCode } = useMbStore();
 
   useTelegramAuth();
   useSyncOnUnload();
 
   useEffect(() => {
-  const bonusKey = "referralBonusApplied";
+    // Извлекаем реферальный код из URL
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteCode = urlParams.get('invite');
+    
+    if (inviteCode) {
+      console.log('🔗 Реферальный код из URL:', inviteCode);
+      setInviteCode(inviteCode);
+      
+      // Сохраняем код в localStorage на случай перезагрузки
+      localStorage.setItem('pendingInviteCode', inviteCode);
+    } else {
+      // Проверяем, есть ли сохраненный код
+      const savedCode = localStorage.getItem('pendingInviteCode');
+      if (savedCode) {
+        setInviteCode(savedCode);
+      }
+    }
+  }, []);
 
-  if (player?.documentId && !localStorage.getItem(bonusKey)) {
-    const newCount = mbCountAll + 2500
-    referralBonus(player.documentId, async () => {
-      localStorage.setItem(bonusKey, "true");
-      setMbCountAll(newCount);
-      // Заново загружаем игрока и вызываем ререндер
-      await loadPlayer();
-    }, mbCountAll);
-  }
-}, [player?.documentId]);
+  useEffect(() => {
+    const bonusKey = "referralBonusApplied";
+
+    if (player?.documentId) {
+      // Проверяем есть ли необработанный реферальный код
+      const pendingCode = localStorage.getItem('pendingInviteCode');
+      
+      if (pendingCode && !localStorage.getItem(bonusKey)) {
+        const newCount = mbCountAll + 2500;
+        referralBonus(
+          player.documentId, 
+          async () => {
+            localStorage.setItem(bonusKey, "true");
+            localStorage.removeItem('pendingInviteCode');
+            setMbCountAll(newCount);
+            await loadPlayer();
+          }, 
+          mbCountAll
+        );
+      }
+    }
+  }, [player?.documentId]);
 
   const appReady = useAppReady();
 

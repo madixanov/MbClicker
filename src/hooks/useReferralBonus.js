@@ -1,5 +1,6 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
+import useMbStore from "../store/mb-store";
 
 export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
   if (!documentId) {
@@ -8,95 +9,92 @@ export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
   }
 
   try {
-    console.log("▶️ Ищем игрока с documentId:", documentId);
+    const inviteCode = useMbStore.getState().inviteCode;
+    
+    if (!inviteCode) {
+      console.warn("❌ Нет реферального кода");
+      return;
+    }
 
-    // Запрос с фильтром и populate invited_by для relation
-    const res = await axios.get(`${API_BASE_URL}/players`, {
+    console.log("🔍 Начинаем обработку реферального бонуса...");
+    console.log("📌 Код приглашения:", inviteCode);
+    console.log("🆔 ID игрока:", documentId);
+
+    // Шаг 1: Находим пригласившего по реферальному коду
+    console.log("🔎 Ищем пригласившего...");
+    const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
       params: {
-        filters: { documentId: { $eq: documentId } },
-        populate: '*', // или "*" если хочешь все поля // на всякий случай лимит
+        filters: { referral_code: { $eq: inviteCode } },
+        populate: '*',
       },
     });
 
-    console.log("📥 Ответ API (поиск игрока):", JSON.stringify(res.data, null, 2));
-
-    if (!res.data.data.length) {
-      console.warn("❌ Игрок НЕ найден в базе");
+    if (!inviterRes.data.data.length) {
+      console.warn("❌ Пригласивший с таким кодом не найден");
       return;
     }
 
-    const current = res.data.data[0];
+    const inviter = inviterRes.data.data[0];
+    console.log("✅ Пригласивший найден:", inviter.id);
 
-    console.log("✅ Игрок найден:", current);
+    // Шаг 2: Получаем данные текущего игрока
+    console.log("🔎 Получаем данные текущего игрока...");
+    const playerRes = await axios.get(`${API_BASE_URL}/players`, {
+      params: {
+        filters: { documentId: { $eq: documentId } },
+        populate: '*',
+      },
+    });
 
-    if (!current.invited_by) {
-      console.warn("❌ invited_by отсутствует — бонус не будет выдан");
+    if (!playerRes.data.data.length) {
+      console.warn("❌ Игрок не найден");
       return;
     }
 
+    const current = playerRes.data.data[0];
+
+    // Проверяем, не получал ли уже бонус
     if (current.referal_bonus_given) {
       console.warn("⚠️ Бонус уже был выдан ранее");
       return;
     }
 
-    const inviterDocumentId = current.invited_by.documentId;
-
-    console.log("▶️ Ищем пригласившего по documentId:", inviterDocumentId);
-
-    if (!inviterDocumentId) {
-      console.warn("❌ В invited_by нет documentId");
-      return;
-    }
-
-    const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
-      params: {
-        filters: { documentId: { $eq: inviterDocumentId } },
-        populate: "*",
-      },
-    });
-
-    console.log("📥 Ответ API (поиск пригласившего):", JSON.stringify(inviterRes.data, null, 2));
-
-    if (!inviterRes.data.data.length) {
-      console.warn("❌ Пригласивший не найден");
-      return;
-    }
-
-    const inviter = inviterRes.data.data[0];
-
-    // Проконтролируй поля clicks у current и inviter
-    const currentClicks = Number(current.clicks) || 0;
+    // Шаг 3: Начисляем бонусы
+    console.log("💰 Начисляем бонусы...");
     const inviterClicks = Number(inviter.clicks) || 0;
+    const currentClicks = Number(current.clicks) || 0;
 
-    console.log(`Текущий кликов у игрока: ${currentClicks}, у пригласившего: ${inviterClicks}`);
-
-    const inviterId = inviter.documentId;
-    const playerId = current.documentId;
-
-    console.log("✅ Начисляем бонусы");
+    console.log(`📊 Клики до: Пригласивший - ${inviterClicks}, Игрок - ${currentClicks}`);
 
     // Обновляем пригласившего
-    await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
+    await axios.put(`${API_BASE_URL}/players/${inviter.id}`, {
       data: {
         clicks: inviterClicks + 2500,
+        updatedAt: new Date().toISOString()
       },
     });
 
     // Обновляем текущего игрока
-    await axios.put(`${API_BASE_URL}/players/${playerId}`, {
+    await axios.put(`${API_BASE_URL}/players/${current.id}`, {
       data: {
         clicks: currentClicks + 2500,
         referal_bonus_given: true,
+        invited_by: inviter.id,
+        updatedAt: new Date().toISOString()
       },
     });
 
-    console.log("🎉 Бонусы успешно выданы");
+    console.log("🎉 Бонусы успешно выданы!");
+    console.log(`📊 Клики после: Пригласивший - ${inviterClicks + 2500}, Игрок - ${currentClicks + 2500}`);
 
     if (typeof onLocalBonus === "function") {
       onLocalBonus();
     }
 
   } catch (err) {
-    console.error("❌ Ошибка в referralBonusDebug:", err);
+    console.error("❌ Критическая ошибка в referralBonus:", err);
+    if (err.response) {
+      console.error("Данные ошибки:", err.response.data);
+    }
   }
 };
