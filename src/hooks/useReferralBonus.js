@@ -24,7 +24,7 @@ export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
     console.log("🔎 Ищем пригласившего...");
     const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
       params: {
-        filters: { referral_code: { $eq: inviteCode } },
+        filters: { documentId: { $eq: documentId } },
         populate: '*',
       },
     });
@@ -67,7 +67,7 @@ export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
     console.log(`📊 Клики до: Пригласивший - ${inviterClicks}, Игрок - ${currentClicks}`);
 
     // Обновляем пригласившего
-    await axios.put(`${API_BASE_URL}/players/${inviter.id}`, {
+    await axios.put(`${API_BASE_URL}/players/${inviter.documentId}`, {
       data: {
         clicks: inviterClicks + 2500,
         updatedAt: new Date().toISOString()
@@ -75,11 +75,11 @@ export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
     });
 
     // Обновляем текущего игрока
-    await axios.put(`${API_BASE_URL}/players/${current.id}`, {
+    await axios.put(`${API_BASE_URL}/players/${current.documentId}`, {
       data: {
         clicks: currentClicks + 2500,
         referal_bonus_given: true,
-        invited_by: inviter.id,
+        invited_by: inviter.documentId,
         updatedAt: new Date().toISOString()
       },
     });
