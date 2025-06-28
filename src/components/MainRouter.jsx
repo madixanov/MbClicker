@@ -8,7 +8,7 @@ import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import useAppReady from "../hooks/useAppReady";
 import usePlayerData from "../hooks/usePlayerData";
 import { referralBonus } from "../hooks/useReferralBonus";
-import { useMbStore } from "../store/mb-store"; // Убедитесь в правильности импорта
+import useMbStore from "../store/mb-store"; // Убедитесь в правильности импорта
 
 // Lazy загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
