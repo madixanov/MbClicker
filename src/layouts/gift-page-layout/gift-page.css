@@ -107,7 +107,7 @@
   color: black;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 550px) {
     .gift-main {
     align-items: start;
   }
