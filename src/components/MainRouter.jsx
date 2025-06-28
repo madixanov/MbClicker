@@ -37,7 +37,7 @@ const MainRouter = () => {
       await loadPlayer();
     }, mbCountAll);
   }
-}, [player?.documentId, player.referal_bonus_given]);
+}, [player?.documentId]);
 
   const appReady = useAppReady();
 
