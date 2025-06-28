@@ -29,15 +29,15 @@ const MainRouter = () => {
   const bonusKey = "referralBonusApplied";
 
   if (player?.documentId && !localStorage.getItem(bonusKey) && !player.referal_bonus_given) {
-    setMbCountAll(mbCountAll + 2500);
+    const newCount = mbCountAll + 2500
     referralBonus(player.documentId, async () => {
       localStorage.setItem(bonusKey, "true");
-
+      setMbCountAll(newCount);
       // Заново загружаем игрока и вызываем ререндер
       await loadPlayer();
     }, mbCountAll);
   }
-}, [player?.documentId]);
+}, [player?.documentId, player.referal_bonus_given]);
 
   const appReady = useAppReady();
 

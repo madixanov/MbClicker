@@ -78,19 +78,23 @@ export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
     // Обновляем пригласившего
     await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
       data: {
-        clicks: mbCountAll,
+        clicks: inviterClicks + 2500,
       },
     });
 
     // Обновляем текущего игрока
     await axios.put(`${API_BASE_URL}/players/${playerId}`, {
       data: {
-        clicks: mbCountAll,
+        clicks: currentClicks + 2500,
         referal_bonus_given: true,
       },
     });
 
     console.log("🎉 Бонусы успешно выданы");
+
+    if (typeof onLocalBonus === "function") {
+      onLocalBonus();
+    }
 
   } catch (err) {
     console.error("❌ Ошибка в referralBonusDebug:", err);
