@@ -28,9 +28,9 @@ const MainRouter = () => {
   useEffect(() => {
   const bonusKey = "referralBonusApplied";
 
-  if (player?.documentId && !localStorage.getItem(bonusKey)) {
+  if (player?.documentId && !localStorage.getItem(bonusKey) && !player.referal_bonus_given) {
+    setMbCountAll(mbCountAll + 2500);
     referralBonus(player.documentId, async () => {
-      setMbCountAll(mbCountAll + 2500);
       localStorage.setItem(bonusKey, "true");
 
       // Заново загружаем игрока и вызываем ререндер
