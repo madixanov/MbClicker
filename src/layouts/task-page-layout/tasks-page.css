@@ -132,7 +132,36 @@
   }
 
   .task-container {
-    justify-content: space-between;
+    width: 100%;
+    padding: 5px 20px; /* Уменьшаем боковые отступы на мобильных */
+    gap: 15px; /* Уменьшаем промежуток между элементами */
+    flex-wrap: nowrap; /* Запрещаем перенос элементов */
+    overflow: hidden; /* Скрываем выходящее за пределы */
+  }
+
+  .pfphoto {
+    flex-shrink: 0; /* Запрещаем уменьшение аватарки */
+  }
+
+  .task-content {
+    min-width: 0; /* Разрешаем сжатие */
+    overflow: hidden; /* Скрываем выходящий текст */
+  }
+
+  .task-content p {
+    width: auto; /* Убираем фиксированную ширину */
+    white-space: nowrap; /* Запрещаем перенос текста */
+    overflow: hidden; /* Скрываем выходящий текст */
+    text-overflow: ellipsis; /* Добавляем многоточие если текст не помещается */
+  }
+
+  .task-btn {
+    width: 80px; /* Уменьшаем кнопку */
+    flex-shrink: 0; /* Запрещаем уменьшение кнопки */
+  }
+
+  .task-done {
+    flex-shrink: 0; /* Запрещаем уменьшение иконки выполнения */
   }
 }
 
