@@ -1,7 +1,7 @@
 import axios from "axios";
 import { API_BASE_URL } from "../config/api";
 
-export const referralBonus = async (documentId, onLocalBonus) => {
+export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
   if (!documentId) {
     console.warn("❌ Нет documentId — бонус не проверяется");
     return;
@@ -78,14 +78,14 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     // Обновляем пригласившего
     await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
       data: {
-        clicks: inviterClicks + 2500,
+        clicks: mbCountAll,
       },
     });
 
     // Обновляем текущего игрока
     await axios.put(`${API_BASE_URL}/players/${playerId}`, {
       data: {
-        clicks: currentClicks + 2500,
+        clicks: mbCountAll,
         referal_bonus_given: true,
       },
     });
