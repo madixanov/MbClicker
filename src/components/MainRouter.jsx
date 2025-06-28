@@ -8,6 +8,7 @@ import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import useAppReady from "../hooks/useAppReady";
 import usePlayerData from "../hooks/usePlayerData";
 import { referralBonus } from "../hooks/useReferralBonus";
+import useMbStore from "../store/mb-store";
 
 // Lazy загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -19,6 +20,7 @@ const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 
 const MainRouter = () => {
   const { player, loadPlayer } = usePlayerData();
+  const { mbCountAll, setMbCountAll } = useMbStore();
 
   useTelegramAuth();
   useSyncOnUnload();
@@ -28,11 +30,12 @@ const MainRouter = () => {
 
   if (player?.documentId && !localStorage.getItem(bonusKey)) {
     referralBonus(player.documentId, async () => {
+      setMbCountAll(mbCountAll + 2500);
       localStorage.setItem(bonusKey, "true");
 
       // Заново загружаем игрока и вызываем ререндер
       await loadPlayer();
-    });
+    }, mbCountAll);
   }
 }, [player?.documentId]);
 
