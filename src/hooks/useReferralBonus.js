@@ -70,7 +70,6 @@ export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
     await axios.put(`${API_BASE_URL}/players/${inviter.documentId}`, {
       data: {
         clicks: inviterClicks + 2500,
-        updatedAt: new Date().toISOString()
       },
     });
 
@@ -79,8 +78,6 @@ export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
       data: {
         clicks: currentClicks + 2500,
         referal_bonus_given: true,
-        invited_by: inviter.documentId,
-        updatedAt: new Date().toISOString()
       },
     });
 
