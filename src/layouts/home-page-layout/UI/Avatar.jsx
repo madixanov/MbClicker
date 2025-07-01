@@ -13,7 +13,7 @@ const Avatar = () => {
   const [popups, setPopups] = useState([]);
 
   const saveTimeoutRef = useRef(null);
-  const SAVE_DELAY = 3000; // 3 сек бездействия
+  const SAVE_DELAY = 1000; // 3 сек бездействия
 
   const saveToStrapi = async () => {
     if (!player || !player.documentId) return;
