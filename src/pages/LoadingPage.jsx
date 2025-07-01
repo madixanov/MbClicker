@@ -3,10 +3,8 @@ import "./loading-page.css";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
-import useLoadingStore from "../store/loading-store";
 
-const LoadingPage = () => {
-  const { progress } = useLoadingStore();
+const LoadingPage = ({ progress }) => {
 
   useEffect(() => {
     document.body.classList.add("other-page");
