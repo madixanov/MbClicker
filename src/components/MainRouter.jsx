@@ -60,10 +60,10 @@ const MainRouter = () => {
           localStorage.removeItem("pendingInviteCode");
           setMbCountAll(newCount);
           await loadPlayer();
-          setProgress(80);
         },
         mbCountAll
       );
+      setProgress(80);
     } else {
       setProgress(80);
     }
@@ -73,9 +73,9 @@ const MainRouter = () => {
   useEffect(() => {
     async function runRetry() {
       await retryPendingUpdate();
-      setProgress(100);
     }
     runRetry();
+    setProgress(100);
   }, [setProgress]);
 
   if (!appReady) return <LoadingPage />;
