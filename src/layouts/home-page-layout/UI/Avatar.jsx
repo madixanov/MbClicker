@@ -8,7 +8,7 @@ import "../home-page.css";
 const Avatar = () => {
   const increment = useMbStore((state) => state.increment);
   const getMbIncrement = useMbStore((state) => state.getMbIncrement);
-  const clicks = useMbStore((state) => state.clicks); // текущие клики
+  const clicks = useMbStore((state) => state.mbCountAll); // текущие клики
   const { player } = usePlayerData(); // получаем Telegram ID
   const [popups, setPopups] = useState([]);
 
