@@ -87,7 +87,7 @@ const MainRouter = () => {
   return (
     <>
       <AutoSaveClicks />
-      <Suspense fallback={<LoadingPage progress={50} />}>
+      <Suspense fallback={<LoadingPage progress={loadingProgress} />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />} />
