@@ -11,7 +11,7 @@ import { referralBonus } from "../hooks/useReferralBonus";
 import useMbStore from "../store/mb-store";
 import useLoadingStore from "../store/loading-store";
 
-// Lazy загрузка страниц
+// Ленивая загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
 const ExchangePage = lazy(() => import("../pages/ExchangePage"));
 const TaskPage = lazy(() => import("../pages/TaskPage"));
@@ -29,7 +29,7 @@ const MainRouter = () => {
 
   const appReady = useAppReady();
 
-  // Начинаем загрузку — выставляем прогресс
+  // Инициализация загрузки и обработка реферального кода из URL
   useEffect(() => {
     setProgress(10);
 
@@ -45,7 +45,7 @@ const MainRouter = () => {
     setProgress(30);
   }, [setInviteCode, setProgress]);
 
-  // Обработка реферального бонуса и загрузка игрока
+  // Обработка реферального бонуса и обновление игрока
   useEffect(() => {
     const bonusKey = "referralBonusApplied";
     const pendingCode = localStorage.getItem("pendingInviteCode");
@@ -69,10 +69,13 @@ const MainRouter = () => {
     }
   }, [player?.documentId, mbCountAll, setMbCountAll, loadPlayer, setProgress]);
 
-  // Обработка отложенных обновлений
+  // Обработка отложенных обновлений и финализация прогресса
   useEffect(() => {
-    retryPendingUpdate();
-    setProgress(100);
+    async function runRetry() {
+      await retryPendingUpdate();
+      setProgress(100);
+    }
+    runRetry();
   }, [setProgress]);
 
   if (!appReady) return <LoadingPage />;
