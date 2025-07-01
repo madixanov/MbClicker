@@ -3,8 +3,9 @@ import dark from "../assets/icons/dark.svg";
 import light from "../assets/icons/light.svg"
 import './header.css'
 import usePlayerData from "../hooks/usePlayerData";
+import { memo } from "react";
 
-const Header = () => {
+const Header = memo(() => {
     const setModalDay = useModalStore((state) => state.setModalDay);
     const setModalTheme = useModalStore((state) => state.setModalTheme);
 
@@ -36,6 +37,6 @@ const Header = () => {
             </div>
         </header>
     )
-}
+})
 
 export default Header;
