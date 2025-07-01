@@ -8,7 +8,8 @@ import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import useAppReady from "../hooks/useAppReady";
 import usePlayerData from "../hooks/usePlayerData";
 import { referralBonus } from "../hooks/useReferralBonus";
-import useMbStore from "../store/mb-store"; // Убедитесь в правильности импорта
+import useMbStore from "../store/mb-store";
+import useLoadingStore from "../store/loading-store";
 
 // Lazy загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -19,48 +20,60 @@ const StatsPage = lazy(() => import("../pages/StatsPage"));
 const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 
 const MainRouter = () => {
-  // Получаем методы хранилища напрямую
   const { mbCountAll, setMbCountAll, setInviteCode } = useMbStore();
   const { player, loadPlayer } = usePlayerData();
+  const { setProgress } = useLoadingStore();
 
   useTelegramAuth();
   useSyncOnUnload();
 
-  useEffect(() => {
-    const urlParams = new URLSearchParams(window.location.search);
-    const inviteCode = urlParams.get('invite');
-    
-    if (inviteCode) {
-      console.log('🔗 Реферальный код из URL:', inviteCode);
-      setInviteCode(inviteCode);
-      localStorage.setItem('pendingInviteCode', inviteCode);
-    }
-  }, [setInviteCode]);
+  const appReady = useAppReady();
 
+  // Начинаем загрузку — выставляем прогресс
+  useEffect(() => {
+    setProgress(10);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const inviteCode = urlParams.get("invite");
+
+    if (inviteCode) {
+      console.log("🔗 Реферальный код из URL:", inviteCode);
+      setInviteCode(inviteCode);
+      localStorage.setItem("pendingInviteCode", inviteCode);
+    }
+
+    setProgress(30);
+  }, [setInviteCode, setProgress]);
+
+  // Обработка реферального бонуса и загрузка игрока
   useEffect(() => {
     const bonusKey = "referralBonusApplied";
-    const pendingCode = localStorage.getItem('pendingInviteCode');
+    const pendingCode = localStorage.getItem("pendingInviteCode");
 
     if (player?.documentId && pendingCode && !localStorage.getItem(bonusKey)) {
       const newCount = mbCountAll + 2500;
+
       referralBonus(
-        player.documentId, 
+        player.documentId,
         async () => {
           localStorage.setItem(bonusKey, "true");
-          localStorage.removeItem('pendingInviteCode');
+          localStorage.removeItem("pendingInviteCode");
           setMbCountAll(newCount);
           await loadPlayer();
-        }, 
+          setProgress(80);
+        },
         mbCountAll
       );
+    } else {
+      setProgress(80);
     }
-  }, [player?.documentId, mbCountAll, setMbCountAll, loadPlayer]);
+  }, [player?.documentId, mbCountAll, setMbCountAll, loadPlayer, setProgress]);
 
-  const appReady = useAppReady();
-
+  // Обработка отложенных обновлений
   useEffect(() => {
     retryPendingUpdate();
-  }, []);
+    setProgress(100);
+  }, [setProgress]);
 
   if (!appReady) return <LoadingPage />;
 

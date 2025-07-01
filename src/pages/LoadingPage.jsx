@@ -1,15 +1,16 @@
+// pages/LoadingPage.jsx
 import "./loading-page.css";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
+import useLoadingStore from "../store/loading-store";
 
 const LoadingPage = () => {
+  const { progress } = useLoadingStore();
+
   useEffect(() => {
     document.body.classList.add("other-page");
-
-    return () => {
-      document.body.classList.remove("other-page");
-    };
+    return () => document.body.classList.remove("other-page");
   }, []);
 
   return (
@@ -34,15 +35,15 @@ const LoadingPage = () => {
         <span>🚀</span>
       </motion.div>
 
+      <div className="progress-bar-wrapper-1">
+        <div className="progress-bar-1" style={{ width: `${progress}%` }}></div>
+      </div>
+
       <motion.p
         className="loading-text"
         initial={{ opacity: 0 }}
         animate={{ opacity: [0, 1, 0] }}
-        transition={{
-          duration: 2,
-          repeat: Infinity,
-          ease: "easeInOut",
-        }}
+        transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
       >
         Загрузка...
       </motion.p>
