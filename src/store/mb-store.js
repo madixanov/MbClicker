@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import getTelegramUser from '../utils/getTelegramUser';
-import { fetchPlayerByTelegramId, updatePlayerWithFallback } from '../services/playerService';
+import { fetchPlayerByTelegramId, updatePlayer, updatePlayerWithFallback } from '../services/playerService';
 import useLvlStore from './lvl-store';
 
 const useMbStore = create((set, get) => ({
@@ -47,7 +47,7 @@ const useMbStore = create((set, get) => ({
     try {
       const player = await fetchPlayerByTelegramId(user.id);
       if (player?.documentId) {
-        await updatePlayerWithFallback(player.documentId, {
+        await updatePlayer(player.documentId, {
           clicks: newState.mbCountAll,
           progress_tokens: newState.progressTokens,
         });
@@ -100,7 +100,7 @@ const useMbStore = create((set, get) => ({
       const player = await fetchPlayerByTelegramId(user.id);
       if (player?.documentId) {
         const { mbCountAll, progressTokens } = get();
-        await updatePlayerWithFallback(player.documentId, {
+        await updatePlayer(player.documentId, {
           clicks: mbCountAll,
           progress_tokens: progressTokens,
         });

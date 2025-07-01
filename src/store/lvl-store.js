@@ -4,6 +4,7 @@ import useMbStore from "./mb-store";
 import getTelegramUser from "../utils/getTelegramUser";
 import {
   fetchPlayerByTelegramId,
+  updatePlayer,
   updatePlayerWithFallback,
 } from "../services/playerService";
 
@@ -46,7 +47,7 @@ const useLvlStore = create((set, get) => ({
     try {
       const player = await fetchPlayerByTelegramId(user.id);
 
-      await updatePlayerWithFallback(player.documentId, {
+      await updatePlayer(player.documentId, {
         level: newLevel,
       });
     } catch (err) {

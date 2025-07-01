@@ -52,7 +52,7 @@ export const retryPendingUpdate = async () => {
 
   try {
     const { documentId, fields } = JSON.parse(item);
-    await updatePlayerWithFallback(documentId, fields);
+    await updatePlayer(documentId, fields);
   } catch (err) {
     console.error("❌ Ошибка при повторной попытке обновления:", err);
   }
