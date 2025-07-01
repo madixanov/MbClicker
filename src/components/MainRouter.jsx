@@ -1,5 +1,5 @@
 import { Routes, Route } from "react-router-dom";
-import { lazy, Suspense, useEffect, useState } from "react";
+import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import LoadingPage from "../pages/LoadingPage";
 import AutoSaveClicks from "./AutoSaveClisk";
 import useTelegramAuth from "../hooks/useTelegramAuth";
@@ -22,65 +22,63 @@ const MainRouter = () => {
   const { player, loadPlayer } = usePlayerData();
   const [isAppReady, setIsAppReady] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
+  const hasInitialized = useRef(false);
 
   useTelegramAuth();
   useSyncOnUnload();
 
   useEffect(() => {
+    if (hasInitialized.current) return;
+    hasInitialized.current = true;
+
     const initApp = async () => {
       try {
-        // Этап 1: Инициализация (10%)
         setLoadingProgress(10);
-        
-        // Загружаем параметры URL
+
         const urlParams = new URLSearchParams(window.location.search);
-        const inviteCode = urlParams.get('invite');
-        
+        const inviteCode = urlParams.get("invite");
+
         if (inviteCode) {
-          console.log('🔗 Реферальный код из URL:', inviteCode);
+          console.log("🔗 Реферальный код из URL:", inviteCode);
           setInviteCode(inviteCode);
-          localStorage.setItem('pendingInviteCode', inviteCode);
+          localStorage.setItem("pendingInviteCode", inviteCode);
         }
 
-        // Этап 2: Загрузка данных игрока (30%)
         setLoadingProgress(30);
         await loadPlayer();
 
-        // Этап 3: Проверка реферального бонуса (80%)
         setLoadingProgress(80);
         const bonusKey = "referralBonusApplied";
-        const pendingCode = localStorage.getItem('pendingInviteCode');
+        const pendingCode = localStorage.getItem("pendingInviteCode");
 
         if (player?.documentId && pendingCode && !localStorage.getItem(bonusKey)) {
           const newCount = mbCountAll + 2500;
           await referralBonus(
-            player.documentId, 
+            player.documentId,
             async () => {
               localStorage.setItem(bonusKey, "true");
-              localStorage.removeItem('pendingInviteCode');
+              localStorage.removeItem("pendingInviteCode");
               setMbCountAll(newCount);
               await loadPlayer();
-            }, 
+            },
             mbCountAll
           );
         }
 
-        // Этап 4: Завершение (100%)
-        setLoadingProgress(100);
+        setLoadingProgress(90);
         await retryPendingUpdate();
-        
-        // Даем небольшую задержку для плавного завершения анимации
+
+        setLoadingProgress(100);
         setTimeout(() => setIsAppReady(true), 500);
       } catch (error) {
-        console.error('Ошибка инициализации приложения:', error);
-        // В случае ошибки все равно разрешаем загрузку
+        console.error("Ошибка инициализации приложения:", error);
         setLoadingProgress(100);
         setIsAppReady(true);
       }
     };
 
     initApp();
-  }, [player?.documentId, mbCountAll, setMbCountAll, loadPlayer, setInviteCode]);
+  }, [mbCountAll, setMbCountAll, loadPlayer, setInviteCode, player?.documentId]);
 
   if (!isAppReady) return <LoadingPage progress={loadingProgress} />;
 
