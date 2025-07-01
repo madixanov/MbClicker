@@ -4,8 +4,8 @@
   align-items: center;
   justify-content: center;
   height: 100vh;
-  background: #fff;
-  color: #333;
+  background: #000;
+  color: white;
   font-family: Arial, sans-serif;
 }
 
@@ -17,7 +17,7 @@
 .progress-bar-wrapper-1 {
   width: 80%;
   height: 12px;
-  background-color: #eee;
+  background-color: #333;
   border-radius: 6px;
   overflow: hidden;
   margin-bottom: 25px;
