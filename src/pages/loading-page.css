@@ -1,19 +1,37 @@
 .loading-wrapper {
-  height: 100vh;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  background-color: #0a0a0a;
-  color: #ffffff;
+  justify-content: center;
+  height: 100vh;
+  background: #fff;
+  color: #333;
+  font-family: Arial, sans-serif;
 }
 
-.loading-logo span {
-  font-size: 4rem;
+.loading-logo {
+  font-size: 5rem;
+  margin-bottom: 20px;
+}
+
+.progress-bar-wrapper-1 {
+  width: 80%;
+  height: 12px;
+  background-color: #eee;
+  border-radius: 6px;
+  overflow: hidden;
+  margin-bottom: 25px;
+}
+
+.progress-bar-1 {
+  height: 100%;
+  background-color: #4caf50;
+  width: 0%;
+  transition: width 0.3s ease;
+  border-radius: 6px 0 0 6px;
 }
 
 .loading-text {
   font-size: 1.5rem;
-  margin-top: 1rem;
-  letter-spacing: 1px;
+  font-weight: 600;
 }
