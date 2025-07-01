@@ -6,6 +6,7 @@ import {
   fetchPlayerByInviteCode,
   createPlayer,
   updatePlayerWithFallback,
+  updatePlayer,
 } from "../services/playerService";
 import usePlayerData from "../hooks/usePlayerData";
 
@@ -106,7 +107,7 @@ const useTelegramAuth = () => {
 
           if (!existingPlayer.invited_by && invited_by) {
             console.log("🔁 Обновляем invited_by для существующего игрока");
-            await updatePlayerWithFallback(existingPlayer.documentId, {
+            await updatePlayer(existingPlayer.documentId, {
               invited_by: { connect: [invited_by] },
             });
           }

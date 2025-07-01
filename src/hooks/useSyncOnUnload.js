@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import getTelegramUser from "../utils/getTelegramUser";
-import { fetchPlayerByTelegramId, updatePlayerWithFallback } from "../services/playerService";
+import { fetchPlayerByTelegramId, updatePlayer } from "../services/playerService";
 import useMbStore from "../store/mb-store";
 import useLvlStore from "../store/lvl-store";
 
@@ -17,7 +17,7 @@ const useSyncOnUnload = () => {
       const { level } = useLvlStore.getState();
 
       try {
-        await updatePlayerWithFallback(player.documentId, {
+        await updatePlayer(player.documentId, {
           clicks: mbCountAll,
           level,
           progress_tokens: progressTokens
