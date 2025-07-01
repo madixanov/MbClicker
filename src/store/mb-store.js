@@ -39,22 +39,6 @@ const useMbStore = create((set, get) => ({
     };
 
     set(newState);
-
-    // Асинхронное сохранение без блокировки UI
-    const user = getTelegramUser();
-    if (!user) return;
-
-    try {
-      const player = await fetchPlayerByTelegramId(user.id);
-      if (player?.documentId) {
-        await updatePlayer(player.documentId, {
-          clicks: newState.mbCountAll,
-          progress_tokens: newState.progressTokens,
-        });
-      }
-    } catch (error) {
-      console.error('Ошибка при сохранении кликов:', error);
-    }
   },
 
   // 🔄 Установка общего количества кликов
