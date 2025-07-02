@@ -4,12 +4,13 @@ import light from "../assets/icons/light.svg"
 import './header.css'
 import usePlayerStore from "../store/player-store";
 import { memo } from "react";
+import { shallow } from 'zustand/shallow'
 
 const Header = memo(() => {
     const setModalDay = useModalStore((state) => state.setModalDay);
     const setModalTheme = useModalStore((state) => state.setModalTheme);
 
-    const player = usePlayerStore((state) => state.player);
+    const player = usePlayerStore((state) => state.player, shallow);
     const username = player?.username;
     console.log(username);
 
