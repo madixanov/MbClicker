@@ -12,7 +12,7 @@ const Main = () => {
     const inputRef = useRef(null);
     const { player } = usePlayerData();
 
-    const linkValue = `https://t.me/mbclicker_tester_bot?start=${player.invite_code}`
+    const linkValue = `https://t.me/mbclicker_tester_bot?start=${player?.invite_code}`
 
     const handleCopyClick = async () => {
         try {
@@ -36,7 +36,7 @@ const Main = () => {
                     <input 
                         ref={inputRef}
                         type="text" 
-                        value={linkValue} 
+                        value={linkValue || '?'} 
                         readOnly 
                         className="link-input" 
                     />
