@@ -1,28 +1,26 @@
 import { lazy, useEffect, useState } from "react";
 import { fetchTemplateTasks, fetchPlayerIdByDocumentId } from "../../../services/taskService";
 import usePlayerData from "../../../hooks/usePlayerData";
-import LoadingPage from "../../../pages/LoadingPage";
 
-const Button = lazy(() => import('./Button'));
+const Button = lazy(() => import("./Button"));
 
 const TabContent = () => {
   const [tasks, setTasks] = useState([]);
   const [playerStrapiId, setPlayerStrapiId] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const { player } = usePlayerData();
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        // Загружаем игрока и задачи
         const [taskData, strapiId] = await Promise.all([
           fetchTemplateTasks(),
           fetchPlayerIdByDocumentId(player.documentId),
         ]);
 
-        // Добавляем поле `isClaimed` в каждую задачу
-        const enhancedTasks = taskData.map(task => {
-          const isClaimed = task.completedBy?.some(user => user.id === strapiId);
+        const enhancedTasks = taskData.map((task) => {
+          const isClaimed = task.completedBy?.some((user) => user.id === strapiId);
           return { ...task, isClaimed };
         });
 
@@ -30,6 +28,7 @@ const TabContent = () => {
         setPlayerStrapiId(strapiId);
       } catch (err) {
         console.error("Ошибка при загрузке задач или игрока:", err);
+        setError(true);
       } finally {
         setLoading(false);
       }
@@ -40,9 +39,10 @@ const TabContent = () => {
     }
   }, [player?.documentId]);
 
-  if (loading || !playerStrapiId) {
-    return <p>Загрузка заданий...</p>;
-  }
+  if (loading) return <p className="tab-status">Загрузка заданий...</p>;
+  if (error) return <p className="tab-status">Произошла ошибка. Пока нет заданий.</p>;
+  if (!Array.isArray(tasks) || tasks.length === 0)
+    return <p className="tab-status">Заданий пока нет</p>;
 
   return (
     <div className="tabs">
@@ -57,7 +57,7 @@ const TabContent = () => {
             task={task}
             playerId={player.documentId}
             strapiPlayerId={playerStrapiId}
-            isClaimed={task.isClaimed} // ✅ передаём статус
+            isClaimed={task.isClaimed}
           />
         </div>
       ))}
