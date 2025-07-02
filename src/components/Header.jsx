@@ -10,8 +10,7 @@ const Header = memo(() => {
     const setModalDay = useModalStore((state) => state.setModalDay);
     const setModalTheme = useModalStore((state) => state.setModalTheme);
 
-    const player = usePlayerStore((state) => state.player, shallow);
-    const username = player?.username;
+    const username = usePlayerStore((state) => state.player?.username, shallow);
     console.log(username);
 
     return (
