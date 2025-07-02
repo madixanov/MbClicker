@@ -5,41 +5,37 @@ import BONUS_LINKS from "./bonus";
 const Button = lazy(() => import("./Button"));
 
 const getBonusLink = (bonusName) => {
-  if (typeof bonusName !== "string") return null; // 💥 защита от undefined/null
+  if (typeof bonusName !== "string") return null;
 
   const nameLower = bonusName.toLowerCase();
-    for (const key in BONUS_LINKS) {
-        if (nameLower.includes(key)) {
-        return BONUS_LINKS[key];
-        }
+  for (const key in BONUS_LINKS) {
+    if (nameLower.includes(key)) {
+      return BONUS_LINKS[key];
     }
-    return null;
-    };
-
+  }
+  return null;
+};
 
 const TabContent = () => {
-  const { bonuses, loading } = useBonuses();
+  const { bonuses, loading, error } = useBonuses();
 
-  if (loading) return <p>Загрузка бонусов...</p>;
-  if (!Array.isArray(bonuses) || !bonuses.length) return <p>Бонусов пока нет</p>;
-
-    bonuses.forEach((bonus) => {
-    if (!bonus.Name) {
-        console.warn("⚠️ У бонуса нет Name:", bonus);
-        }
-    });
+  if (loading) return <p className="tab-status">Загрузка бонусов...</p>;
+  if (error) return <p className="tab-status">Произошла ошибка. Пока нет бонусов.</p>;
+  if (!Array.isArray(bonuses) || bonuses.length === 0)
+    return <p className="tab-status">Бонусов пока нет</p>;
 
   return (
     <div className="tabs">
       {bonuses.map((bonus, index) => {
-        const bonusLink = getBonusLink(bonus.Name);
+        const bonusData = bonus.attributes || bonus; // поддержка Strapi 4 и 5
+        const bonusLink = getBonusLink(bonusData.Name);
 
         return (
-          <div className="task-container" key={index}>
+          <div className="task-container" key={bonus.documentId || index}>
             <div className="pfphoto"></div>
             <div className="task-content">
-              <p className="task-name">{bonus.Name}</p>
-              <p className="task-prize">+ {bonus.Prize} КБ</p>
+              <p className="task-name">{bonusData.Name}</p>
+              <p className="task-prize">+ {bonusData.Prize} КБ</p>
             </div>
             <a
               href={bonusLink}
@@ -47,7 +43,7 @@ const TabContent = () => {
               rel="noopener noreferrer"
               style={{ textDecoration: "none" }}
             >
-              <Button completed={bonus.Completed} />
+              <Button completed={bonusData.Completed} />
             </a>
           </div>
         );
