@@ -9,7 +9,8 @@ const Header = memo(() => {
     const setModalDay = useModalStore((state) => state.setModalDay);
     const setModalTheme = useModalStore((state) => state.setModalTheme);
 
-    const username = usePlayerStore((state) => state.player.username);
+    const player = usePlayerStore((state) => state.player);
+    const username = player.username;
     console.log(username);
 
     if (!username) return <div>Загрузка...</div>
