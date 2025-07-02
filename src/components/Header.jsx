@@ -13,8 +13,6 @@ const Header = memo(() => {
     const username = player?.username;
     console.log(username);
 
-    if (!username) return <div>Загрузка...</div>
-
     return (
         <header>
             <div className="header-container">
