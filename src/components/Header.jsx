@@ -4,17 +4,15 @@ import light from "../assets/icons/light.svg"
 import './header.css'
 import usePlayerStore from "../store/player-store";
 import { memo } from "react";
-import usePlayerData from '../hooks/usePlayerData'
 
 const Header = memo(() => {
     const setModalDay = useModalStore((state) => state.setModalDay);
     const setModalTheme = useModalStore((state) => state.setModalTheme);
-    const { loading } = usePlayerData();
 
     const username = usePlayerStore((state) => state.player.username);
     console.log(username);
 
-    if (loading) return <div>Загрузка...</div>
+    if (!username) return <div>Загрузка...</div>
 
     return (
         <header>
