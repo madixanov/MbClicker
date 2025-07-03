@@ -4,11 +4,13 @@ import useMbStore from "../../../store/mb-store";
 import usePlayerData from "../../../hooks/usePlayerData";
 import { updatePlayer } from "../../../services/playerService"; // <-- Добавь это
 import "../home-page.css";
+import useLvlStore from "../../../store/lvl-store";
 
 const Avatar = () => {
   const increment = useMbStore((state) => state.increment);
   const getMbIncrement = useMbStore((state) => state.getMbIncrement);
   const clicks = useMbStore((state) => state.mbCountAll); // текущие клики
+  const lvl = useLvlStore((state) => state.level);
   const { player } = usePlayerData(); // получаем Telegram ID
   const [popups, setPopups] = useState([]);
 
@@ -22,6 +24,7 @@ const Avatar = () => {
       await updatePlayer(player.documentId, {
         clicks,
         progress_tokens: clicks, // если нужно
+        level: useLvlStore,
       });
       console.log("Данные сохранены в Strapi");
     } catch (err) {
