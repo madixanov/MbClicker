@@ -5,7 +5,6 @@ import getTelegramUser from "../utils/getTelegramUser";
 import {
   fetchPlayerByTelegramId,
   updatePlayer,
-  updatePlayerWithFallback,
 } from "../services/playerService";
 
 const useLvlStore = create((set, get) => ({
@@ -22,10 +21,10 @@ const useLvlStore = create((set, get) => ({
       const player = await fetchPlayerByTelegramId(user.id);
 
       if (player && typeof player.level === "number") {
-        const level = player.level;
-        const points = 1024 * 2 ** (level - 1);
-
-        set({ level, points });
+        set({
+          level: player.level,
+          points: 1024 * 2 ** (player.level - 1)
+        })
       }
     } catch (err) {
       console.error("❌ Ошибка загрузки уровня:", err);
