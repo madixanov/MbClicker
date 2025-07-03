@@ -4,6 +4,7 @@ import { useEffect } from "react";
 import useMbStore from "../store/mb-store";
 
 export const fetchPlayerByTelegramId = async (telegram_id) => {
+  console.log("fetchPlayerByTelegramId вызван", telegram_id)
   const res = await axios.get(`${API_BASE_URL}/players`, {
     params: {
       filters: {
@@ -15,7 +16,6 @@ export const fetchPlayerByTelegramId = async (telegram_id) => {
     },
   });
 
-  console.log("fetchPlayerByTelegramId вызван")
   return res.data?.data?.[0] || null;
 };
 
