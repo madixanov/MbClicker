@@ -1,43 +1,38 @@
-import { useState, useRef, useEffect, useMemo } from "react";
-import debounce from "lodash/debounce";
-
+import { useState, useRef, useEffect } from "react";
 import avatar from "../../../assets/images/avatar.webp";
 import useMbStore from "../../../store/mb-store";
 import usePlayerData from "../../../hooks/usePlayerData";
-import { updatePlayer } from "../../../services/playerService";
-
+import { updatePlayer } from "../../../services/playerService"; // <-- Добавь это
 import "../home-page.css";
 
 const Avatar = () => {
   const increment = useMbStore((state) => state.increment);
   const getMbIncrement = useMbStore((state) => state.getMbIncrement);
-  const mbCountAll = useMbStore((state) => state.mbCountAll);
-  const progressTokens = useMbStore((state) => state.progressTokens);
-  const { player } = usePlayerData();
-
+  const clicks = useMbStore((state) => state.mbCountAll); // текущие клики
+  const { player } = usePlayerData(); // получаем Telegram ID
   const [popups, setPopups] = useState([]);
 
-  // ⏱ Дебаунс сохранения (300мс после последнего вызова)
-  const debouncedSave = useMemo(() => debounce(async () => {
-    if (!player?.documentId) return;
+  const saveTimeoutRef = useRef(null);
+  const SAVE_DELAY = 1000;
 
+  const saveToStrapi = async () => {
+    if (!player || !player.documentId) return;
     try {
-      console.log("✅ Сохраняю в Strapi...");
+      console.log("Сохранение данных в Strapi...");
       await updatePlayer(player.documentId, {
-        clicks: mbCountAll,
-        progress_tokens: progressTokens,
+        clicks,
+        progress_tokens: clicks, // если нужно
       });
-      console.log("✅ Данные сохранены");
+      console.log("Данные сохранены в Strapi");
     } catch (err) {
-      console.error("❌ Ошибка сохранения в Strapi:", err);
+      console.error("Ошибка сохранения:", err);
     }
-  }, 300), [mbCountAll]);
+  };
 
   const handleClick = (e) => {
     increment();
     const mbIncrement = getMbIncrement();
 
-    // 💬 Анимация +X
     const container = e.currentTarget.getBoundingClientRect();
     const x = e.clientX - container.left;
     const y = e.clientY - container.top;
@@ -56,16 +51,20 @@ const Avatar = () => {
       setPopups((curr) => curr.filter((p) => p.id !== id));
     }, 1200);
 
-    // 💾 Сохраняем прогресс с задержкой
-    debouncedSave();
+    // ⛔️ Очищаем предыдущий таймер
+    clearTimeout(saveTimeoutRef.current);
+
+    // ✅ Ставим новый таймер на 3 секунды
+    saveTimeoutRef.current = setTimeout(() => {
+      console.log("⏳ Таймер истёк, сохраняем...");
+      saveToStrapi();
+      saveTimeoutRef.current = null; // сбрасываем
+    }, SAVE_DELAY);
   };
 
-  // 🧹 Очистка при размонтировании (debounce)
   useEffect(() => {
-    return () => {
-      debouncedSave.cancel();
-    };
-  }, [debouncedSave]);
+    return () => clearTimeout(saveTimeoutRef.current); // очистка при размонтировании
+  }, []);
 
   return (
     <div
@@ -101,7 +100,6 @@ const Avatar = () => {
           key={popup.id}
           className="popup-text"
           style={{
-            position: "absolute",
             left: popup.x,
             top: popup.y,
           }}
