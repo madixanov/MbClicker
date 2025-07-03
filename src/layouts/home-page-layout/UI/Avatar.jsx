@@ -11,7 +11,7 @@ import "../home-page.css";
 const Avatar = () => {
   const increment = useMbStore((state) => state.increment);
   const getMbIncrement = useMbStore((state) => state.getMbIncrement);
-  const clicks = useMbStore((state) => state.mbCountAll);
+  const mbCountAll = useMbStore((state) => state.mbCountAll);
   const progressTokens = useMbStore((state) => state.progressTokens);
   const { player } = usePlayerData();
 
@@ -24,14 +24,14 @@ const Avatar = () => {
     try {
       console.log("✅ Сохраняю в Strapi...");
       await updatePlayer(player.documentId, {
-        clicks,
+        clicks: mbCountAll,
         progress_tokens: progressTokens,
       });
       console.log("✅ Данные сохранены");
     } catch (err) {
       console.error("❌ Ошибка сохранения в Strapi:", err);
     }
-  }, 300), [player?.documentId, clicks, progressTokens]);
+  }, 300), [mbCountAll]);
 
   const handleClick = (e) => {
     increment();
