@@ -26,6 +26,16 @@ const MainRouter = () => {
 
   const hasInitialized = useRef(false);
 
+  useEffect(() => {
+    const init = async () => {
+      await loadPlayer();           // один раз загружаем
+      await loadMbFromPlayer();     // один раз мегабайты
+      await loadLevelFromStrapi();  // один раз уровень
+      await retryPendingUpdate();   // один раз обновления
+    }
+
+    init();
+  }, []);
 
 
   useEffect(() => {
@@ -51,8 +61,6 @@ const MainRouter = () => {
         await loadPlayer();
 
         setLoadingProgress(50);
-        await loadMbFromPlayer();
-        await loadLevelFromStrapi();
 
         // 🎁 3. Проверка и применение реферального бонуса
         setLoadingProgress(80);
