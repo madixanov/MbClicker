@@ -15,6 +15,7 @@ export const fetchPlayerByTelegramId = async (telegram_id) => {
     },
   });
 
+  console.log("fetchPlayerByTelegramId вызван")
   return res.data?.data?.[0] || null;
 };
 
