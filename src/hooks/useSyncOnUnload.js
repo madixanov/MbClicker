@@ -1,33 +1,53 @@
 import { useEffect } from "react";
 import getTelegramUser from "../utils/getTelegramUser";
-import { fetchPlayerByTelegramId, updatePlayer } from "../services/playerService";
 import useMbStore from "../store/mb-store";
 import useLvlStore from "../store/lvl-store";
 
+const API_BASE_URL = "https://your-strapi-url.com/api"; // Замените на ваш URL
+
 const useSyncOnUnload = () => {
   useEffect(() => {
-    const handleVisibilityChange = async () => {
+    const handleVisibilityChange = () => {
       if (document.visibilityState !== "hidden") return;
 
       const user = getTelegramUser();
-      if (!user) return;
+      if (!user || !user.documentId) return;
 
-      try {
-        const player = await fetchPlayerByTelegramId(user.id);
-        if (!player?.documentId) return;
+      const { mbCountAll, progressTokens } = useMbStore.getState();
+      const { level } = useLvlStore.getState();
 
-        const { mbCountAll, progressTokens } = useMbStore.getState();
-        const { level } = useLvlStore.getState();
+      const data = JSON.stringify({
+        clicks: mbCountAll,
+        progress_tokens: progressTokens,
+        level,
+      });
 
-        await updatePlayer(player.documentId, {
-          clicks: mbCountAll,
-          progress_tokens: progressTokens,
-          level: level,
-        });
+      const url = `${API_BASE_URL}/players/${user.documentId}`;
 
-        console.log("✅ Прогресс синхронизирован при уходе");
-      } catch (err) {
-        console.error("❌ Ошибка при синхронизации при закрытии:", err);
+      if (navigator.sendBeacon) {
+        const blob = new Blob([data], { type: "application/json" });
+        const success = navigator.sendBeacon(url, blob);
+        if (success) {
+          console.log("✅ Прогресс отправлен через sendBeacon");
+        } else {
+          console.warn("⚠️ sendBeacon не сработал, попробуем fetch");
+          fallbackFetch();
+        }
+      } else {
+        fallbackFetch();
+      }
+
+      function fallbackFetch() {
+        fetch(url, {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: data,
+          keepalive: true,
+        })
+          .then(() => console.log("✅ Прогресс отправлен через fetch fallback"))
+          .catch((err) =>
+            console.error("❌ Ошибка отправки прогресса через fetch fallback:", err)
+          );
       }
     };
 

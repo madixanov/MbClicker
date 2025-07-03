@@ -5,7 +5,6 @@ import {
   fetchPlayerByTelegramId,
   fetchPlayerByInviteCode,
   createPlayer,
-  updatePlayerWithFallback,
   updatePlayer,
 } from "../services/playerService";
 import usePlayerData from "../hooks/usePlayerData";
