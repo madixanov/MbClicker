@@ -25,7 +25,7 @@ const MbCounter = () => {
     if (prevCountRef.current === mbCountAll) return;
 
     const controls = animate(prevCountRef.current, mbCountAll, {
-      duration: 0.6,
+      duration: 0.3,
       ease: "easeOut",
       onUpdate: (latest) => {
         setAnimatedCount(Math.round(latest));
