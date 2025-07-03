@@ -32,14 +32,6 @@ const usePlayerData = () => {
     }
   };
 
-  useEffect(() => {
-    if (!player) {
-      loadPlayer();
-    } else {
-      setLoading(false);
-    }
-  }, []);
-
   return { player, setPlayer, loadPlayer, loading, error };
 };
 
