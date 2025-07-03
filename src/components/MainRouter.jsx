@@ -2,11 +2,12 @@ import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import LoadingPage from "../pages/LoadingPage";
 import AutoSaveClicks from "./AutoSaveClisk";
+
 import useTelegramAuth from "../hooks/useTelegramAuth";
-import { retryPendingUpdate } from "../services/playerService";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import usePlayerData from "../hooks/usePlayerData";
 import { referralBonus } from "../hooks/useReferralBonus";
+import { retryPendingUpdate } from "../services/playerService";
 import useMbStore from "../store/mb-store";
 
 // Ленивая загрузка страниц
@@ -18,10 +19,12 @@ const StatsPage = lazy(() => import("../pages/StatsPage"));
 const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 
 const MainRouter = () => {
-  const { mbCountAll, setMbCountAll, setInviteCode } = useMbStore();
-  const { player, loadPlayer } = usePlayerData();
+  const { loadPlayer, player } = usePlayerData();
+  const { mbCountAll, setMbCountAll, setInviteCode, loadMbFromPlayer } = useMbStore();
+
   const [isAppReady, setIsAppReady] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
+
   const hasInitialized = useRef(false);
 
   useTelegramAuth();
@@ -35,6 +38,7 @@ const MainRouter = () => {
       try {
         setLoadingProgress(10);
 
+        // 🎯 1. Читаем реферальный код из URL
         const urlParams = new URLSearchParams(window.location.search);
         const inviteCode = urlParams.get("invite");
 
@@ -44,41 +48,48 @@ const MainRouter = () => {
           localStorage.setItem("pendingInviteCode", inviteCode);
         }
 
+        // 👤 2. Загружаем игрока и его мегабайты
         setLoadingProgress(30);
         await loadPlayer();
 
+        setLoadingProgress(50);
+        await loadMbFromPlayer();
+
+        // 🎁 3. Проверка и применение реферального бонуса
         setLoadingProgress(80);
         const bonusKey = "referralBonusApplied";
         const pendingCode = localStorage.getItem("pendingInviteCode");
 
         if (player?.documentId && pendingCode && !localStorage.getItem(bonusKey)) {
           const newCount = mbCountAll + 2500;
+
           await referralBonus(
             player.documentId,
             async () => {
               localStorage.setItem(bonusKey, "true");
               localStorage.removeItem("pendingInviteCode");
               setMbCountAll(newCount);
-              await loadPlayer();
             },
             mbCountAll
           );
         }
 
+        // ⏫ 4. Повтор последнего обновления
         setLoadingProgress(90);
         await retryPendingUpdate();
 
+        // ✅ 5. Готово
         setLoadingProgress(100);
         setTimeout(() => setIsAppReady(true), 500);
       } catch (error) {
-        console.error("Ошибка инициализации приложения:", error);
+        console.error("❌ Ошибка инициализации:", error);
         setLoadingProgress(100);
-        setIsAppReady(true);
+        setIsAppReady(true); // Даже если ошибка — грузим интерфейс
       }
     };
 
     initApp();
-  }, [mbCountAll, setMbCountAll, loadPlayer, setInviteCode, player?.documentId]);
+  }, []);
 
   if (!isAppReady) return <LoadingPage progress={loadingProgress} />;
 
