@@ -16,6 +16,7 @@ const usePlayerData = () => {
     }
 
     try {
+      console.log('Load player');
       const playerData = await fetchPlayerByTelegramId(user.id);
 
       if (playerData) {
@@ -31,6 +32,10 @@ const usePlayerData = () => {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    console.log("🧠 usePlayerData mounted");
+  }, []);
 
   return { player, setPlayer, loadPlayer, loading, error };
 };

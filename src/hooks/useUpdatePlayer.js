@@ -11,6 +11,7 @@ const useUpdatePlayer = () => {
     const user = getTelegramUser();
     if (!user?.id) return;
 
+    console.log('update player')
     const player = await fetchPlayerByTelegramId(user.id);
     if (!player) {
       console.warn("Игрок не найден");

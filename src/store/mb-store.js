@@ -68,6 +68,7 @@ const useMbStore = create((set, get) => ({
       const user = getTelegramUser();
       if (!user) return;
 
+      console.log('loadMbfromPlayer')
       const player = await fetchPlayerByTelegramId(user.id);
       if (player) {
         set({
@@ -92,6 +93,7 @@ const useMbStore = create((set, get) => ({
       const user = getTelegramUser();
       if (!user) return;
 
+      console.log('savetokens')
       const player = await fetchPlayerByTelegramId(user.id);
       if (player?.documentId) {
         const { mbCountAll, progressTokens } = get();

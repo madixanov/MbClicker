@@ -15,6 +15,7 @@ const syncClicksToStrapi = async () => {
   }
 
   try {
+    console.log('autosavetokens')
     const player = await fetchPlayerByTelegramId(user.id);
 
     if (!player || !player.documentId) {
