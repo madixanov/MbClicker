@@ -18,6 +18,7 @@ const useLvlStore = create((set, get) => ({
     if (!user) return;
 
     try {
+      console.log('lvl-store')
       const player = await fetchPlayerByTelegramId(user.id);
 
       if (player && typeof player.level === "number") {

@@ -28,6 +28,7 @@ const MainRouter = () => {
 
   useEffect(() => {
     const init = async () => {
+      console.log("📦 MainRouter — вызов loadPlayer()");
       await loadPlayer();           // один раз загружаем
       await loadMbFromPlayer();     // один раз мегабайты
       await loadLevelFromStrapi();  // один раз уровень
@@ -50,6 +51,7 @@ const MainRouter = () => {
         const urlParams = new URLSearchParams(window.location.search);
         const inviteCode = urlParams.get("invite");
 
+        setLoadingProgress(30);
         if (inviteCode) {
           console.log("🔗 Реферальный код из URL:", inviteCode);
           setInviteCode(inviteCode);
@@ -57,8 +59,7 @@ const MainRouter = () => {
         }
 
         // 👤 2. Загружаем игрока и его мегабайты
-        setLoadingProgress(30);
-        await loadPlayer();
+        
 
         setLoadingProgress(50);
 

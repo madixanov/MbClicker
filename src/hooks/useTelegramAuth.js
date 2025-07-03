@@ -81,6 +81,7 @@ const useTelegramAuth = () => {
       }
 
       try {
+        console.log('telegram auth')
         const existingPlayer = await fetchPlayerByTelegramId(telegram_id);
 
         if (!existingPlayer) {
