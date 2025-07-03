@@ -50,6 +50,7 @@ const useLvlStore = create((set, get) => ({
       await updatePlayer(player.documentId, {
         level: newLevel,
       });
+      console.log('Уровень сохранен');
     } catch (err) {
       console.error("❌ Ошибка обновления уровня:", err);
     }
