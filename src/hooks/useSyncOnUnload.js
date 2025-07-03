@@ -6,30 +6,34 @@ import useLvlStore from "../store/lvl-store";
 
 const useSyncOnUnload = () => {
   useEffect(() => {
-    const handleBeforeUnload = async () => {
+    const handleVisibilityChange = async () => {
+      if (document.visibilityState !== "hidden") return;
+
       const user = getTelegramUser();
       if (!user) return;
 
-      const player = await fetchPlayerByTelegramId(user.id);
-      if (!player || !player.documentId) return;
-
-      const { mbCountAll, progressTokens } = useMbStore.getState();
-      const { level } = useLvlStore.getState();
-
       try {
+        const player = await fetchPlayerByTelegramId(user.id);
+        if (!player?.documentId) return;
+
+        const { mbCountAll, progressTokens } = useMbStore.getState();
+        const { level } = useLvlStore.getState();
+
         await updatePlayer(player.documentId, {
           clicks: mbCountAll,
-          level,
-          progress_tokens: progressTokens
+          progress_tokens: progressTokens,
+          level: level,
         });
+
+        console.log("✅ Прогресс синхронизирован при уходе");
       } catch (err) {
-        console.error("❌ Ошибка при синхронизации на выходе:", err);
+        console.error("❌ Ошибка при синхронизации при закрытии:", err);
       }
     };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 };
