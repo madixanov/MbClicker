@@ -1,6 +1,6 @@
 import { create } from 'zustand';
 import getTelegramUser from '../utils/getTelegramUser';
-import { fetchPlayerByTelegramId, updatePlayer, updatePlayerWithFallback } from '../services/playerService';
+import { fetchPlayerByTelegramId, updatePlayer } from '../services/playerService';
 import useLvlStore from './lvl-store';
 
 const useMbStore = create((set, get) => ({
