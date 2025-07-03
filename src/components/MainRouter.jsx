@@ -9,6 +9,7 @@ import usePlayerData from "../hooks/usePlayerData";
 import { referralBonus } from "../hooks/useReferralBonus";
 import { retryPendingUpdate } from "../services/playerService";
 import useMbStore from "../store/mb-store";
+import useLvlStore from "../store/lvl-store";
 
 // Ленивая загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -21,6 +22,7 @@ const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 const MainRouter = () => {
   const { loadPlayer, player } = usePlayerData();
   const { mbCountAll, setMbCountAll, setInviteCode, loadMbFromPlayer } = useMbStore();
+  const { loadLevelFromStrapi } = useLvlStore();
 
   const [isAppReady, setIsAppReady] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
@@ -54,6 +56,7 @@ const MainRouter = () => {
 
         setLoadingProgress(50);
         await loadMbFromPlayer();
+        await loadLevelFromStrapi();
 
         // 🎁 3. Проверка и применение реферального бонуса
         setLoadingProgress(80);
