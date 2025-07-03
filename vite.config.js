@@ -11,8 +11,9 @@ export default defineConfig({
     historyApiFallback: true,
   },
   build: {
+    sourcemap: true,
     target: 'es2020',
-    minify: 'terser',
+    // minify: 'terser',
     terserOptions: {
       compress: {
         // drop_console: true,
