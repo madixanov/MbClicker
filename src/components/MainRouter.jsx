@@ -2,9 +2,6 @@ import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import LoadingPage from "../pages/LoadingPage";
 import AutoSaveClicks from "./AutoSaveClisk";
-
-import useTelegramAuth from "../hooks/useTelegramAuth";
-import useSyncOnUnload from "../hooks/useSyncOnUnload";
 import usePlayerData from "../hooks/usePlayerData";
 import { referralBonus } from "../hooks/useReferralBonus";
 import { retryPendingUpdate } from "../services/playerService";
@@ -29,8 +26,7 @@ const MainRouter = () => {
 
   const hasInitialized = useRef(false);
 
-  useTelegramAuth();
-  useSyncOnUnload();
+
 
   useEffect(() => {
     if (hasInitialized.current) return;
