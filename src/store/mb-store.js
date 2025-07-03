@@ -1,58 +1,68 @@
-import { create } from 'zustand';
-import getTelegramUser from '../utils/getTelegramUser';
-import { fetchPlayerByTelegramId, updatePlayer } from '../services/playerService';
-import useLvlStore from './lvl-store';
+// store/mb-store.ts или .js
+
+import { create } from "zustand";
+import getTelegramUser from "../utils/getTelegramUser";
+import { fetchPlayerByTelegramId, updatePlayer } from "../services/playerService";
+import useLvlStore from "./lvl-store";
 
 const useMbStore = create((set, get) => ({
   // 📦 Состояния
-  mbCountAll: 0,            // Общие клики (глобально)
-  mbCount: 0,               // Клики за сессию (локально)
-  progressTokens: 0,        // Прогресс до следующего уровня
-  inviteCode: '',           // Реферальный код
-  isProcessing: false,      // Флаг для отслеживания операций
+  mbCountAll: 0,
+  mbCount: 0,
+  progressTokens: 0,
+  inviteCode: "",
+  isProcessing: false,
+  loaded: false, // ✅ Чтобы не загружать повторно
 
-  // 🔄 Установка реферального кода с валидацией
+  // 📦 Инициализация (автозагрузка один раз)
+  initMbStore: () => {
+    const { loaded, loadMbFromPlayer } = get();
+    if (!loaded) loadMbFromPlayer();
+  },
+
+  // 🔄 Установка реферального кода
   setInviteCode: (value) => {
-    if (typeof value === 'string' && value.trim() !== '') {
-      set({ inviteCode: value.trim() });
-      localStorage.setItem('pendingInviteCode', value.trim());
+    if (typeof value === "string" && value.trim() !== "") {
+      const trimmed = value.trim();
+      set({ inviteCode: trimmed });
+      localStorage.setItem("pendingInviteCode", trimmed);
     }
   },
 
-  // 📈 Формула инкремента (мемоизированная)
+  // 📈 Расчёт инкремента
   getMbIncrement: () => {
     const level = useLvlStore.getState().level || 1;
     const baseIncrement = 10;
-    const levelBonus = Math.min(level - 1, 5); // Максимум +5 за уровни
+    const levelBonus = Math.min(level - 1, 5); // Макс +5
     return baseIncrement + levelBonus;
   },
 
-  // 🔁 Оптимизированная функция инкремента
+  // 🔁 Инкремент
   increment: async () => {
     const { getMbIncrement, mbCountAll, mbCount, progressTokens } = get();
     const increment = getMbIncrement();
-    
-    const newState = {
+
+    set({
       mbCountAll: mbCountAll + increment,
       mbCount: mbCount + increment,
       progressTokens: progressTokens + increment,
-    };
-
-    set(newState);
+    });
   },
 
-  // 🔄 Установка общего количества кликов
+  // Установка общего количества
   setMbCountAll: (value) => {
-    if (typeof value === 'number' && value >= 0) {
+    if (typeof value === "number" && value >= 0) {
       set({ mbCountAll: value });
     }
   },
 
-  // 🔄 Сброс сессионных данных
+  // Сброс сессионных данных
   resetCount: () => set({ mbCount: 0, progressTokens: 0 }),
 
-  // 📤 Загрузка данных игрока с обработкой ошибок
+  // 📤 Загрузка с сервера (только один раз)
   loadMbFromPlayer: async () => {
+    if (get().loaded || get().isProcessing) return;
+
     set({ isProcessing: true });
     try {
       const user = getTelegramUser();
@@ -63,19 +73,20 @@ const useMbStore = create((set, get) => ({
         set({
           mbCountAll: Number(player.clicks) || 0,
           progressTokens: Number(player.progress_tokens) || 0,
+          loaded: true,
         });
       }
     } catch (error) {
-      console.error('Ошибка загрузки данных игрока:', error);
+      console.error("Ошибка загрузки данных игрока:", error);
     } finally {
       set({ isProcessing: false });
     }
   },
 
-  // 💾 Оптимизированное автосохранение
+  // 💾 Автосохранение
   saveTokensToStrapi: async () => {
     if (get().isProcessing) return;
-    
+
     set({ isProcessing: true });
     try {
       const user = getTelegramUser();
@@ -90,7 +101,7 @@ const useMbStore = create((set, get) => ({
         });
       }
     } catch (error) {
-      console.error('Ошибка автосохранения:', error);
+      console.error("Ошибка автосохранения:", error);
     } finally {
       set({ isProcessing: false });
     }
