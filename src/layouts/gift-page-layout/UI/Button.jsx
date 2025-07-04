@@ -81,7 +81,7 @@ const BonusButton = ({
     if (loading || isProcessing || state !== "initial") return;
 
     setState("checking");
-    window.open(bonusUrl);
+    window.open(bonusUrl, "_blank");
 
     setTimeout(() => {
       if (document.visibilityState === "visible") {
