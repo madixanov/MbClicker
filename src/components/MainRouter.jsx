@@ -10,7 +10,6 @@ import useLvlStore from "../store/lvl-store";
 import useTelegramAuth from "../hooks/useTelegramAuth";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
 
-// Ленивая загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
 const ExchangePage = lazy(() => import("../pages/ExchangePage"));
 const TaskPage = lazy(() => import("../pages/TaskPage"));
@@ -25,6 +24,7 @@ const MainRouter = () => {
     setMbCountAll,
     setInviteCode,
     loadMbFromPlayer,
+    saveTokensToStrapi
   } = useMbStore();
   const { loadLevelFromStrapi } = useLvlStore();
 
@@ -73,32 +73,42 @@ const MainRouter = () => {
     initApp();
   }, []);
 
-  // Применение реферального бонуса
+  // Применение реферального бонуса с защитой от сброса
   useEffect(() => {
     if (!player?.documentId || hasAppliedBonus.current) return;
 
     const applyReferralBonus = async () => {
       const pendingCode = localStorage.getItem("pendingInviteCode");
       const bonusAlreadyGiven = player.referal_bonus_given;
-      const newCount = mbCountAll + 2500;
 
       if (pendingCode && !bonusAlreadyGiven) {
         try {
           console.log("🎁 Пытаемся применить реферальный бонус...");
           hasAppliedBonus.current = true;
           
+          // 1. Сначала обновляем локальное состояние
+          const newCount = mbCountAll + 2500;
+          setMbCountAll(newCount);
+          
+          // 2. Затем сохраняем на сервер
           await referralBonus(
             player.documentId,
-            () => {
+            async () => {
               console.log("✅ Реферальный бонус успешно применен");
-              setMbCountAll(newCount);
+              
+              // 3. Форсируем синхронизацию с сервером
+              await saveTokensToStrapi();
               localStorage.removeItem("pendingInviteCode");
+              
+              console.log("🔄 Состояние синхронизировано с сервером");
             },
-            mbCountAll
+            newCount // Передаем уже обновленное значение
           );
         } catch (error) {
           console.error("❌ Ошибка применения реферального бонуса:", error);
-          hasAppliedBonus.current = false; // Разблокируем повторную попытку
+          // Откатываем изменения при ошибке
+          setMbCountAll(mbCountAll);
+          hasAppliedBonus.current = false;
         }
       }
     };
