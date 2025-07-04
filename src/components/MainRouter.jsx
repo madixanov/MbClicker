@@ -29,9 +29,9 @@ const MainRouter = () => {
   const [isAppReady, setIsAppReady] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const hasInitialized = useRef(false);
-  const hasAppliedBonus = useRef(false); // чтобы не применить бонус повторно
+  const hasAppliedBonus = useRef(false); // защита от двойного вызова
 
-  // 📦 1. Инициализация данных
+  // 📦 1. Инициализация
   useEffect(() => {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
@@ -39,16 +39,12 @@ const MainRouter = () => {
     const initApp = async () => {
       try {
         setLoadingProgress(10);
-
-        // Загрузка игрока, мегабайтов и уровня
-        console.log("📦 MainRouter — загрузка игрока и данных");
-        await loadPlayer();              // обновит player асинхронно
-        await loadMbFromPlayer();
-        await loadLevelFromStrapi();
+        await loadPlayer();              // загрузка игрока
+        await loadMbFromPlayer();        // загрузка мегабайтов
+        await loadLevelFromStrapi();     // загрузка уровня
 
         setLoadingProgress(50);
 
-        // Реферальный код из URL
         const urlParams = new URLSearchParams(window.location.search);
         const inviteCode = urlParams.get("invite");
         if (inviteCode) {
@@ -61,12 +57,11 @@ const MainRouter = () => {
         await retryPendingUpdate();
 
         setLoadingProgress(100);
-
         setTimeout(() => setIsAppReady(true), 500);
       } catch (error) {
         console.error("❌ Ошибка инициализации:", error);
         setLoadingProgress(100);
-        setIsAppReady(true); // даже при ошибке показываем интерфейс
+        setIsAppReady(true);
       }
     };
 
@@ -75,13 +70,14 @@ const MainRouter = () => {
 
   // 🎁 2. Применение реферального бонуса
   useEffect(() => {
-    console.log("👤 player useEffect:", player);
+    if (!player?.documentId) return;
+
+    console.log("👤 player useEffect (с documentId):", player.documentId);
 
     const bonusKey = "referralBonusApplied";
     const pendingCode = localStorage.getItem("pendingInviteCode");
 
     if (
-      player?.documentId &&
       pendingCode &&
       !localStorage.getItem(bonusKey) &&
       !hasAppliedBonus.current
@@ -102,13 +98,10 @@ const MainRouter = () => {
         mbCountAll
       );
     }
-}, [player]);
+  }, [player?.documentId]);
 
-
-  // ⏳ Пока не готово — показываем экран загрузки
   if (!isAppReady) return <LoadingPage progress={loadingProgress} />;
 
-  // ✅ Интерфейс приложения
   return (
     <>
       <AutoSaveClicks />
