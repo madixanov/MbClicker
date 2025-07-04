@@ -29,7 +29,9 @@ const MainRouter = () => {
   const [isAppReady, setIsAppReady] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const hasInitialized = useRef(false);
+  const hasAppliedBonus = useRef(false); // чтобы не применить бонус повторно
 
+  // 📦 1. Инициализация данных
   useEffect(() => {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
@@ -38,15 +40,15 @@ const MainRouter = () => {
       try {
         setLoadingProgress(10);
 
-        // 1. Загружаем игрока, мегабайты и уровень
+        // Загрузка игрока, мегабайтов и уровня
         console.log("📦 MainRouter — загрузка игрока и данных");
-        await loadPlayer();
+        await loadPlayer();              // обновит player асинхронно
         await loadMbFromPlayer();
         await loadLevelFromStrapi();
 
         setLoadingProgress(30);
 
-        // 2. Чтение и сохранение инвайт-кода
+        // Реферальный код из URL
         const urlParams = new URLSearchParams(window.location.search);
         const inviteCode = urlParams.get("invite");
         if (inviteCode) {
@@ -57,50 +59,55 @@ const MainRouter = () => {
 
         setLoadingProgress(50);
 
-        // 3. Применение бонуса
-        const bonusKey = "referralBonusApplied";
-        const pendingCode = localStorage.getItem("pendingInviteCode");
-
-        if (
-          player?.documentId &&
-          pendingCode &&
-          !localStorage.getItem(bonusKey)
-        ) {
-          const newCount = mbCountAll + 2500;
-
-          console.log("🎁 Применяем бонус:", pendingCode);
-
-          await referralBonus(
-            player.documentId,
-            async () => {
-              localStorage.setItem(bonusKey, "true");
-              localStorage.removeItem("pendingInviteCode");
-              setMbCountAll(newCount);
-              console.log("✅ Бонус применён");
-            },
-            mbCountAll
-          );
-        }
-
-        setLoadingProgress(90);
-
-        // 4. Повтор последнего обновления
         await retryPendingUpdate();
 
+        setLoadingProgress(90);
         setLoadingProgress(100);
+
         setTimeout(() => setIsAppReady(true), 500);
       } catch (error) {
         console.error("❌ Ошибка инициализации:", error);
         setLoadingProgress(100);
-        setIsAppReady(true); // даже при ошибке — показываем интерфейс
+        setIsAppReady(true); // даже при ошибке показываем интерфейс
       }
     };
 
     initApp();
   }, []);
 
+  // 🎁 2. Применение реферального бонуса
+  useEffect(() => {
+    const bonusKey = "referralBonusApplied";
+    const pendingCode = localStorage.getItem("pendingInviteCode");
+
+    if (
+      player?.documentId &&
+      pendingCode &&
+      !localStorage.getItem(bonusKey) &&
+      !hasAppliedBonus.current
+    ) {
+      hasAppliedBonus.current = true;
+
+      const newCount = mbCountAll + 2500;
+      console.log("🎁 Применяем бонус для игрока:", player.documentId);
+
+      referralBonus(
+        player.documentId,
+        async () => {
+          localStorage.setItem(bonusKey, "true");
+          localStorage.removeItem("pendingInviteCode");
+          setMbCountAll(newCount);
+          console.log("✅ Бонус применён: +2500 МБ");
+        },
+        mbCountAll
+      );
+    }
+  }, [player]);
+
+  // ⏳ Пока не готово — показываем экран загрузки
   if (!isAppReady) return <LoadingPage progress={loadingProgress} />;
 
+  // ✅ Интерфейс приложения
   return (
     <>
       <AutoSaveClicks />
