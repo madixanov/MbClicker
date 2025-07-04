@@ -82,7 +82,7 @@ const TabContent = () => {
           ) : (
             <Button
               bonus={bonus}
-              bonusUrl={getBonusLink(bonus.name)} // адаптируй если ссылка приходит по-другому
+              bonusUrl={getBonusLink(bonus.Name)} // адаптируй если ссылка приходит по-другому
               player={player}
               strapiPlayerId={playerStrapiId}
             />
