@@ -25,6 +25,7 @@ const MainRouter = () => {
     setMbCountAll,
     setInviteCode,
     loadMbFromPlayer,
+    loaded
   } = useMbStore();
   const { loadLevelFromStrapi } = useLvlStore();
 
@@ -75,7 +76,7 @@ const MainRouter = () => {
 
   // 🎁 2. Применение реферального бонуса
   useEffect(() => {
-    if (!player?.documentId) return;
+    if (!player?.documentId || !loaded) return;
 
     console.log("👤 player useEffect (с documentId):", player.documentId);
 
@@ -103,7 +104,7 @@ const MainRouter = () => {
         mbCountAll
       );
     }
-  }, [player?.documentId]);
+  }, [player?.documentId, loaded]);
 
   if (!isAppReady) return <LoadingPage progress={loadingProgress} />;
 
