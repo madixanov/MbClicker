@@ -104,7 +104,7 @@ const BonusButton = ({
   return (
     <button
       className={`task-btn ${state === "checking" || state === "waiting" ? "active" : ""}`}
-      onClick={handleClick}
+      // onClick={handleClick}
       disabled={loading || isProcessing}
     >
       {loading || isProcessing
