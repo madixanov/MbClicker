@@ -13,7 +13,7 @@ export const completeBonus = async (bonusId) => {
 
   if (completed_bonuses.includes(bonusId)) return;
 
-  const updateBonuses = [ ...completeBonus, bonusId];
+  const updateBonuses = [ ...completed_bonuses, bonusId];
 
   await updatePlayer(player.documentId, {
     completed_bonuses: updateBonuses
