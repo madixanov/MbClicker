@@ -25,19 +25,18 @@ const MainRouter = () => {
     setMbCountAll,
     setInviteCode,
     loadMbFromPlayer,
-    loaded
   } = useMbStore();
   const { loadLevelFromStrapi } = useLvlStore();
 
   const [isAppReady, setIsAppReady] = useState(false);
   const [loadingProgress, setLoadingProgress] = useState(0);
   const hasInitialized = useRef(false);
-  const hasAppliedBonus = useRef(false); // защита от двойного вызова
+  const hasAppliedBonus = useRef(false);
 
   useTelegramAuth();
   useSyncOnUnload();
 
-  // 📦 1. Инициализация
+  // Инициализация приложения
   useEffect(() => {
     if (hasInitialized.current) return;
     hasInitialized.current = true;
@@ -45,12 +44,14 @@ const MainRouter = () => {
     const initApp = async () => {
       try {
         setLoadingProgress(10);
-        await loadPlayer();              // загрузка игрока
-        await loadMbFromPlayer();        // загрузка мегабайтов
-        await loadLevelFromStrapi();     // загрузка уровня
-
+        await loadPlayer();
+        setLoadingProgress(30);
+        await loadMbFromPlayer();
         setLoadingProgress(50);
+        await loadLevelFromStrapi();
+        setLoadingProgress(70);
 
+        // Обработка реферального кода из URL
         const urlParams = new URLSearchParams(window.location.search);
         const inviteCode = urlParams.get("invite");
         if (inviteCode) {
@@ -59,9 +60,7 @@ const MainRouter = () => {
           localStorage.setItem("pendingInviteCode", inviteCode);
         }
 
-        setLoadingProgress(80);
         await retryPendingUpdate();
-
         setLoadingProgress(100);
         setTimeout(() => setIsAppReady(true), 500);
       } catch (error) {
@@ -74,37 +73,37 @@ const MainRouter = () => {
     initApp();
   }, []);
 
-  // 🎁 2. Применение реферального бонуса
+  // Применение реферального бонуса
   useEffect(() => {
-    if (!player?.documentId || !loaded) return;
+    if (!player?.documentId || hasAppliedBonus.current) return;
 
-    console.log("👤 player useEffect (с documentId):", player.documentId);
+    const applyReferralBonus = async () => {
+      const pendingCode = localStorage.getItem("pendingInviteCode");
+      const bonusAlreadyGiven = player.referal_bonus_given;
 
-    const bonusKey = "referralBonusApplied";
-    const pendingCode = localStorage.getItem("pendingInviteCode");
+      if (pendingCode && !bonusAlreadyGiven) {
+        try {
+          console.log("🎁 Пытаемся применить реферальный бонус...");
+          hasAppliedBonus.current = true;
+          
+          await referralBonus(
+            player.documentId,
+            () => {
+              console.log("✅ Реферальный бонус успешно применен");
+              setMbCountAll(prev => prev + 2500);
+              localStorage.removeItem("pendingInviteCode");
+            },
+            mbCountAll
+          );
+        } catch (error) {
+          console.error("❌ Ошибка применения реферального бонуса:", error);
+          hasAppliedBonus.current = false; // Разблокируем повторную попытку
+        }
+      }
+    };
 
-    if (
-      pendingCode &&
-      !localStorage.getItem(bonusKey) &&
-      !hasAppliedBonus.current
-    ) {
-      hasAppliedBonus.current = true;
-
-      const newCount = mbCountAll + 2500;
-      console.log("🎁 Применяем бонус для игрока:", player.documentId);
-
-      referralBonus(
-        player.documentId,
-        async () => {
-          localStorage.setItem(bonusKey, "true");
-          localStorage.removeItem("pendingInviteCode");
-          setMbCountAll(newCount);
-          console.log("✅ Бонус применён: +2500 МБ");
-        },
-        mbCountAll
-      );
-    }
-  }, [player?.documentId, loaded]);
+    applyReferralBonus();
+  }, [player?.documentId, player?.referal_bonus_given]);
 
   if (!isAppReady) return <LoadingPage progress={loadingProgress} />;
 
