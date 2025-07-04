@@ -7,6 +7,8 @@ import { referralBonus } from "../hooks/useReferralBonus";
 import { retryPendingUpdate } from "../services/playerService";
 import useMbStore from "../store/mb-store";
 import useLvlStore from "../store/lvl-store";
+import useTelegramAuth from "../hooks/useTelegramAuth";
+import useSyncOnUnload from "../hooks/useSyncOnUnload";
 
 // Ленивая загрузка страниц
 const HomePage = lazy(() => import("../pages/HomePage"));
@@ -30,6 +32,9 @@ const MainRouter = () => {
   const [loadingProgress, setLoadingProgress] = useState(0);
   const hasInitialized = useRef(false);
   const hasAppliedBonus = useRef(false); // защита от двойного вызова
+
+  useTelegramAuth();
+  useSyncOnUnload();
 
   // 📦 1. Инициализация
   useEffect(() => {
