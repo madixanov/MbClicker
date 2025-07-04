@@ -1,7 +1,9 @@
-import { lazy, memo } from "react";
-import useBonuses from "../../../hooks/useBonuses";
-import BONUS_LINKS from "./bonus";
-import usePlayerData from '../../../hooks/usePlayerData'
+import { lazy, useEffect, useState } from "react";
+import { fetchBonuses } from "../../../services/bonusService"; // 👈 адаптируй путь
+import { fetchPlayerIdByDocumentId } from '../../../services/taskService'
+import usePlayerData from "../../../hooks/usePlayerData";
+import completed_logo from "../../../assets/icons/completed.svg";
+import BONUS_LINKS from './bonus'
 
 const Button = lazy(() => import("./Button"));
 
@@ -18,9 +20,41 @@ const getBonusLink = (bonusName) => {
 };
 
 const TabContent = () => {
+  const [bonuses, setBonuses] = useState([]);
+  const [playerStrapiId, setPlayerStrapiId] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(false);
   const { player } = usePlayerData();
-  const { bonuses, loading, error } = useBonuses();
-  const completedBonuses = player?.completed_bonuses || [];
+
+  useEffect(() => {
+    const loadData = async () => {
+      try {
+        const [bonusData, strapiId] = await Promise.all([
+          fetchBonuses(),
+          fetchPlayerIdByDocumentId(player.documentId),
+        ]);
+
+        const enhancedBonuses = bonusData.map((bonus) => {
+          const isClaimed = bonus.completedBy?.some(
+            (user) => user.id === strapiId
+          );
+          return { ...bonus, isClaimed };
+        });
+
+        setBonuses(enhancedBonuses);
+        setPlayerStrapiId(strapiId);
+      } catch (err) {
+        console.error("Ошибка при загрузке бонусов или игрока:", err);
+        setError(true);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    if (player?.documentId) {
+      loadData();
+    }
+  }, [player?.documentId]);
 
   if (loading) return <p className="tab-status">Загрузка бонусов...</p>;
   if (error) return <p className="tab-status">Произошла ошибка. Пока нет бонусов.</p>;
@@ -29,31 +63,34 @@ const TabContent = () => {
 
   return (
     <div className="tabs">
-      {bonuses.map((bonus, index) => {
-        const bonusData = bonus.attributes || bonus;
-        const bonusId = bonus.documentId;
-        const bonusLink = getBonusLink(bonusData.Name);
-        const isCompleted = completedBonuses.includes(bonusId);
+      {bonuses.map((bonus) => (
+        <div className="task-container" key={bonus.id}>
+          <div className="pfphoto"></div>
+          <div className="task-content">
+            <p className="task-name">{bonus.Name}</p>
+            <p className="task-prize">+ {bonus.Prize} КБ</p>
+          </div>
 
-        return (
-          <div className="task-container" key={bonusId || index}>
-            <div className="pfphoto"></div>
-            <div className="task-content">
-              <p className="task-name">{bonusData.Name}</p>
-              <p className="task-prize">+ {bonusData.Prize} КБ</p>
+          {bonus.isClaimed ? (
+            <div className="task-completed">
+              <img
+                src={completed_logo}
+                alt="Бонус получен"
+                className="completed-icon"
+              />
             </div>
-
+          ) : (
             <Button
               bonus={bonus}
-              bonusUrl={bonusLink}
-              completed={isCompleted}
+              bonusUrl={getBonusLink(bonus.name)} // адаптируй если ссылка приходит по-другому
               player={player}
+              strapiPlayerId={playerStrapiId}
             />
-          </div>
-        );
-      })}
+          )}
+        </div>
+      ))}
     </div>
   );
 };
 
-export default memo(TabContent);
+export default TabContent;
