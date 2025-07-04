@@ -1,35 +1,21 @@
-// hooks/useBonusCompletionSync.js
-import { useEffect } from "react";
-import axios from "axios";
+import { updatePlayer } from "../services/playerService";
+import getTelegramUser from "../utils/getTelegramUser";
+import { fetchPlayerByTelegramId } from "../services/playerService";
 
-const useBonusCompletionSync = (bonuses, player) => {
-  useEffect(() => {
-    if (!player || !bonuses?.length) return;
+export const completeBonus = async (bonusId) => {
+  const user = getTelegramUser();
+  if (!user) return;
 
-    const syncCompletedBonuses = async () => {
-      const savedBonusIds = player.bonuses?.map((b) => b.documentId) || [];
+  const player = await fetchPlayerByTelegramId(user.id);
+  if (!player) return;
 
-      const newCompletedBonuses = bonuses.filter(
-        (bonus) => bonus.isCompleted && !savedBonusIds.includes(bonus.documentId)
-      );
+  const { completed_bonuses = [] } = player;
 
-      if (newCompletedBonuses.length === 0) return;
+  if (completed_bonuses.includes(bonusId)) return;
 
-      try {
-        await axios.put(`/api/players/${player.documentId}`, {
-          bonuses: {
-            connect: newCompletedBonuses.map((b) => b.documentId),
-          },
-        });
+  const updateBonuses = [ ...completeBonus, bonusId];
 
-        console.log("✅ Добавлены бонусы игроку:", newCompletedBonuses.map(b => b.title));
-      } catch (err) {
-        console.error("❌ Ошибка при добавлении бонусов в player:", err);
-      }
-    };
-
-    syncCompletedBonuses();
-  }, [bonuses, player]);
-};
-
-export default useBonusCompletionSync;
+  await updatePlayer(player.documentId, {
+    completed_bonuses: updateBonuses
+  })
+}
