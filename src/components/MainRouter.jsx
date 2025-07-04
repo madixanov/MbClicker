@@ -44,7 +44,6 @@ const MainRouter = () => {
         console.log("📦 MainRouter — загрузка игрока и данных");
         await loadPlayer();              // обновит player асинхронно
         await loadMbFromPlayer();
-        setLoadingProgress(30);
         await loadLevelFromStrapi();
 
         setLoadingProgress(50);
