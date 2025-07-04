@@ -80,6 +80,7 @@ const MainRouter = () => {
     const applyReferralBonus = async () => {
       const pendingCode = localStorage.getItem("pendingInviteCode");
       const bonusAlreadyGiven = player.referal_bonus_given;
+      const newCount = mbCountAll + 2500;
 
       if (pendingCode && !bonusAlreadyGiven) {
         try {
@@ -90,7 +91,7 @@ const MainRouter = () => {
             player.documentId,
             () => {
               console.log("✅ Реферальный бонус успешно применен");
-              setMbCountAll(prev => prev + 2500);
+              setMbCountAll(newCount);
               localStorage.removeItem("pendingInviteCode");
             },
             mbCountAll
