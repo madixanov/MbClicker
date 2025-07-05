@@ -4,7 +4,6 @@ import { fetchPlayerIdByDocumentId } from "../../../services/taskService";
 import usePlayerData from "../../../hooks/usePlayerData";
 import BONUS_LINKS from './bonus';
 import useMbStore from "../../../store/mb-store";
-import completed_logo from "../../../assets/icons/completed.svg";
 
 const BonusButton = lazy(() => import("./Button"));
 
@@ -22,7 +21,6 @@ const getBonusLink = (bonusName) => {
 const TabContent = () => {
   const { player } = usePlayerData();
   const [bonuses, setBonuses] = useState([]);
-  const [playerStrapiId, setPlayerStrapiId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { mbCountAll, setMbCountAll } = useMbStore();
@@ -41,7 +39,6 @@ const TabContent = () => {
         });
 
         setBonuses(enhanced);
-        setPlayerStrapiId(strapiId);
       } catch (err) {
         console.error("Ошибка загрузки бонусов:", err);
         setError(true);
