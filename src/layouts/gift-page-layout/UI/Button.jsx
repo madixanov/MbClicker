@@ -1,23 +1,33 @@
 import completed_logo from "../../../assets/icons/completed.svg";
+import { useEffect, useState } from "react";
 
 const BonusButton = ({ bonus, onComplete, isCompleted, bonusLink }) => {
+  const [state, setState] = useState('initial');
+
   const handleClick = () => {
     if (!bonusLink || isCompleted) return;
 
-    // Открываем ссылку и вызываем onComplete
     window.open(bonusLink, '_blank');
-    onComplete(bonus);
+    onComplete(bonus); // обновляет isCompleted в родителе
   };
 
-  if (isCompleted) return (
-    <span>
-      <img src={completed_logo} className="completed-logo"/>
-    </span>
-  )
+  useEffect(() => {
+    if (isCompleted) {
+      setState('claimed');
+    }
+  }, [isCompleted]);
+
+  if (state === 'claimed' || isCompleted) {
+    return (
+      <span>
+        <img src={completed_logo} alt="✓" />
+      </span>
+    );
+  }
 
   return (
-    <button className="task-btn" onClick={handleClick}
-      >ВЫПОЛНИТЬ
+    <button className="task-btn" onClick={handleClick}>
+      ВЫПОЛНИТЬ
     </button>
   );
 };
