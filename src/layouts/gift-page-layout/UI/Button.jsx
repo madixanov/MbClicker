@@ -10,8 +10,8 @@ const BonusButton = ({ bonus, onComplete, isCompleted, bonusLink }) => {
   };
 
   return (
-    <div>
-      {isCompleted ? <img src={completed_logo}/> : <button className="task-btn" onClick={handleClick}
+    <div className="div-wrapper">
+      {isCompleted ? <img src={completed_logo} className="completed-logo"/> : <button className="task-btn" onClick={handleClick}
       >ВЫПОЛНИТЬ</button>}
     </div>
   );
