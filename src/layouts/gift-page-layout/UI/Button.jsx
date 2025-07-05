@@ -20,7 +20,7 @@ const BonusButton = ({ bonus, onComplete, isCompleted, bonusLink }) => {
   if (state === 'claimed' || isCompleted) {
     return (
       <span className="task-done">
-        <img src={completed_logo} alt="✓" />
+        <img src={completed_logo} alt="✓" className="completed-logo"/>
       </span>
     );
   }
