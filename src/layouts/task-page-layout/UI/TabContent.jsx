@@ -1,112 +1,66 @@
 import { lazy, useEffect, useState } from "react";
-import { fetchBonuses, completeBonusForPlayer } from "../../../services/bonusService";
-import { fetchPlayerIdByDocumentId } from "../../../services/taskService";
+import { fetchTemplateTasks, fetchPlayerIdByDocumentId } from "../../../services/taskService";
 import usePlayerData from "../../../hooks/usePlayerData";
-import BONUS_LINKS from './bonus';
-import useMbStore from "../../../store/mb-store";
-import completed_logo from "../../../assets/icons/completed.svg";
 
-const BonusButton = lazy(() => import("./Button"));
-
-const getBonusLink = (bonusName) => {
-  if (typeof bonusName !== "string") return null;
-  const nameLower = bonusName.toLowerCase();
-  for (const key in BONUS_LINKS) {
-    if (nameLower.includes(key)) {
-      return BONUS_LINKS[key];
-    }
-  }
-  return null;
-};
+const Button = lazy(() => import("./Button"));
 
 const TabContent = () => {
-  const { player } = usePlayerData();
-  const [bonuses, setBonuses] = useState([]);
+  const [tasks, setTasks] = useState([]);
   const [playerStrapiId, setPlayerStrapiId] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
-  const { mbCountAll, setMbCountAll } = useMbStore();
+  const { player } = usePlayerData();
 
   useEffect(() => {
     const loadData = async () => {
       try {
-        const [bonusData, strapiId] = await Promise.all([
-          fetchBonuses(),
+        const [taskData, strapiId] = await Promise.all([
+          fetchTemplateTasks(),
           fetchPlayerIdByDocumentId(player.documentId),
         ]);
 
-        const enhanced = bonusData.map((bonus) => {
-          const isClaimed = bonus.completedBy?.some((u) => u.id === strapiId);
-          return { ...bonus, isClaimed };
+        const enhancedTasks = taskData.map((task) => {
+          const isClaimed = task.completedBy?.some((user) => user.id === strapiId);
+          return { ...task, isClaimed };
         });
 
-        setBonuses(enhanced);
+        setTasks(enhancedTasks);
         setPlayerStrapiId(strapiId);
       } catch (err) {
-        console.error("Ошибка загрузки бонусов:", err);
+        console.error("Ошибка при загрузке задач или игрока:", err);
         setError(true);
       } finally {
         setLoading(false);
       }
     };
 
-    if (player?.documentId) loadData();
+    if (player?.documentId) {
+      loadData();
+    }
   }, [player?.documentId]);
 
-  const handleComplete = async (bonus) => {
-    try {
-      await completeBonusForPlayer(playerStrapiId, bonus.documentId);
-
-      // Начисляем КБ и обновляем игрока
-      const newMb = mbCountAll + Number(bonus.Prize);
-      setMbCountAll(newMb);
-
-      // Локально помечаем бонус как выполненный
-      setBonuses((prev) =>
-        prev.map((b) =>
-          b.id === bonus.id ? { ...b, isClaimed: true } : b
-        )
-      );
-    } catch (err) {
-      console.error("Ошибка при выполнении бонуса:", err);
-    }
-  };
-
-  if (loading) return <p className="tab-status">Загрузка бонусов...</p>;
-  if (error) return <p className="tab-status">Ошибка. Попробуй позже.</p>;
-  if (bonuses.length === 0) return <p className="tab-status">Бонусов пока нет</p>;
+  if (loading) return <p className="tab-status">Загрузка заданий...</p>;
+  if (error) return <p className="tab-status">Произошла ошибка. Пока нет заданий.</p>;
+  if (!Array.isArray(tasks) || tasks.length === 0)
+    return <p className="tab-status">Заданий пока нет</p>;
 
   return (
     <div className="tabs">
-      {bonuses.map((bonus) => {
-        const link = getBonusLink(bonus.Name);
-
-        return (
-          <div className="task-container" key={bonus.id}>
-            <div className="pfphoto"></div>
-            <div className="task-content">
-              <p className="task-name">{bonus.Name}</p>
-              <p className="task-prize">+ {bonus.Prize} КБ</p>
-            </div>
-            {bonus.isClaimed ? (
-              <div className="task-completed">
-                <img
-                  src={completed_logo}
-                  alt="✓"
-                  className="completed-icon"
-                />
-              </div>
-            ) : (
-              <BonusButton
-                bonus={bonus}
-                bonusLink={link}
-                onComplete={handleComplete}
-                isCompleted={bonus.isClaimed}
-              />
-            )}
+      {tasks.map((task) => (
+        <div className="task-container" key={task.id}>
+          <div className="pfphoto"></div>
+          <div className="task-content">
+            <p className="task-name">{task.Name}</p>
+            <p className="task-prize">+ {task.Prize} КБ</p>
           </div>
-        );
-      })}
+          <Button
+            task={task}
+            playerId={player.documentId}
+            strapiPlayerId={playerStrapiId}
+            isClaimed={task.isClaimed}
+          />
+        </div>
+      ))}
     </div>
   );
 };
