@@ -5,6 +5,7 @@ export const fetchBonuses = async () => {
     const res = await axios.get("https://mbclickerstrapi.onrender.com/api/bonuses", {
       params: {
         sort: "createdAt:desc",
+        populate: 'completedBy'
       },
     });
 
