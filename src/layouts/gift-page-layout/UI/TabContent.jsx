@@ -47,7 +47,9 @@ const TabContent = () => {
     setCompletedIds((prev) => [...prev, bonus.documentId]);
     const newCount = mbCountAll + Number(bonus.Prize);
     setMbCountAll(newCount);
-    updatePlayer(player.documentId, newCount)
+    updatePlayer(player.documentId, {
+      clicks: newCount
+    })
   };
 
   if (loading) return <p className="tab-status">Загрузка бонусов...</p>;
