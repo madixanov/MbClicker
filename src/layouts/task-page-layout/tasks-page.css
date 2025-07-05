@@ -15,7 +15,7 @@
 .task-main {
   display: flex;
   flex-direction: column;
-  align-items: flex-start; /* ✅ чтобы выравнивалось по левому краю */
+  align-items: center; /* ✅ чтобы выравнивалось по левому краю */
   min-height: 133vh;
   width: 100%;
 }
