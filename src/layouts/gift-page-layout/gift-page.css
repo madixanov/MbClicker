@@ -119,6 +119,8 @@
   align-items: center;
 }
 
+
+
 @media (max-width: 550px) {
     .gift-main {
     align-items: start;

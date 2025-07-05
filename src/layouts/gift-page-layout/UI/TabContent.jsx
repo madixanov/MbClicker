@@ -88,22 +88,12 @@ const TabContent = () => {
               <p className="task-name">{bonus.Name}</p>
               <p className="task-prize">+ {bonus.Prize} КБ</p>
             </div>
-            {bonus.isClaimed ? (
-              <div className="task-completed">
-                <img
-                  src={completed_logo}
-                  alt="✓"
-                  className="completed-icon"
-                />
-              </div>
-            ) : (
               <BonusButton
                 bonus={bonus}
                 bonusLink={link}
                 onComplete={handleComplete}
                 isCompleted={bonus.isClaimed}
               />
-            )}
           </div>
         );
       })}
