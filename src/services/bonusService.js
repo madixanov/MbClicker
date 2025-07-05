@@ -20,11 +20,11 @@ export const fetchBonuses = async () => {
 export const completeBonusForPlayer = async (playerId, bonusId) => {
   try {
     const res = await axios.put(
-        `https://mbclickerstrapi.onrender.com/api/players/${playerId}`,
+        `https://mbclickerstrapi.onrender.com/api/bonuses/${bonusId}`,
         {
           data: {
-            completed_bonuses: {
-              connect: [bonusId],
+            completedBy: {
+              connect: [playerId],
             }
           }
         }
