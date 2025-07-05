@@ -6,7 +6,7 @@ import BONUS_LINKS from './bonus';
 import useMbStore from "../../../store/mb-store";
 import completed_logo from "../../../assets/icons/completed.svg";
 
-const BonusButton = lazy(() => import("./BonusButton"));
+const BonusButton = lazy(() => import("./Button"));
 
 const getBonusLink = (bonusName) => {
   if (typeof bonusName !== "string") return null;
