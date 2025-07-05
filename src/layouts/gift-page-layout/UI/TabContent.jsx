@@ -55,7 +55,7 @@ const TabContent = () => {
 
   const handleComplete = async (bonus) => {
     try {
-      await completeBonusForPlayer(playerStrapiId, bonus.documentId);
+      await completeBonusForPlayer(player.documentId, bonus.documentId);
 
       // Начисляем КБ и обновляем игрока
       const newMb = mbCountAll + Number(bonus.Prize);
