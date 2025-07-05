@@ -16,3 +16,23 @@ export const fetchBonuses = async () => {
     return [];
   }
 };
+
+export const completeBonusForPlayer = async (playerId, bonusId) => {
+  try {
+    const res = await axios.put(
+        `https://mbclickerstrapi.onrender.com/api/players/${playerId}`,
+        {
+          data: {
+            completed_bonuses: {
+              connect: [bonusId],
+            }
+          }
+        }
+    )
+
+    return res.data;
+  } catch (err) {
+    console.error("Ошибка при сохранении бонуса:", err?.response?.data || err)
+    throw err;
+  }
+}
