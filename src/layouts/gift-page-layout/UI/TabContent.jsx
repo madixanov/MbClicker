@@ -45,7 +45,7 @@ const TabContent = () => {
   const handleComplete = async (bonus) => {
     await completeBonusForPlayer(player.documentId, bonus.documentId);
     setCompletedIds((prev) => [...prev, bonus.documentId]);
-    const newCount = mbCountAll + bonus.prize;
+    const newCount = mbCountAll + Number(bonus.Prize);
     setMbCountAll(newCount);
     updatePlayer(player.documentId, newCount)
   };
