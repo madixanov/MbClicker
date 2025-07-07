@@ -10,6 +10,7 @@ const Avatar = () => {
   const increment = useMbStore((state) => state.increment);
   const getMbIncrement = useMbStore((state) => state.getMbIncrement);
   const clicks = useMbStore((state) => state.mbCountAll); // текущие клики
+  const progress_tokens = useMbStore((state) => state.progressTokens)
   const lvl = useLvlStore((state) => state.level);
   const { player } = usePlayerData(); // получаем Telegram ID
   const [popups, setPopups] = useState([]);
@@ -23,8 +24,8 @@ const Avatar = () => {
       console.log("Сохранение данных в Strapi...");
       await updatePlayer(player.documentId, {
         clicks,
-        progress_tokens: clicks, // если нужно
-        level: useLvlStore,
+        progress_tokens: progress_tokens, // если нужно
+        level: lvl,
       });
       console.log("Данные сохранены в Strapi");
     } catch (err) {
