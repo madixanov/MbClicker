@@ -1,23 +1,27 @@
 import useMbStore from "../store/mb-store";
+import usePlayerStore from "../store/player-store";
 import { updatePlayer } from "../services/playerService";
 
 const syncClicksToStrapi = async () => {
-  const { mbCountAll, playerDocumentId } = useMbStore.getState();
+  const { mbCountAll } = useMbStore.getState();
+  const { player } = usePlayerStore.getState();
+
+  const playerDocumentId = player?.documentId;
 
   if (!playerDocumentId) {
-    console.warn("❌ Нет playerDocumentId — невозможно сохранить клики");
+    console.warn("❌ Нет documentId — не сохраняем клики");
     return;
   }
 
   if (typeof mbCountAll !== "number" || mbCountAll <= 0) {
-    console.warn("⚠️ mbCountAll невалиден или 0 — пропускаем сохранение:", mbCountAll);
+    console.warn("⚠️ mbCountAll = 0 или невалиден — пропускаем", mbCountAll);
     return;
   }
 
   try {
-    console.log("💾 Автосейв кликов:", mbCountAll);
+    console.log("💾 Сохраняем клики:", mbCountAll);
     await updatePlayer(playerDocumentId, { clicks: mbCountAll });
-    console.log("✅ Клики успешно сохранены в Strapi (ID:", playerDocumentId, ")");
+    console.log("✅ Клики сохранены (ID:", playerDocumentId, ")");
   } catch (err) {
     console.error("❌ Ошибка при сохранении кликов:", err.response?.data || err);
   }
