@@ -34,7 +34,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
       return;
     }
 
-    const inviterRaw = currentData.attributes.invited_by?.data;
+    const inviterRaw = currentData.invited_by?.data;
     if (!inviterRaw) {
       console.warn("❌ У игрока нет пригласившего");
       return;
