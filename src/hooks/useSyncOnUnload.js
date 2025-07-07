@@ -2,8 +2,7 @@ import { useEffect } from "react";
 import getTelegramUser from "../utils/getTelegramUser";
 import useMbStore from "../store/mb-store";
 import useLvlStore from "../store/lvl-store";
-
-const API_BASE_URL = "https://your-strapi-url.com/api"; // Замените на ваш URL
+import { API_BASE_URL } from "../config/api";
 
 const useSyncOnUnload = () => {
   useEffect(() => {
@@ -22,7 +21,7 @@ const useSyncOnUnload = () => {
         level,
       });
 
-      const url = `${API_BASE_URL}/players/${user.documentId}`;
+      const url = `${API_BASE_URL}/api/players/${user.documentId}`;
 
       if (navigator.sendBeacon) {
         const blob = new Blob([data], { type: "application/json" });

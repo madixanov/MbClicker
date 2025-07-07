@@ -1,29 +1,28 @@
 import axios from "axios";
-
-const API = "https://mbclickerstrapi.onrender.com/api";
+import { API_BASE_URL } from "../config/api";
 
 // 🔹 Получение всех шаблонных задач
 export const fetchTemplateTasks = async () => {
-  const res = await axios.get(`${API}/tasks?filters[isTemplate][$eq]=true&populate=completedBy`);
+  const res = await axios.get(`${API_BASE_URL}/api/tasks?filters[isTemplate][$eq]=true&populate=completedBy`);
   return res.data.data;
 };
 
 // 🔹 Получить Strapi ID игрока по его documentId
 export const fetchPlayerIdByDocumentId = async (documentId) => {
-  const res = await axios.get(`${API}/players?filters[documentId][$eq]=${documentId}`);
+  const res = await axios.get(`${API_BASE_URL}/api/players?filters[documentId][$eq]=${documentId}`);
   return res.data.data[0]?.id || null;
 };
 
 // 🔹 Получить Strapi ID задачи по её documentId
 export const fetchTaskIdByDocumentId = async (documentId) => {
-  const res = await axios.get(`${API}/tasks?filters[documentId][$eq]=${documentId}`);
+  const res = await axios.get(`${API_BASE_URL}/api/tasks?filters[documentId][$eq]=${documentId}`);
   return res.data.data[0]?.id || null;
 };
 
 // 🔹 Обновить задачу, добавив игрока в completedBy
 export const completeTask = async (taskId, playerId) => {
   try {
-    const res = await axios.put(`${API}/tasks/${taskId}`, {
+    const res = await axios.put(`${API_BASE_URL}/api/tasks/${taskId}`, {
       data: {
         completedBy: [playerId], // ✅ массив ID
       },
@@ -37,7 +36,7 @@ export const completeTask = async (taskId, playerId) => {
 
 export const updatePlayerClicks = async (playerId, newClicks) => {
   try {
-    const res = await axios.put(`${API}/players/${playerId}`, {
+    const res = await axios.put(`${API_BASE_URL}/api/players/${playerId}`, {
       data: {
         clicks: newClicks,
       },

@@ -5,7 +5,7 @@ import useMbStore from "../store/mb-store";
 
 export const fetchPlayerByTelegramId = async (telegram_id) => {
   console.log("fetchPlayerByTelegramId вызван", telegram_id)
-  const res = await axios.get(`${API_BASE_URL}/players`, {
+  const res = await axios.get(`${API_BASE_URL}/api/players`, {
     params: {
       filters: {
         telegram_id: {
@@ -20,13 +20,13 @@ export const fetchPlayerByTelegramId = async (telegram_id) => {
 };
 
 export const updatePlayer = async (documentId, fields = {}) => {
-  return axios.put(`${API_BASE_URL}/players/${documentId}`, {
+  return axios.put(`${API_BASE_URL}/api/players/${documentId}`, {
     data: fields,
   });
 };
 
 export const createPlayer = async (playerData) => {
-  return axios.post(`${API_BASE_URL}/players`, {
+  return axios.post(`${API_BASE_URL}/api/players`, {
     data: playerData,
   });
 };
@@ -60,7 +60,7 @@ export const retryPendingUpdate = async () => {
 };
 
 export const fetchDashboardPlayers = async () => {
-  const res = await axios.get(`${API_BASE_URL}/players?sort=clicks:desc&pagination[limit]=3`);
+  const res = await axios.get(`${API_BASE_URL}/api/players?sort=clicks:desc&pagination[limit]=3`);
   return res.data?.data;;
 }
 
@@ -71,7 +71,7 @@ export const fetchAllPlayers = async () => {
   let totalPages = 1;
 
   do {
-    const res = await axios.get(`${API_BASE_URL}/players`, {
+    const res = await axios.get(`${API_BASE_URL}/api/players`, {
       params: {
         'pagination[page]': page,
         'pagination[pageSize]': pageSize,
@@ -90,7 +90,7 @@ export const fetchAllPlayers = async () => {
 };
 
 export const fetchPlayerByInviteCode = async (inviteCode) => {
-  const res = await axios.get(`${API_BASE_URL}/players`, {
+  const res = await axios.get(`${API_BASE_URL}/api/players`, {
     params: {
       filters: {
         invite_code: {
@@ -105,14 +105,14 @@ export const fetchPlayerByInviteCode = async (inviteCode) => {
 };
 
 export const addInvitedFriend = async (referrerId, invitedId) => {
-  const response = await axios.patch(`${API_BASE_URL}/players/${referrerId}/invited_friends`, {
+  const response = await axios.patch(`${API_BASE_URL}/api/players/${referrerId}/invited_friends`, {
     friend_id: invitedId,
   });
   return response.data?.data;
 };
 
 export const fetchPlayerWithFriends = async (telegram_id) => {
-  const res = await axios.get(`${API_BASE_URL}/players`, {
+  const res = await axios.get(`${API_BASE_URL}/api/players`, {
     params: {
       filters: {
         telegram_id: {
@@ -130,7 +130,7 @@ export const fetchPlayerWithFriends = async (telegram_id) => {
 const giveReferralBonus = async (documentId) => {
   try {
     // Получаем текущего игрока
-    const res = await axios.get(`${API_BASE_URL}/players`, {
+    const res = await axios.get(`${API_BASE_URL}/api/players`, {
       params: {
         filters: {
           documentId: { $eq: documentId },
@@ -147,7 +147,7 @@ const giveReferralBonus = async (documentId) => {
     // Проверка: invited_by есть, бонус не выдан
     if (current.invited_by && !current.referal_bonus_given) {
       // Получаем пригласившего игрока
-      const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
+      const inviterRes = await axios.get(`${API_BASE_URL}/api/players`, {
         params: {
           filters: {
             documentId: { $eq: current.invited_by },
@@ -161,14 +161,14 @@ const giveReferralBonus = async (documentId) => {
       const inviterId = inviter.documentId;
 
       // Обновляем пригласившего
-      await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
+      await axios.put(`${API_BASE_URL}/api/players/${inviterId}`, {
         data: {
           clicks: (inviter.clicks || 0) + 2500,
         },
       });
 
       // Обновляем текущего игрока
-      await axios.put(`${API_BASE_URL}/players/${playerId}`, {
+      await axios.put(`${API_BASE_URL}/api/players/${playerId}`, {
         data: {
           clicks: (current.clicks || 0) + 2500,
           referal_bonus_given: true,

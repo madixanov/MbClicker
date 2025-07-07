@@ -1,8 +1,9 @@
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
 export const fetchBonuses = async () => {
   try {
-    const res = await axios.get("https://mbclickerstrapi.onrender.com/api/bonuses", {
+    const res = await axios.get(`${API_BASE_URL}/api/bonuses`, {
       params: {
         sort: "createdAt:desc",
         populate: 'completedBy'
@@ -21,7 +22,7 @@ export const fetchBonuses = async () => {
 export const completeBonusForPlayer = async (playerId, bonusId) => {
   try {
     const res = await axios.put(
-        `https://mbclickerstrapi.onrender.com/api/bonuses/${bonusId}`,
+        `${API_BASE_URL}/api/bonuses/${bonusId}`,
         {
           data: {
             completedBy: {

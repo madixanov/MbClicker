@@ -47,14 +47,14 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     const currentClicks = Number(currentData.clicks) || 0;
 
     // 1. Обновляем пригласившего
-    await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
+    await axios.put(`${API_BASE_URL}/api/players/${inviterId}`, {
       data: {
         clicks: inviterClicks + 2500,
       },
     });
 
     // 2. Обновляем текущего игрока
-    await axios.put(`${API_BASE_URL}/players/${currentId}`, {
+    await axios.put(`${API_BASE_URL}/api/players/${currentId}`, {
       data: {
         clicks: currentClicks + 2500,
         referal_bonus_given: true,

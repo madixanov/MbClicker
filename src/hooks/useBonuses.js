@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
 const useBonuses = () => {
   const [bonuses, setBonuses] = useState([]);
@@ -9,7 +10,7 @@ const useBonuses = () => {
   useEffect(() => {
     const fetchBonuses = async () => {
       try {
-        const response = await axios.get("https://mbclickerstrapi.onrender.com/api/bonuses", {
+        const response = await axios.get(`${API_BASE_URL}/api/bonuses`, {
           params: {
             sort: "createdAt:desc",
             fields: ["Name", "Prize", "Completed", "documentId"],
