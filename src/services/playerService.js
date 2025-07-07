@@ -5,6 +5,7 @@ import useMbStore from "../store/mb-store";
 
 export const fetchPlayerByTelegramId = async (telegram_id) => {
   console.log("fetchPlayerByTelegramId вызван", telegram_id)
+  console.trace('Trace: ')
   const res = await axios.get(`${API_BASE_URL}/api/players`, {
     params: {
       filters: {
