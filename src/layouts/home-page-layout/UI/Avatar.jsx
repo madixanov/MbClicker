@@ -9,7 +9,7 @@ import useLvlStore from "../../../store/lvl-store";
 const Avatar = () => {
   const increment = useMbStore((state) => state.increment);
   const getMbIncrement = useMbStore((state) => state.getMbIncrement);
-  const clicks = useMbStore((state) => state.mbCountAll); // текущие клики
+  const mbCountAll = useMbStore((state) => state.mbCountAll); // текущие клики
   const progress_tokens = useMbStore((state) => state.progressTokens)
   const lvl = useLvlStore((state) => state.level);
   const { player } = usePlayerData(); // получаем Telegram ID
@@ -23,7 +23,7 @@ const Avatar = () => {
     try {
       console.log("Сохранение данных в Strapi...");
       await updatePlayer(player.documentId, {
-        clicks,
+        clicks: mbCountAll,
         progress_tokens: progress_tokens, // если нужно
         level: lvl,
       });
