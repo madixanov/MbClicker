@@ -27,14 +27,14 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     const current = currentRaw;
     const currentId = current.documentId;
-    const currentData = current.attributes;
+    const currentData = current;
 
     if (currentData.referal_bonus_given) {
       console.warn("⚠️ Бонус уже был выдан ранее");
       return;
     }
 
-    const inviterRaw = currentData.invited_by?.data;
+    const inviterRaw = currentData.attributes.invited_by?.data;
     if (!inviterRaw) {
       console.warn("❌ У игрока нет пригласившего");
       return;
