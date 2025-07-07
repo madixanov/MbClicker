@@ -4,10 +4,9 @@ import usePlayerData from "../../../hooks/usePlayerData";
 
 const Button = lazy(() => import("./Button"));
 
-const TabContent = () => {
+const TabContent = ({ loading, setLoading }) => {
   const [tasks, setTasks] = useState([]);
   const [playerStrapiId, setPlayerStrapiId] = useState(null);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { player } = usePlayerData();
 

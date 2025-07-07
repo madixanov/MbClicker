@@ -18,10 +18,9 @@ const getBonusLink = (bonusName) => {
   return null;
 };
 
-const TabContent = () => {
+const TabContent = ({ loading, setLoading}) => {
   const { player } = usePlayerData();
   const [bonuses, setBonuses] = useState([]);
-  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const { mbCountAll, setMbCountAll } = useMbStore();
 

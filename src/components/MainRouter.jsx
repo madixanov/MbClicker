@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState, useRef } from "react";
-import LoadingPage from "../pages/LoadingPage";
+import AppLoading from "../pages/AppLoading";
 import AutoSaveClicks from "./AutoSaveClisk";
 import usePlayerData from "../hooks/usePlayerData";
 import { referralBonus } from "../hooks/useReferralBonus";
@@ -116,12 +116,12 @@ const MainRouter = () => {
     applyReferralBonus();
   }, [player?.documentId, player?.referal_bonus_given]);
 
-  if (!isAppReady) return <LoadingPage progress={loadingProgress} />;
+  if (!isAppReady) return <AppLoading progress={loadingProgress} />;
 
   return (
     <>
       <AutoSaveClicks />
-      <Suspense fallback={<LoadingPage progress={loadingProgress} />}>
+      <Suspense fallback={<AppLoading progress={loadingProgress} />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />} />

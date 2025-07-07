@@ -1,10 +1,10 @@
 // pages/LoadingPage.jsx
-import "./loading-page.css";
+import "./app-loading.css";
 import { Helmet } from "react-helmet";
 import { useEffect } from "react";
 import { motion } from "framer-motion";
 
-const LoadingPage = ({ progress }) => {
+const AppLoading = ({ progress }) => {
 
   useEffect(() => {
     document.body.classList.add("other-page");
