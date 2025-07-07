@@ -12,7 +12,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     console.log("🆔 ID текущего игрока:", documentId);
 
     // Получаем текущего игрока по documentId
-    const playerRes = await axios.get(`${API_BASE_URL}/players`, {
+    const playerRes = await axios.get(`${API_BASE_URL}/api/players`, {
       params: {
         filters: { documentId: { $eq: documentId } },
         populate: "*",

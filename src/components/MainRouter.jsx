@@ -86,7 +86,7 @@ const MainRouter = () => {
       if (pendingCode && !bonusAlreadyGiven) {
         try {
           hasAppliedBonus.current = true;
-
+          console.log("Игрок: ", player)
           await referralBonus(player.documentId, () => {
             const newCount = mbCountAll + 2500;
             setMbCountAll(newCount);
