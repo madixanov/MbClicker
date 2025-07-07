@@ -1,126 +1,79 @@
-import { Routes, Route } from "react-router-dom";
-import { lazy, Suspense, useEffect, useState, useRef } from "react";
-import AppLoading from "../pages/AppLoading";
-import PageLoading from "../pages/PageLoading";
-import AutoSaveClicks from "./AutoSaveClisk";
-import usePlayerData from "../hooks/usePlayerData";
-import { referralBonus } from "../hooks/useReferralBonus";
-import { retryPendingUpdate } from "../services/playerService";
-import useMbStore from "../store/mb-store";
-import useLvlStore from "../store/lvl-store";
-import useTelegramAuth from "../hooks/useTelegramAuth";
-import useSyncOnUnload from "../hooks/useSyncOnUnload";
+import axios from "axios";
+import { API_BASE_URL } from "../config/api";
 
-// Lazy pages
-const HomePage = lazy(() => import("../pages/HomePage"));
-const ExchangePage = lazy(() => import("../pages/ExchangePage"));
-const TaskPage = lazy(() => import("../pages/TaskPage"));
-const GiftPage = lazy(() => import("../pages/GiftPage"));
-const StatsPage = lazy(() => import("../pages/StatsPage"));
-const FriendsPage = lazy(() => import("../pages/FriendsPage"));
+export const referralBonus = async (documentId, onLocalBonus) => {
+  if (!documentId) {
+    console.warn("❌ Нет documentId — бонус не проверяется");
+    return;
+  }
 
-const MainRouter = () => {
-  const { loadPlayer, player } = usePlayerData();
-  const {
-    mbCountAll,
-    setMbCountAll,
-    setInviteCode,
-    loadMbFromPlayer,
-    saveTokensToStrapi,
-  } = useMbStore();
-  const { loadLevelFromStrapi } = useLvlStore();
+  try {
+    console.log("🔍 Начинаем обработку реферального бонуса...");
+    console.log("🆔 ID текущего игрока:", documentId);
 
-  const [isAppReady, setIsAppReady] = useState(false);
-  const [loadingProgress, setLoadingProgress] = useState(0);
-  const hasInitialized = useRef(false);
-  const hasAppliedBonus = useRef(false);
+    // Получаем текущего игрока по documentId
+    const playerRes = await axios.get(`${API_BASE_URL}/players`, {
+      params: {
+        filters: { documentId: { $eq: documentId } },
+        populate: "*",
+      },
+    });
 
-  useTelegramAuth();
-  useSyncOnUnload();
+    const currentRaw = playerRes.data.data[0];
+    if (!currentRaw) {
+      console.warn("❌ Игрок не найден");
+      return;
+    }
 
-  // Инициализация приложения
-  useEffect(() => {
-    if (hasInitialized.current) return;
-    hasInitialized.current = true;
+    const current = currentRaw;
+    const currentId = current.documentId;
+    const currentData = current;
 
-    const initApp = async () => {
-      try {
-        setLoadingProgress(10);
-        await loadPlayer();
-        setLoadingProgress(30);
-        await loadMbFromPlayer();
-        setLoadingProgress(50);
-        await loadLevelFromStrapi();
-        setLoadingProgress(70);
+    if (currentData.referal_bonus_given) {
+      console.warn("⚠️ Бонус уже был выдан ранее");
+      return;
+    }
 
-        // Обработка реферального кода из URL
-        const urlParams = new URLSearchParams(window.location.search);
-        const inviteCode = urlParams.get("invite");
-        if (inviteCode) {
-          console.log("🔗 Реферальный код из URL:", inviteCode);
-          setInviteCode(inviteCode);
-          localStorage.setItem("pendingInviteCode", inviteCode);
-        }
+    const inviterRaw = currentData.invited_by?.data;
+    if (!inviterRaw) {
+      console.warn("❌ У игрока нет пригласившего");
+      return;
+    }
 
-        await retryPendingUpdate();
-        setLoadingProgress(100);
-        setTimeout(() => setIsAppReady(true), 500);
-      } catch (error) {
-        console.error("❌ Ошибка инициализации:", error);
-        setLoadingProgress(100);
-        setIsAppReady(true);
-      }
-    };
+    const inviterId = inviterRaw.documentId;
+    const inviterData = inviterRaw
 
-    initApp();
-  }, []);
+    const inviterClicks = Number(inviterData.clicks) || 0;
+    const currentClicks = Number(currentData.clicks) || 0;
 
-  // Применение бонуса
-  useEffect(() => {
-    if (!player?.documentId || hasAppliedBonus.current) return;
+    // 1. Обновляем пригласившего
+    await axios.put(`${API_BASE_URL}/players/${inviterId}`, {
+      data: {
+        clicks: inviterClicks + 2500,
+      },
+    });
 
-    const applyReferralBonus = async () => {
-      const pendingCode = localStorage.getItem("pendingInviteCode");
-      const bonusAlreadyGiven = !!player.referal_bonus_given;
+    // 2. Обновляем текущего игрока
+    await axios.put(`${API_BASE_URL}/players/${currentId}`, {
+      data: {
+        clicks: currentClicks + 2500,
+        referal_bonus_given: true,
+      },
+    });
 
-      if (pendingCode && !bonusAlreadyGiven) {
-        try {
-          hasAppliedBonus.current = true;
+    console.log("🎉 Бонус выдан обоим: +2500");
 
-          await referralBonus(player.documentId, () => {
-            setMbCountAll(prev => prev + 2500);
-          });
+    // 3. Локальное обновление
+    if (typeof onLocalBonus === "function") {
+      onLocalBonus(); // Например: setMbCountAll(prev => prev + 2500)
+    }
 
-          await saveTokensToStrapi();
-          localStorage.removeItem("pendingInviteCode");
+    // Успешно завершено
+    return true;
 
-        } catch (err) {
-          console.error("❌ Ошибка применения бонуса:", err);
-          hasAppliedBonus.current = false;
-        }
-      }
-    };
-
-    applyReferralBonus();
-  }, [player?.documentId, player?.referal_bonus_given]);
-
-  if (!isAppReady) return <AppLoading progress={loadingProgress} />;
-
-  return (
-    <>
-      <AutoSaveClicks />
-      <Suspense fallback={<PageLoading />}>
-        <Routes>
-          <Route path="/" element={<HomePage />} />
-          <Route path="/exchange" element={<ExchangePage />} />
-          <Route path="/tasks" element={<TaskPage />} />
-          <Route path="/gift" element={<GiftPage />} />
-          <Route path="/stats" element={<StatsPage />} />
-          <Route path="/friends" element={<FriendsPage />} />
-        </Routes>
-      </Suspense>
-    </>
-  );
+  } catch (err) {
+    console.error("❌ Ошибка в referralBonus:", err);
+    if (err.response) console.error("💥 Ответ сервера:", err.response.data);
+    return false;
+  }
 };
-
-export default MainRouter;
