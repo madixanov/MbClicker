@@ -1,6 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 import { lazy, Suspense, useEffect, useState, useRef } from "react";
 import AppLoading from "../pages/AppLoading";
+import PageLoading from "../pages/PageLoading";
 import AutoSaveClicks from "./AutoSaveClisk";
 import usePlayerData from "../hooks/usePlayerData";
 import { referralBonus } from "../hooks/useReferralBonus";
@@ -9,8 +10,8 @@ import useMbStore from "../store/mb-store";
 import useLvlStore from "../store/lvl-store";
 import useTelegramAuth from "../hooks/useTelegramAuth";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
-import PageLoading from "../pages/PageLoading";
 
+// Lazy pages
 const HomePage = lazy(() => import("../pages/HomePage"));
 const ExchangePage = lazy(() => import("../pages/ExchangePage"));
 const TaskPage = lazy(() => import("../pages/TaskPage"));
@@ -25,7 +26,7 @@ const MainRouter = () => {
     setMbCountAll,
     setInviteCode,
     loadMbFromPlayer,
-    saveTokensToStrapi
+    saveTokensToStrapi,
   } = useMbStore();
   const { loadLevelFromStrapi } = useLvlStore();
 
@@ -74,41 +75,28 @@ const MainRouter = () => {
     initApp();
   }, []);
 
-  // Применение реферального бонуса с защитой от сброса
+  // Применение бонуса
   useEffect(() => {
     if (!player?.documentId || hasAppliedBonus.current) return;
 
     const applyReferralBonus = async () => {
       const pendingCode = localStorage.getItem("pendingInviteCode");
-      const bonusAlreadyGiven = player.referal_bonus_given;
+      const bonusAlreadyGiven = !!player.referal_bonus_given;
 
       if (pendingCode && !bonusAlreadyGiven) {
         try {
-          console.log("🎁 Пытаемся применить реферальный бонус...");
           hasAppliedBonus.current = true;
-          
-          // 1. Сначала обновляем локальное состояние
-          const newCount = mbCountAll + 2500;
-          setMbCountAll(newCount);
-          
-          // 2. Затем сохраняем на сервер
-          await referralBonus(
-            player.documentId,
-            async () => {
-              console.log("✅ Реферальный бонус успешно применен");
-              
-              // 3. Форсируем синхронизацию с сервером
-              await saveTokensToStrapi();
-              localStorage.removeItem("pendingInviteCode");
-              
-              console.log("🔄 Состояние синхронизировано с сервером");
-            },
-            newCount // Передаем уже обновленное значение
-          );
-        } catch (error) {
-          console.error("❌ Ошибка применения реферального бонуса:", error);
-          // Откатываем изменения при ошибке
-          setMbCountAll(mbCountAll);
+
+          await referralBonus(player.documentId, () => {
+            const newCount = mbCountAll + 2500;
+            setMbCountAll(newCount);
+          });
+
+          await saveTokensToStrapi();
+          localStorage.removeItem("pendingInviteCode");
+
+        } catch (err) {
+          console.error("❌ Ошибка применения бонуса:", err);
           hasAppliedBonus.current = false;
         }
       }
@@ -122,7 +110,7 @@ const MainRouter = () => {
   return (
     <>
       <AutoSaveClicks />
-      <Suspense fallback={<PageLoading loading={true}/>}>
+      <Suspense fallback={<PageLoading />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />} />
