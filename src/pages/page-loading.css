@@ -1,7 +1,7 @@
 .loader-wrapper {
   position: fixed;
   inset: 0;
-  background-color: white;
+  background-color: black;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -11,7 +11,7 @@
 .loader {
   width: 64px;
   height: 64px;
-  border: 6px solid #3b82f6;
+  border: 6px solid rgb(185, 184, 184);
   border-top-color: transparent;
   border-radius: 50%;
   animation: spin 1s linear infinite;
