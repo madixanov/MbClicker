@@ -9,6 +9,7 @@ import useMbStore from "../store/mb-store";
 import useLvlStore from "../store/lvl-store";
 import useTelegramAuth from "../hooks/useTelegramAuth";
 import useSyncOnUnload from "../hooks/useSyncOnUnload";
+import PageLoading from "../pages/PageLoading";
 
 const HomePage = lazy(() => import("../pages/HomePage"));
 const ExchangePage = lazy(() => import("../pages/ExchangePage"));
@@ -121,6 +122,7 @@ const MainRouter = () => {
   return (
     <>
       <AutoSaveClicks />
+      <Suspense fallback={<PageLoading loading={true}/>}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />} />
@@ -129,6 +131,7 @@ const MainRouter = () => {
           <Route path="/stats" element={<StatsPage />} />
           <Route path="/friends" element={<FriendsPage />} />
         </Routes>
+      </Suspense>
     </>
   );
 };
