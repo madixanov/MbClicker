@@ -5,6 +5,7 @@ import avatar from '../../assets/images/avatar.webp';
 
 const ProgressBar = lazy(() => import("./UI/ProgressBar"));
 const MbCounter = lazy(() => import("./UI/MbCounter"));
+const Avatar = lazy(() => import("./UI/Avatar"))
 
 const Main = () => {
     return (
