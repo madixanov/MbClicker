@@ -41,7 +41,7 @@ export const referralBonus = async (documentId, onLocalBonus, mbCountAll) => {
     console.log("📌 documentId пригласившего:", inviterId);
 
     // 2. Получаем пригласившего игрока
-    const inviterRes = await axios.get(`${API_BASE_URL}/players`, {
+    const inviterRes = await axios.get(`${API_BASE_URL}/api/players`, {
       params: {
         filters: { documentId: { $eq: inviterId } },
         populate: "*",
