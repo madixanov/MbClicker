@@ -121,7 +121,6 @@ const MainRouter = () => {
   return (
     <>
       <AutoSaveClicks />
-      <Suspense fallback={<AppLoading progress={loadingProgress} />}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />} />
@@ -130,7 +129,6 @@ const MainRouter = () => {
           <Route path="/stats" element={<StatsPage />} />
           <Route path="/friends" element={<FriendsPage />} />
         </Routes>
-      </Suspense>
     </>
   );
 };
