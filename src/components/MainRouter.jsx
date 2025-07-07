@@ -110,7 +110,7 @@ const MainRouter = () => {
   return (
     <>
       <AutoSaveClicks />
-      <Suspense fallback={<PageLoading />}>
+      <Suspense fallback={<PageLoading loading={true}/>}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />} />
