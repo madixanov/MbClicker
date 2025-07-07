@@ -50,10 +50,20 @@ const useMbStore = create((set, get) => ({
   },
 
   // Установка общего количества
-  setMbCountAll: (value) => {
-    if (typeof value === "number" && value >= 0) {
-      set({ mbCountAll: value });
-    }
+  setMbCountAll: (valueOrUpdater) => {
+    set((state) => {
+      const newValue =
+        typeof valueOrUpdater === "function"
+          ? valueOrUpdater(state.mbCountAll)
+          : valueOrUpdater;
+
+      if (typeof newValue === "number" && newValue >= 0) {
+        return { mbCountAll: newValue };
+      }
+
+      // ничего не обновляем, если некорректное значение
+      return {};
+    });
   },
 
   // Сброс сессионных данных

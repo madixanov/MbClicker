@@ -22,7 +22,6 @@ const FriendsPage = lazy(() => import("../pages/FriendsPage"));
 const MainRouter = () => {
   const { loadPlayer, player } = usePlayerData();
   const {
-    mbCountAll,
     setMbCountAll,
     setInviteCode,
     loadMbFromPlayer,
