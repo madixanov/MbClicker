@@ -41,7 +41,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     }
 
     const inviterId = inviterRaw.documentId;
-    const inviterData = inviterRaw.attributes;
+    const inviterData = inviterRaw;
 
     const inviterClicks = Number(inviterData.clicks) || 0;
     const currentClicks = Number(currentData.clicks) || 0;
