@@ -14,6 +14,10 @@ const useMbStore = create((set, get) => ({
   inviteCode: "",
   isProcessing: false,
   loaded: false, // ✅ Чтобы не загружать повторно
+  isSaving: false,
+
+  startSavingAvatar: () => set({ isSavingAvatar: true }),
+  stopSavingAvatar: () => set({ isSavingAvatar: false }),
 
   // 📦 Инициализация (автозагрузка один раз)
   initMbStore: () => {

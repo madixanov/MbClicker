@@ -3,10 +3,15 @@ import usePlayerStore from "../store/player-store";
 import { updatePlayer } from "../services/playerService";
 
 const syncClicksToStrapi = async () => {
-  const { mbCountAll } = useMbStore.getState();
+  const { mbCountAll, isSavingAvatar } = useMbStore.getState();
   const { player } = usePlayerStore.getState();
 
   const playerDocumentId = player?.documentId;
+
+  if (isSavingAvatar) {
+    console.log("⏸ Пропущено автосохранение — активна ручная синхронизация из Avatar");
+    return;
+  }
 
   if (!playerDocumentId) {
     console.warn("❌ Нет documentId — не сохраняем клики");

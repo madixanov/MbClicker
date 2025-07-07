@@ -7,11 +7,8 @@ import "../home-page.css";
 import useLvlStore from "../../../store/lvl-store";
 
 const Avatar = () => {
-  const increment = useMbStore((state) => state.increment);
-  const getMbIncrement = useMbStore((state) => state.getMbIncrement);
-  const mbCountAll = useMbStore((state) => state.mbCountAll); // текущие клики
-  const progress_tokens = useMbStore((state) => state.progressTokens)
-  const lvl = useLvlStore((state) => state.level);
+  const { mbCountAll, progressTokens, increment, getMbIncrement, startSavingAvatar, stopSavingAvatar } = useMbStore.getState();
+  const lvl = useLvlStore.getState().level;
   const { player } = usePlayerData(); // получаем Telegram ID
   const [popups, setPopups] = useState([]);
 
@@ -21,15 +18,18 @@ const Avatar = () => {
   const saveToStrapi = async () => {
     if (!player || !player.documentId) return;
     try {
+      startSavingAvatar();
       console.log("Сохранение данных в Strapi...");
       await updatePlayer(player.documentId, {
         clicks: mbCountAll,
-        progress_tokens: progress_tokens, // если нужно
+        progress_tokens: progressTokens, // если нужно
         level: lvl,
       });
       console.log("Данные сохранены в Strapi");
     } catch (err) {
       console.error("Ошибка сохранения:", err);
+    } finally {
+      stopSavingAvatar();
     }
   };
 
