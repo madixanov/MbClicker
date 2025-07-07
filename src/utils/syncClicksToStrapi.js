@@ -1,31 +1,23 @@
 import useMbStore from "../store/mb-store";
-import getTelegramUser from "../utils/getTelegramUser";
-import {
-  fetchPlayerByTelegramId,
-  updatePlayer,
-} from "../services/playerService";
+import { updatePlayer } from "../services/playerService";
 
 const syncClicksToStrapi = async () => {
-  const { mbCountAll } = useMbStore.getState();
-  const user = getTelegramUser();
+  const { mbCountAll, playerDocumentId } = useMbStore.getState();
 
-  if (!user) {
-    console.warn("❌ Пользователь Telegram не найден");
+  if (!playerDocumentId) {
+    console.warn("❌ Нет playerDocumentId — невозможно сохранить клики");
+    return;
+  }
+
+  if (typeof mbCountAll !== "number" || mbCountAll <= 0) {
+    console.warn("⚠️ mbCountAll невалиден или 0 — пропускаем сохранение:", mbCountAll);
     return;
   }
 
   try {
-    console.log('autosavetokens')
-    const player = await fetchPlayerByTelegramId(user.id);
-
-    if (!player || !player.documentId) {
-      console.warn("⚠️ Игрок или его documentId не найден");
-      return;
-    }
-
-    await updatePlayer(player.documentId, { clicks: mbCountAll });
-
-    console.log("✅ Клики обновлены (ID:", player.documentId, ")");
+    console.log("💾 Автосейв кликов:", mbCountAll);
+    await updatePlayer(playerDocumentId, { clicks: mbCountAll });
+    console.log("✅ Клики успешно сохранены в Strapi (ID:", playerDocumentId, ")");
   } catch (err) {
     console.error("❌ Ошибка при сохранении кликов:", err.response?.data || err);
   }
