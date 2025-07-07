@@ -27,7 +27,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     const current = currentRaw;
     const currentId = current.documentId;
-    const currentData = current;
+    const currentData = current.attributes;
 
     if (currentData.referal_bonus_given) {
       console.warn("⚠️ Бонус уже был выдан ранее");
@@ -41,7 +41,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     }
 
     const inviterId = inviterRaw.documentId;
-    const inviterData = inviterRaw
+    const inviterData = inviterRaw.attributes;
 
     const inviterClicks = Number(inviterData.clicks) || 0;
     const currentClicks = Number(currentData.clicks) || 0;
