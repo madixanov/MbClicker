@@ -1,6 +1,7 @@
 import { lazy, useEffect, useState } from "react";
 import { fetchTemplateTasks, fetchPlayerIdByDocumentId } from "../../../services/taskService";
 import usePlayerData from "../../../hooks/usePlayerData";
+import PageLoading from "../../../pages/PageLoading";
 
 const Button = lazy(() => import("./Button"));
 
@@ -38,7 +39,7 @@ const TabContent = ({ loading, setLoading }) => {
     }
   }, [player?.documentId]);
 
-  if (loading) return <p className="tab-status">Загрузка заданий...</p>;
+  if (loading) return <PageLoading loading={loading} />;
   if (error) return <p className="tab-status">Произошла ошибка. Пока нет заданий.</p>;
   if (!Array.isArray(tasks) || tasks.length === 0)
     return <p className="tab-status">Заданий пока нет</p>;

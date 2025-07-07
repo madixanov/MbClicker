@@ -4,6 +4,7 @@ import { fetchPlayerIdByDocumentId } from "../../../services/taskService";
 import usePlayerData from "../../../hooks/usePlayerData";
 import BONUS_LINKS from './bonus';
 import useMbStore from "../../../store/mb-store";
+import PageLoading from "../../../pages/PageLoading";
 
 const BonusButton = lazy(() => import("./Button"));
 
@@ -68,7 +69,7 @@ const TabContent = ({ loading, setLoading}) => {
     }
   };
 
-  if (loading) return <p className="tab-status">Загрузка бонусов...</p>;
+  if (loading) return <PageLoading loading={loading} />;
   if (error) return <p className="tab-status">Ошибка. Попробуй позже.</p>;
   if (bonuses.length === 0) return <p className="tab-status">Бонусов пока нет</p>;
 
