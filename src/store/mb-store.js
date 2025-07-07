@@ -4,6 +4,7 @@ import { create } from "zustand";
 import getTelegramUser from "../utils/getTelegramUser";
 import { fetchPlayerByTelegramId, updatePlayer } from "../services/playerService";
 import useLvlStore from "./lvl-store";
+import usePlayerStore from "./player-store";
 
 const useMbStore = create((set, get) => ({
   // 📦 Состояния
@@ -95,29 +96,34 @@ const useMbStore = create((set, get) => ({
   },
 
   // 💾 Автосохранение
+ // ⬅️ добавить
+
   saveTokensToStrapi: async () => {
     if (get().isProcessing) return;
 
     set({ isProcessing: true });
-    try {
-      const user = getTelegramUser();
-      if (!user) return;
 
-      console.log('savetokens')
-      const player = await fetchPlayerByTelegramId(user.id);
-      if (player?.documentId) {
-        const { mbCountAll, progressTokens } = get();
-        await updatePlayer(player.documentId, {
-          clicks: mbCountAll,
-          progress_tokens: progressTokens,
-        });
+    try {
+      const { player } = usePlayerStore.getState(); // ⬅️ получаем из store
+      if (!player?.documentId) {
+        console.warn("❌ Нет documentId — не сохраняем");
+        return;
       }
+
+      const { mbCountAll, progressTokens } = get();
+      console.log("💾 saveTokensToStrapi:", mbCountAll, progressTokens);
+
+      await updatePlayer(player.documentId, {
+        clicks: mbCountAll,
+        progress_tokens: progressTokens,
+      });
     } catch (error) {
-      console.error("Ошибка автосохранения:", error);
+      console.error("❌ Ошибка сохранения в Strapi:", error);
     } finally {
       set({ isProcessing: false });
     }
   },
-}));
+
+  }));
 
 export default useMbStore;
