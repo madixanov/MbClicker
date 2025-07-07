@@ -27,7 +27,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
 
     const current = currentRaw;
     const currentId = current.documentId;
-    const currentData = current;
+    const currentData = current.attributes;
 
     if (currentData.referal_bonus_given) {
       console.warn("⚠️ Бонус уже был выдан ранее");
@@ -44,7 +44,7 @@ export const referralBonus = async (documentId, onLocalBonus) => {
     const inviterData = inviterRaw;
 
     const inviterClicks = Number(inviterData.clicks) || 0;
-    const currentClicks = Number(currentData.clicks) || 0;
+    const currentClicks = Number(current.clicks) || 0;
 
     // 1. Обновляем пригласившего
     await axios.put(`${API_BASE_URL}/api/players/${inviterId}`, {
