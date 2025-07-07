@@ -82,13 +82,11 @@ const MainRouter = () => {
     const applyReferralBonus = async () => {
       const pendingCode = localStorage.getItem("pendingInviteCode");
       const bonusAlreadyGiven = !!player.referal_bonus_given;
-      const isSelfReferral = pendingCode === player.invite_code; // 🔄 защита
 
-      if (pendingCode && !bonusAlreadyGiven && !isSelfReferral) {
+      if (pendingCode && !bonusAlreadyGiven) {
         try {
           hasAppliedBonus.current = true;
-          console.log("🎁 Применяется реферальный бонус от:", pendingCode);
-
+          console.log("Игрок: ", player)
           await referralBonus(player.documentId, () => {
             const newCount = mbCountAll + 2500;
             setMbCountAll(newCount);
@@ -96,14 +94,10 @@ const MainRouter = () => {
 
           await saveTokensToStrapi();
           localStorage.removeItem("pendingInviteCode");
+
         } catch (err) {
           console.error("❌ Ошибка применения бонуса:", err);
           hasAppliedBonus.current = false;
-        }
-      } else {
-        if (isSelfReferral) {
-          console.warn("🚫 Самореферал — бонус не выдается");
-          localStorage.removeItem("pendingInviteCode");
         }
       }
     };
@@ -116,7 +110,7 @@ const MainRouter = () => {
   return (
     <>
       <AutoSaveClicks />
-      <Suspense fallback={<PageLoading loading={true} />}>
+      <Suspense fallback={<PageLoading loading={true}/>}>
         <Routes>
           <Route path="/" element={<HomePage />} />
           <Route path="/exchange" element={<ExchangePage />} />
