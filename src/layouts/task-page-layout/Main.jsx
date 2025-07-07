@@ -2,7 +2,6 @@ import { useState } from "react"
 import TabContent from "./UI/TabContent"
 import "./tasks-page.css"
 import { Helmet } from "react-helmet"
-import usePlayerData from "../../hooks/usePlayerData"
 import PageLoading from "../../pages/PageLoading"
 
 const Main = () => {
