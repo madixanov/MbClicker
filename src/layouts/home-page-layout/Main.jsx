@@ -1,8 +1,10 @@
 import { lazy, Suspense } from "react";
 import './home-page.css';
+import LoadingPage from '../../pages/LoadingPage';
 import { Helmet } from "react-helmet";
 import avatar from '../../assets/images/avatar.webp';
-import Avatar from "./UI/Avatar"; 
+import Avatar from "./UI/Avatar";
+import PageLoading from "../../pages/PageLoading";
 
 const ProgressBar = lazy(() => import("./UI/ProgressBar"));
 const MbCounter = lazy(() => import("./UI/MbCounter"));
@@ -15,11 +17,9 @@ const Main = () => {
                 <meta name="description" content="Нажимай на своего Аватара, копи MB, играй в удовольствие" />
             </Helmet>
 
-            <Suspense>
-                <ProgressBar />
-                <MbCounter />
-                <Avatar />
-            </Suspense>
+            <ProgressBar />
+            <MbCounter />
+            <Avatar />
         </main>
     )
 }
