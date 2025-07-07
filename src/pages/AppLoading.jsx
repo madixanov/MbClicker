@@ -49,4 +49,4 @@ const AppLoading = ({ progress }) => {
   );
 };
 
-export default LoadingPage;
+export default AppLoading;
