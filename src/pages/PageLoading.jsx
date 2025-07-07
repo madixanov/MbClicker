@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import "./loader.css"; // подключаем CSS
+import "./page-loading.css"; // подключаем CSS
 
 const Loader = () => {
   return (
