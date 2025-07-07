@@ -28,7 +28,7 @@ body.other-page {
   display: block;
 }
 
-html, body, #root, .App {
+html, body {
   background-color: #000;
 }
 
