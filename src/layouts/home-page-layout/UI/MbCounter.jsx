@@ -37,21 +37,6 @@ const MbCounter = () => {
     return () => controls.stop();
   }, [mbCountAll]);
 
-  // ⏳ Автосохранение в Strapi раз в 15 секунд
-  useEffect(() => {
-    if (!player?.documentId) return;
-
-    const interval = setInterval(() => {
-      updatePlayer(player.documentId, {
-        clicks: mbCountAll,
-        progress_tokens: progressTokens,
-        level: lvl
-      });
-    }, 15000);
-
-    return () => clearInterval(interval);
-  }, [mbCountAll, progressTokens, player?.documentId]);
-
   // ✅ Пересинхронизация animatedCount после обнуления
   useEffect(() => {
     if (mbCountAll === 0 && animatedCount !== 0) {

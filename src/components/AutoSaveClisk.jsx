@@ -7,6 +7,7 @@ const AutoSaveClicks = () => {
       syncClicksToStrapi();
     }, 15000); // каждые 15 секунд
 
+    console.log("Клики сохранены");
     return () => clearInterval(interval);
   }, []);
 
