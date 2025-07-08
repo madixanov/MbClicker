@@ -42,7 +42,7 @@ const MbCounter = () => {
     if (!player?.documentId) return;
 
     const interval = setInterval(() => {
-      updatePlayer({
+      updatePlayer(player.documentId, {
         clicks: mbCountAll,
         progress_tokens: progressTokens,
         level: lvl
