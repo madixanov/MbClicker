@@ -105,7 +105,7 @@ const Button = ({
       disabled={loading || isProcessing}
     >
       {loading || isProcessing
-        ? "..."
+        ? "ВЫДАЧА"
         : state === "ready"
         ? "ПОЛУЧИТЬ"
         : "ВЫПОЛНИТЬ"}
