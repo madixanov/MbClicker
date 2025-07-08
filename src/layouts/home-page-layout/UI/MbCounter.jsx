@@ -8,12 +8,11 @@ import exchange1 from "../../../assets/icons/exchange1.svg";
 
 import useMbStore from "../../../store/mb-store";
 import usePlayerData from "../../../hooks/usePlayerData";
-import useUpdatePlayer from "../../../hooks/useUpdatePlayer";
+import { updatePlayer } from "../../../services/playerService";
 import useLvlStore from "../../../store/lvl-store";
 
 const MbCounter = () => {
   const { player } = usePlayerData();
-  const updatePlayer = useUpdatePlayer();
   const mbCountAll = useMbStore((state) => state.mbCountAll);
   const progressTokens = useMbStore((state) => state.progressTokens);
   const lvl = useLvlStore((state) => state.level);
