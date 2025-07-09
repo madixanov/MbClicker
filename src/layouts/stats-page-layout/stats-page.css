@@ -55,6 +55,12 @@
   align-items: center;
   transition: transform 0.3s;
   height: 100%;
+  border: 1px solid;
+  padding-top: 5px;
+  padding-bottom: 5px;
+  border-radius: 10px;
+  background-color: #141414;
+  border-color: #363535;
 }
 
 .profile-card.top-card {
@@ -203,9 +209,13 @@
   gap: 80px;
   width: 100%;
   margin-top: 15px;
-  padding-bottom: 15px;
   padding-right: 40px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.5);
+  border: 1px solid;
+  padding-top: 8px;
+  padding-bottom: 8px;
+  border-radius: 8px;
+  background-color: #141414;
+  border-color: #363535;
 }
 
 .leaders-photo-container {
