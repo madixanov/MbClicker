@@ -16,8 +16,7 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-height: 100%;
-  width: 100vw;
+  min-height: 133vh;
   width: 100%;
 }
 
@@ -80,7 +79,6 @@
   font-weight: 400;
   width: 100%;
   text-wrap: wrap;
-  margin-left: 5px;
 }
 
 .task-prize {
