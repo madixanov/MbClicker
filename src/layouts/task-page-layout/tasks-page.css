@@ -58,10 +58,17 @@
   box-sizing: border-box;
   height: 80px;
   border: 1px solid;
-  padding: 8px 10px;
-  border-radius: 8px;
+  padding: 5px 10px;
+  border-radius: 20px;
   background-color: #141414;
   border-color: #363535;
+}
+
+.task-info {
+  display: flex;
+  gap: 5px;
+  align-items: center;
+  justify-self: center;
 }
 
 .pfphoto {

@@ -6,10 +6,6 @@
   box-sizing: border-box;
 }
 
-html, body {
-  background-color: #000;
-}
-
 body {
   margin: 0;
   font-family: Benzin;
@@ -24,6 +20,16 @@ body {
   background-repeat: no-repeat;
   padding-top: 50px;
   overflow: hidden;
+}
+
+body.other-page {
+  background: none;
+  background-color: #000;
+  display: block;
+}
+
+html, body {
+  background-color: #000;
 }
 
 @media (prefers-color-scheme: dark) {

@@ -48,10 +48,12 @@ const TabContent = ({ loading, setLoading }) => {
     <div className="tabs">
       {tasks.map((task) => (
         <div className="task-container" key={task.id}>
-          <div className="pfphoto"></div>
-          <div className="task-content">
-            <p className="task-name">{task.Name}</p>
-            <p className="task-prize">+ {task.Prize} КБ</p>
+          <div className="task-info">
+            <div className="pfphoto"></div>
+            <div className="task-content">
+              <p className="task-name">{task.Name}</p>
+              <p className="task-prize">+ {task.Prize} КБ</p>
+            </div>
           </div>
           <Button
             task={task}
