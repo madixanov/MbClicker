@@ -80,10 +80,12 @@ const TabContent = ({ loading, setLoading}) => {
 
         return (
           <div className="task-container" key={bonus.id}>
-            <div className="pfphoto"></div>
-            <div className="task-content">
-              <p className="task-name">{bonus.Name}</p>
-              <p className="task-prize">+ {bonus.Prize} КБ</p>
+            <div className="task-info">
+              <div className="pfphoto"></div>
+              <div className="task-content">
+                <p className="task-name">{bonus.Name}</p>
+                <p className="task-prize">+ {bonus.Prize} КБ</p>
+              </div>
             </div>
               <BonusButton
                 bonus={bonus}
