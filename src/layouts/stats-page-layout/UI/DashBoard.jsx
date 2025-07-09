@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { fetchDashboardPlayers } from "../../../services/playerService";
+import { motion } from "framer-motion";
 
 const DashBoard = () => {
-    const [ players, setPlayers ] = useState([]);
+    const [players, setPlayers] = useState([]);
+
     const defaultAvatar = `data:image/svg+xml;utf8,
         <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
             <rect fill="white" width="100" height="100"/>
@@ -20,7 +22,7 @@ const DashBoard = () => {
             }
         };
         loadPlayers();
-    }, [])
+    }, []);
 
     return (
         <div className="dash-board">
@@ -37,7 +39,17 @@ const DashBoard = () => {
                 }
 
                 return (
-                    <div key={player.name} className={cardClass}>
+                    <motion.div
+                        key={player.name}
+                        className={cardClass}
+                        initial={{ opacity: 0, y: 20 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{
+                            delay: index * 0.15, // ⏱ задержка для поочередного появления
+                            duration: 0.5,
+                            ease: "easeOut"
+                        }}
+                    >
                         <div className={imgClass}>
                             <img
                                 src={player.photo_url || defaultAvatar}
@@ -52,7 +64,7 @@ const DashBoard = () => {
                         <h2>{player.username}</h2>
                         <p>БАЛАНС: <span>{player.clicks.toLocaleString('ru-RU')}</span></p>
                         <p>ОБМЕНЫ: <span>0</span></p>
-                    </div>
+                    </motion.div>
                 );
             })}
         </div>
