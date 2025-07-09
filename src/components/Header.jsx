@@ -12,7 +12,7 @@ const Header = memo(() => {
     const setModalTheme = useModalStore((state) => state.setModalTheme);
 
     const username = usePlayerStore((state) => state.player?.username, shallow);
-    const createdAt = usePlayerStore((state) => state.player?.created_at, shallow);
+    const createdAt = usePlayerStore((state) => state.player?.createdAt, shallow);
 
     return (
         <header>
