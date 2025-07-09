@@ -18,7 +18,7 @@ const Header = memo(() => {
         <header>
             <div className="header-container">
                 <div className="time-container" onClick={() => setModalDay(true)}>
-                    <div className="div-day">{createdAt ? <DayCounter createdAt={createdAt} : "1 ДЕНЬ"}</div>
+                    <div className="div-day">{createdAt ? <DayCounter createdAt={createdAt} /> : "1 ДЕНЬ"}</div>
                     <p>ВРЕМЯ</p>
                 </div>
                 <div className="name-container">
