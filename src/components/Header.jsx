@@ -4,20 +4,21 @@ import light from "../assets/icons/light.svg"
 import './header.css'
 import usePlayerStore from "../store/player-store";
 import { memo } from "react";
-import { shallow } from 'zustand/shallow'
+import { shallow } from 'zustand/shallow';
+import DayCounter from "./DayCounter";
 
 const Header = memo(() => {
     const setModalDay = useModalStore((state) => state.setModalDay);
     const setModalTheme = useModalStore((state) => state.setModalTheme);
 
     const username = usePlayerStore((state) => state.player?.username, shallow);
-    console.log(username);
+    const createdAt = usePlayerStore((state) => state.player?.created_at, shallow);
 
     return (
         <header>
             <div className="header-container">
                 <div className="time-container" onClick={() => setModalDay(true)}>
-                    <div className="div-day">1 DAY</div>
+                    <div className="div-day">{createdAt ? <DayCounter createdAt={createdAt} : "1 ДЕНЬ"}</div>
                     <p>ВРЕМЯ</p>
                 </div>
                 <div className="name-container">
