@@ -7,12 +7,12 @@ const Main = lazy(() => import ('../layouts/stats-page-layout/Main'))
 
 const StatsPage = () => {
 
-    useEffect(() => {
-            document.body.classList.add("other-page")
-            return () => {
-                document.body.classList.remove('other-page')
-            }
-        }, [])
+    // useEffect(() => {
+    //         document.body.classList.add("other-page")
+    //         return () => {
+    //             document.body.classList.remove('other-page')
+    //         }
+    //     }, [])
 
     return (
         <div className="stats-page">
