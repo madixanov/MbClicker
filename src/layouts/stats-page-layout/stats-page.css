@@ -196,7 +196,7 @@
 .leaders-list {
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 5px;
   padding: 0 1rem;
   margin-top: 10px;
 }
