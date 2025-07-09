@@ -1,4 +1,4 @@
-import { lazy, useEffect } from "react";
+import { lazy } from "react";
 import '../layouts/stats-page-layout/stats-page.css'
 
 const Header = lazy(() => import('../components/Header'))
