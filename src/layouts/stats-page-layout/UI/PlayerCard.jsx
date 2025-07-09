@@ -4,7 +4,10 @@ import { useRef } from "react";
 const PlayerCard = ({ player, index, isCurrentUser }) => {
   const placement = index + 1;
   const ref = useRef(null);
-  const isInView = useInView(ref, { once: true });
+  const isInView = useInView(ref, {
+    margin: "-20% 0px -20% 0px", // появление только когда реально в видимой части
+    once: false
+  });
 
   const defaultAvatar = `data:image/svg+xml;utf8,
     <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
@@ -18,10 +21,13 @@ const PlayerCard = ({ player, index, isCurrentUser }) => {
       ref={ref}
       className={`player-container ${isCurrentUser ? "highlight-player" : ""}`}
       initial={{ opacity: 0, scale: 0.9, y: 20 }}
-      animate={isInView ? { opacity: 1, scale: 1, y: 0 } : {}}
+      animate={
+        isInView
+          ? { opacity: 1, scale: 1, y: 0 }
+          : { opacity: 0, scale: 0.9, y: 20 }
+      }
       transition={{
         duration: 0.4,
-        delay: index * 0.07,
         ease: "easeOut"
       }}
     >
