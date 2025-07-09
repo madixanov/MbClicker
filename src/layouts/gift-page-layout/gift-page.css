@@ -27,6 +27,7 @@
   font-weight: 700;
   padding-top: 27px;
   padding-bottom: 16px;
+  padding-left: 34px;
 }
 
 .tabs {
@@ -36,6 +37,8 @@
   justify-content: center;
   gap: 20px;
   margin-top: 29px;
+  padding-left:  20px;
+  padding-right: 20px;
 }
 
 .task-container {
