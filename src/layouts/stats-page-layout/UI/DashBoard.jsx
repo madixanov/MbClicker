@@ -45,7 +45,7 @@ const DashBoard = () => {
             initial={{ opacity: 0, y: 20 }}
             animate={{
               opacity: 1,
-              y: index === 0 ? -10 : 0 // Первый игрок чуть выше
+              y: index === 0 ? -20 : 0 // Первый игрок чуть выше
             }}
             transition={{
               delay: index * 0.15,
