@@ -110,6 +110,8 @@
   font-size: 12px;
   font-weight: 400;
   text-align: center;
+  border: 1px solid;
+  border-color: #363535;
 }
 
 .tg-bonus {
