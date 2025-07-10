@@ -105,8 +105,11 @@
   text-align: center;
   margin: 0 0 18px;
   color: white;
-  word-break: break-word; /* ✅ перенос длинных слов */
-  max-width: 100%; /* ограничение по ширине карточки */
+  max-width: 100px; /* ✅ или % от родителя */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .profile-card p {
@@ -246,6 +249,11 @@
   font-size: 12px;
   text-align: center;
   color: white;
+  max-width: 100px; /* ✅ или % от родителя */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .placement {

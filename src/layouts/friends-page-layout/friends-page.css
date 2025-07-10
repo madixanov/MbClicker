@@ -266,11 +266,16 @@
   background-color: #3DA14C;
   box-shadow: 0 0 12px rgba(255, 255, 255, 0.24);
   min-width: 18px; /* ✅ гарантирует ширину даже при "0" */
+  max-width: 100px; /* ✅ или % от родителя */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .div-b span {
   font-weight: 500;
-  font-size: 12px;
+  font-size: 10px;
 }
 
 .div-e {
