@@ -105,6 +105,8 @@
   text-align: center;
   margin: 0 0 18px;
   color: white;
+  word-break: break-word; /* ✅ перенос длинных слов */
+  max-width: 100%; /* ограничение по ширине карточки */
 }
 
 .profile-card p {
