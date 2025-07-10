@@ -2,8 +2,7 @@ import { useEffect, useState } from "react";
 import { fetchAllPlayers } from "../../../services/playerService";
 import usePlacementStore from "../../../store/placement-store";
 import getTelegramUser from "../../../utils/getTelegramUser";
-import PlayerCard from "./PlayerCard"; // вынесем карточку в отдельный файл
-
+import PlayerCard from "./PlayerCard";
 
 const LeadersList = () => {
   const [players, setPlayers] = useState([]);
@@ -16,16 +15,22 @@ const LeadersList = () => {
     const loadPlayers = async () => {
       try {
         const allPlayers = await fetchAllPlayers();
-
         const sortedPlayers = [...allPlayers].sort((a, b) => b.clicks - a.clicks);
         setPlayers(sortedPlayers);
 
-        const userId = getTelegramUser()?.id;
-        const index = sortedPlayers.findIndex(p => p.telegram_id === userId);
+        const userId = String(getTelegramUser()?.id);
+        console.log("🔍 Текущий Telegram ID:", userId);
+
+        const index = sortedPlayers.findIndex(
+          (p) => String(p.telegram_id) === userId
+        );
+
         if (index !== -1) {
           setCurrentPlacement(index + 1);
           setCurrentPlayer(sortedPlayers[index]);
           setPlacement(index + 1);
+        } else {
+          console.warn("⚠️ Текущий пользователь не найден в рейтинге.");
         }
       } catch (err) {
         console.error("Ошибка при загрузке игроков:", err);
@@ -43,11 +48,11 @@ const LeadersList = () => {
         <PlayerCard key={player.documentId} player={player} index={index} />
       ))}
 
-      {currentPlayer && currentPlacement > 10 && (
+      {currentPlayer && currentPlacement && currentPlacement > 10 && (
         <>
           <hr />
           <div className="your-placement-badge">
-            Ты на #{currentPlacement} месте из {players.length}
+            ТЫ НА #{currentPlacement} МЕСТЕ
           </div>
           <PlayerCard
             player={currentPlayer}
