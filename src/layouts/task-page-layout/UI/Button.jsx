@@ -64,6 +64,8 @@ const Button = ({
 
     // --- Если у задачи есть ссылка ---
     if (task.taskLink) {
+      if (hasClaimed.current) return; // 🛑 не открываем повторно
+
       window.open(task.taskLink, "_blank");
 
       const handleVisibility = async () => {
