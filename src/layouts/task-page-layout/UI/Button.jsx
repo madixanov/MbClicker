@@ -24,7 +24,6 @@ const Button = ({
   const [progressValue, setProgressValue] = useState(0);
   const [loading, setLoading] = useState(false);
 
-  // Подписка на изменения прогресса
   useEffect(() => {
     const unsubMb = useMbStore.subscribe(
       (state) => state.mbCountAll,
@@ -47,7 +46,6 @@ const Button = ({
     };
   }, [isLevelTask]);
 
-  // Проверка выполненности задачи
   useEffect(() => {
     if (isClaimed || claimedManually) {
       setState("claimed");
@@ -55,41 +53,77 @@ const Button = ({
     if (onReady) onReady();
   }, [isClaimed, claimedManually, onReady]);
 
-  // Обработка клика
   const handleClick = async () => {
     if (loading || isProcessing || state === "claimed") return;
 
-    if (state === "initial") {
-      const ready = progressValue >= task.Goal;
-      if (ready) {
-        setState("ready");
-      } else {
-        alert("Вы ещё не выполнили задание.");
-      }
-    } else if (state === "ready") {
-      setLoading(true);
-      setIsProcessing(true);
-      try {
-        await completeTask(task.documentId, playerId);
+    const ready = progressValue >= task.Goal;
 
-        const prize = Number(task.Prize) || 0;
-        const newClicks =  mbStore.mbCountAll + prize
-        mbStore.setMbCountAll(newClicks); // ✅ прибавляем к mbCountAll
+    if (task.taskLink) {
+      window.open(task.taskLink, "_blank");
 
-        if (onUpdateClicks) onUpdateClicks(newClicks);
+      const handleVisibility = async () => {
+        if (document.visibilityState === "visible") {
+          document.removeEventListener("visibilitychange", handleVisibility);
 
-        setClaimedManually(true);
-        setState("claimed");
-      } catch (err) {
-        console.error("Ошибка при завершении задачи:", err);
-      } finally {
-        setIsProcessing(false);
-        setLoading(false);
+          if (!ready) {
+            alert("Вы ещё не выполнили задание.");
+            return;
+          }
+
+          setLoading(true);
+          setIsProcessing(true);
+          try {
+            await completeTask(task.documentId, playerId);
+
+            const prize = Number(task.Prize) || 0;
+            const newClicks = mbStore.mbCountAll + prize;
+            mbStore.setMbCountAll(newClicks);
+
+            if (onUpdateClicks) onUpdateClicks(newClicks);
+
+            setClaimedManually(true);
+            setState("claimed");
+          } catch (err) {
+            console.error("Ошибка при завершении задачи:", err);
+          } finally {
+            setIsProcessing(false);
+            setLoading(false);
+          }
+        }
+      };
+
+      document.addEventListener("visibilitychange", handleVisibility);
+    } else {
+      if (state === "initial") {
+        if (ready) {
+          setState("ready");
+        } else {
+          alert("Вы ещё не выполнили задание.");
+        }
+      } else if (state === "ready") {
+        setLoading(true);
+        setIsProcessing(true);
+        try {
+          await completeTask(task.documentId, playerId);
+
+          const prize = Number(task.Prize) || 0;
+          const newClicks = mbStore.mbCountAll + prize;
+          mbStore.setMbCountAll(newClicks);
+
+          if (onUpdateClicks) onUpdateClicks(newClicks);
+
+          setClaimedManually(true);
+          setState("claimed");
+        } catch (err) {
+          console.error("Ошибка при завершении задачи:", err);
+        } finally {
+          setIsProcessing(false);
+          setLoading(false);
+        }
       }
     }
   };
 
-  // UI
   if (state === "claimed") {
     return (
       <span className="task-done">

@@ -55,12 +55,29 @@ const TabContent = ({ loading, setLoading }) => {
               <p className="task-prize">+ {task.Prize} КБ</p>
             </div>
           </div>
-          <Button
-            task={task}
-            playerId={player.documentId}
-            strapiPlayerId={playerStrapiId}
-            isClaimed={task.isClaimed}
-          />
+
+          {task.taskLink ? (
+            <a
+              href={task.taskLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              style={{ textDecoration: "none" }}
+            >
+              <Button
+                task={task}
+                playerId={player.documentId}
+                strapiPlayerId={playerStrapiId}
+                isClaimed={task.isClaimed}
+              />
+            </a>
+          ) : (
+            <Button
+              task={task}
+              playerId={player.documentId}
+              strapiPlayerId={playerStrapiId}
+              isClaimed={task.isClaimed}
+            />
+          )}
         </div>
       ))}
     </div>
