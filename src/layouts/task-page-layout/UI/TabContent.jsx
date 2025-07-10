@@ -61,7 +61,7 @@ const TabContent = ({ loading, setLoading }) => {
               href={task.taskLink}
               target="_blank"
               rel="noopener noreferrer"
-              style={{ textDecoration: "none" }}
+              style={{ textDecoration: "none", width: "30px", height: "30px" }}
             >
               <Button
                 task={task}
