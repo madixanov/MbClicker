@@ -97,7 +97,7 @@
 }
 
 .labels-container p {
-  font-size: 12px; /* ✅ улучшено с 10px */
+  font-size: 10px; /* ✅ улучшено с 10px */
   font-weight: 500;
   color: rgba(255, 255, 255, 0.5); /* чуть ярче для читаемости */
   margin: 4px 0 0;
