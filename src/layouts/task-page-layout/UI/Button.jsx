@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { completeTask } from "../../../services/taskService";
 import completed from "../../../assets/icons/completed.svg";
 import useMbStore from "../../../store/mb-store";
@@ -24,6 +24,9 @@ const Button = ({
   const [progressValue, setProgressValue] = useState(0);
   const [loading, setLoading] = useState(false);
 
+  const hasClaimed = useRef(false); // ⛔ защита от повторного выполнения
+
+  // Подписка на прогресс
   useEffect(() => {
     const unsubMb = useMbStore.subscribe(
       (state) => state.mbCountAll,
@@ -46,18 +49,20 @@ const Button = ({
     };
   }, [isLevelTask]);
 
+  // Установка состояния claimed
   useEffect(() => {
-    if (isClaimed || claimedManually) {
+    if (isClaimed || claimedManually || hasClaimed.current) {
       setState("claimed");
     }
     if (onReady) onReady();
   }, [isClaimed, claimedManually, onReady]);
 
   const handleClick = async () => {
-    if (loading || isProcessing || state === "claimed") return;
+    if (loading || isProcessing || state === "claimed" || hasClaimed.current) return;
 
     const ready = progressValue >= task.Goal;
 
+    // --- Если у задачи есть ссылка ---
     if (task.taskLink) {
       window.open(task.taskLink, "_blank");
 
@@ -65,8 +70,8 @@ const Button = ({
         if (document.visibilityState === "visible") {
           document.removeEventListener("visibilitychange", handleVisibility);
 
-          if (!ready) {
-            alert("Вы ещё не выполнили задание.");
+          if (!ready || hasClaimed.current) {
+            if (!ready) alert("Вы ещё не выполнили задание.");
             return;
           }
 
@@ -74,6 +79,7 @@ const Button = ({
           setIsProcessing(true);
           try {
             await completeTask(task.documentId, playerId);
+            hasClaimed.current = true;
 
             const prize = Number(task.Prize) || 0;
             const newClicks = mbStore.mbCountAll + prize;
@@ -93,37 +99,41 @@ const Button = ({
       };
 
       document.addEventListener("visibilitychange", handleVisibility);
-    } else {
-      if (state === "initial") {
-        if (ready) {
-          setState("ready");
-        } else {
-          alert("Вы ещё не выполнили задание.");
-        }
-      } else if (state === "ready") {
-        setLoading(true);
-        setIsProcessing(true);
-        try {
-          await completeTask(task.documentId, playerId);
+      return;
+    }
 
-          const prize = Number(task.Prize) || 0;
-          const newClicks = mbStore.mbCountAll + prize;
-          mbStore.setMbCountAll(newClicks);
+    // --- Обычная задача ---
+    if (state === "initial") {
+      if (ready) {
+        setState("ready");
+      } else {
+        alert("Вы ещё не выполнили задание.");
+      }
+    } else if (state === "ready") {
+      setLoading(true);
+      setIsProcessing(true);
+      try {
+        await completeTask(task.documentId, playerId);
+        hasClaimed.current = true;
 
-          if (onUpdateClicks) onUpdateClicks(newClicks);
+        const prize = Number(task.Prize) || 0;
+        const newClicks = mbStore.mbCountAll + prize;
+        mbStore.setMbCountAll(newClicks);
 
-          setClaimedManually(true);
-          setState("claimed");
-        } catch (err) {
-          console.error("Ошибка при завершении задачи:", err);
-        } finally {
-          setIsProcessing(false);
-          setLoading(false);
-        }
+        if (onUpdateClicks) onUpdateClicks(newClicks);
+
+        setClaimedManually(true);
+        setState("claimed");
+      } catch (err) {
+        console.error("Ошибка при завершении задачи:", err);
+      } finally {
+        setIsProcessing(false);
+        setLoading(false);
       }
     }
   };
 
+  // --- UI: уже выполнено ---
   if (state === "claimed") {
     return (
       <span className="task-done">
@@ -132,6 +142,7 @@ const Button = ({
     );
   }
 
+  // --- UI: кнопка ---
   return (
     <button
       className={`task-btn ${state === "ready" ? "completed" : "active"}`}
