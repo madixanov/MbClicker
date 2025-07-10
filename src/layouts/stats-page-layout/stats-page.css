@@ -118,6 +118,11 @@
   color: rgba(255, 255, 255, 0.5);
   margin: 0 0 8px;
   text-align: start;
+  max-width: 100px; /* ✅ или % от родителя */
+  overflow: hidden;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  text-align: center;
 }
 
 .profile-card p span {
